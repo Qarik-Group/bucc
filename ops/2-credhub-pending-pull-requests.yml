@@ -1,0 +1,48 @@
+# Remove when merged: https://github.com/cloudfoundry/bosh-deployment/pull/42
+#
+- type: replace
+  path: /releases/name=credhub/url
+  value: https://github.com/pivotal-cf/credhub-release/releases/download/0.5.1/credhub-0.5.1.tgz
+
+- type: replace
+  path: /releases/name=credhub/sha1?
+  value: fcfa37835c813b175defe01d8fae7d57e7ef669c
+
+
+# Remove when merged: https://github.com/cloudfoundry/bosh-deployment/pull/44
+#
+- type: remove
+  path: /instance_groups/name=bosh/jobs/name=credhub/properties/credhub/user_management
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub/properties/credhub/authentication?
+  value:
+    uaa:
+      url: "https://((internal_ip)):8443"
+      verification_key: ((uaa_jwt_signing_key.public_key))
+
+
+- type: remove
+  path: /instance_groups/name=bosh/jobs/name=credhub/properties/credhub/encryption
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub/properties/credhub/encryption?
+  value:
+    keys:
+    - provider_name: internal
+      active: true
+      dev_key: ((credhub_dev_key))
+    providers:
+    - name: internal
+      type: dev_internal
+
+
+
+# Remove when merged https://github.com/cloudfoundry/bosh-deployment/pull/37
+#
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/credhub_cli?
+  value:
+    override: true
+    authorized-grant-types: password,refresh_token
+ 

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bosh create-env ./manifest.yml --state ./state.json `find ops/*.yml | sort | sed 's/^/-o /' | xargs` --vars-store ./creds.yml
