@@ -1,13 +1,24 @@
 #!/bin/bash
 version="0.1"
-description="BUCC (BOSH UAA Credhud Concourse) CLI"
 
 repo_root=$(dirname "$0" | rev | cut -c5- | rev)
 state=${repo_root}/state
 mkdir -p $state
 
+vars_file() {
+    local local_file=${repo_root}/local.yml
+    local vars_file=${repo_root}/vars.yml
+    local state_vars=${state}/vars.yml
+    if [ -e $local_file ]; then
+	bosh int $vars_file -o $local_file > $state_vars
+    else
+	cp $vars_file $state_vars
+    fi
+    echo $state_vars
+}
+
 manifest="${repo_root}/src/bosh-deployment/bosh.yml"
-vars_file_arg="--vars-file ${repo_root}/vars.yml"
+vars_file_arg="--vars-file $(vars_file)"
 ssh_private_key="${state}/ssh.key"
 state_arg="--state ${state}/state.json"
 ops_file_args=$(find ${repo_root}/ops/*.yml | sort | sed 's/^/-o /' | xargs)
@@ -17,7 +28,8 @@ vars_store_arg="--vars-store ${vars_store}"
 int_args="${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
 
 usage() {
-    echo "Usage: bucc [up, down, ssh]" 1>&2; exit 1;
+    echo "BUCC (BOSH UAA Credhud Concourse) CLI v${version}"
+    echo "Usage: bucc [up, down, env, ssh]" 1>&2; exit 1;
 }
 
 up() {
@@ -55,20 +67,6 @@ _ssh() {
 }
 
 
-default() {
-    local optind
-    while getopts ":v" opt; do
-	case "${opt}" in
-	    v)
-		echo -e "${DESCRIPTION}, Version v${VERSION}"
-		;;
-	esac
-    done
-    shift $((optind-1))
-    usage
-}
-
-
 case "$1" in
     up)
 	up "$@"
@@ -93,7 +91,7 @@ case "$1" in
 	
 
     *)
-	default "$@"
+	usage
 	exit 1
 	;;
 esac

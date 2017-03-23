@@ -1,7 +1,0 @@
-# Configure sizes
-- type: replace
-  path: /resource_pools/name=vms/cloud_properties?
-  value:
-    cpus: 6
-    memory: 30_720
-    ephemeral_disk: 102_400

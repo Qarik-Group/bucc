@@ -1,0 +1,15 @@
+# This ops file can be used to change local settings
+# to use this file `cp local.sample.yml local.yml`
+# for more variables to override look in vars.yml
+
+- type: replace
+  path: /vm_cpus
+  value: 7
+
+- type: replace
+  path: /vm_memory
+  value: 30_720
+
+- type: replace
+  path: /vm_ephemeral_disk
+  value: 102_400

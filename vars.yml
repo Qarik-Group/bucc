@@ -4,3 +4,6 @@ internal_cidr: 192.168.50.0/24
 internal_gw: 192.168.50.1
 internal_ip: 192.168.50.6
 outbound_network_name: NatNetwork
+vm_cpus: 2
+vm_memory: 4096
+vm_ephemeral_disk: 16_384
