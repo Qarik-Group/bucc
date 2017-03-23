@@ -42,7 +42,9 @@ usage() {
     echo "  ssh -- ssh into the bucc VM"
     echo "  env -- sourceable envrionment variables for cli clients"
     echo "  info -- displays info about bucc deployed endpoints"
-    echo "  fly -- setups a bucc target for the fly cli"
+    echo "  credhub -- configures credhub cli"
+    echo "  uaac -- configures uaac cli"
+    echo "  fly -- configures fly cli"
     exit 1
 }
 
@@ -56,7 +58,7 @@ down() {
 
 env() {
     echo "export BOSH_ENVIRONMENT=$(ip)"
-    echo "export BOSH_CA_CERT='$(store_int --path /director_ssl/ca)'"
+    echo "export BOSH_CA_CERT='$(ca_cert)'"
     echo "export BOSH_CLIENT=admin"
     echo "export BOSH_CLIENT_SECRET=$(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=admin/password)"
 }
@@ -74,8 +76,23 @@ fly() {
 	--username $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username) \
 	--password $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password) \
 	--team-name main \
-	--ca-cert $(ca_cert)" /dev/null &> /dev/null
-    echo "saved target: bucc"
+	--ca-cert $(ca_cert)" /dev/null | grep -v Script
+}
+
+credhub() {
+    # does not yet support supplying a CA cert
+    script --return -c "credhub login --server $(int --path /instance_groups/0/properties/director/config_server/url | rev | cut -c6- | rev) \
+            --username credhub-cli \
+            --password $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=credhub-cli/password) \
+	    --skip-tls-validation" /dev/null | grep -v Script
+}
+
+uaac() {
+    script --return -c "uaac target $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/url) \
+	 --ca-cert $(ca_cert)
+    
+    uaac token client get uaa_admin \
+	 --secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)" /dev/null | grep -v Script
 }
 
 store_int() {
@@ -115,9 +132,18 @@ case "$1" in
 	info "$@"
 	;;
 
+    credhub)
+	credhub "$@"
+	;;
+
+    uaac)
+	uaac "$@"
+	;;
+
     fly)
 	fly "$@"
 	;;
+
 
     ssh)
 	_ssh "$@"
