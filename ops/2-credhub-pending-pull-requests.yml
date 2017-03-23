@@ -40,9 +40,19 @@
 
 # Remove when merged https://github.com/cloudfoundry/bosh-deployment/pull/37
 #
+- type: remove
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/credhub?
+
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/credhub_cli?
   value:
     override: true
     authorized-grant-types: password,refresh_token
+    access-token-validity: 60
+    authorities: ""
+    authorized-grant-types: password,refresh_token
+    override: true
+    refresh-token-validity: 1800
+    scope: credhub.read,credhub.write
+    secret: ""
  
