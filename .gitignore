@@ -1,6 +1,4 @@
-state.json
 #*
 *~
 .#*
-*.key
-tmp/
+state/

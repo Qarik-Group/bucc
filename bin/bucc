@@ -3,15 +3,15 @@ version="0.1"
 description="BUCC (BOSH UAA Credhud Concourse) CLI"
 
 repo_root=$(dirname "$0" | rev | cut -c5- | rev)
-tmp=${repo_root}/tmp
-mkdir -p $tmp
+state=${repo_root}/state
+mkdir -p $state
 
-manifest="${repo_root}/manifest.yml"
+manifest="${repo_root}/src/bosh-deployment/bosh.yml"
 vars_file_arg="--vars-file ${repo_root}/vars.yml"
-ssh_private_key="${tmp}/ssh.key"
-state_arg="--state ${repo_root}/state.json"
+ssh_private_key="${state}/ssh.key"
+state_arg="--state ${state}/state.json"
 ops_file_args=$(find ${repo_root}/ops/*.yml | sort | sed 's/^/-o /' | xargs)
-vars_store=${tmp}/creds.yml
+vars_store=${state}/creds.yml
 vars_store_arg="--vars-store ${vars_store}"
 
 int_args="${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
@@ -28,16 +28,30 @@ down() {
     bosh delete-env $int_args $state_arg
 }
 
+env() {
+    echo "export BOSH_ENVIRONMENT=$(ip)"
+    echo "export BOSH_CA_CERT='$(store_int --path /director_ssl/ca)'"
+    echo "export BOSH_CLIENT=admin"
+    echo "export BOSH_CLIENT_SECRET=$(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=admin/password)"
+}
+
+store_int() {
+    bosh int $vars_store $@
+}
+
 int() {
-    bosh int $int_args
+    bosh int $int_args $@
+}
+
+ip() {
+    int --path /networks/name=default/subnets/0/static/0
 }
 
 _ssh() {
-    local ip=$(bosh int $int_args --path /networks/name=default/subnets/0/static/0)
-    local user=$(bosh int $int_args --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
-    bosh int ${vars_store} --path=/jumpbox_ssh/private_key > $ssh_private_key
+    local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
+    store_int --path /jumpbox_ssh/private_key > $ssh_private_key
     chmod 600 $ssh_private_key
-    ssh -i $ssh_private_key $user@$ip -t 'command; sudo su -'
+    ssh -i $ssh_private_key $user@$(ip) -t 'command; sudo su -'
 }
 
 
@@ -64,11 +78,16 @@ case "$1" in
 	down "$@"
 	;;
 
+    env)
+	env "$@"
+	;;
+
     ssh)
 	_ssh "$@"
 	;;
 
     int)
+	shift
 	int "$@"
 	;;
 	
@@ -77,5 +96,4 @@ case "$1" in
 	default "$@"
 	exit 1
 	;;
-esac 
-
+esac
