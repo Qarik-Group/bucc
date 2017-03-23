@@ -3,17 +3,21 @@ version="0.1"
 description="BUCC (BOSH UAA Credhud Concourse) CLI"
 
 repo_root=$(dirname "$0" | rev | cut -c5- | rev)
+tmp=${repo_root}/tmp
+mkdir -p $tmp
+
 manifest="${repo_root}/manifest.yml"
-ssh_private_key="${repo_root}/ssh.key"
+vars_file_arg="--vars-file ${repo_root}/vars.yml"
+ssh_private_key="${tmp}/ssh.key"
 state_arg="--state ${repo_root}/state.json"
 ops_file_args=$(find ${repo_root}/ops/*.yml | sort | sed 's/^/-o /' | xargs)
-vars_store=${repo_root}/creds.yml
+vars_store=${tmp}/creds.yml
 vars_store_arg="--vars-store ${vars_store}"
 
-int_args="${manifest} ${ops_file_args} ${vars_store_arg}"
+int_args="${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
 
 usage() {
-    echo "Usage: bucc [up, ssh]" 1>&2; exit 1;
+    echo "Usage: bucc [up, down, ssh]" 1>&2; exit 1;
 }
 
 up() {
