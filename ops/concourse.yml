@@ -1,0 +1,66 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: concourse
+    url: https://bosh.io/d/github.com/concourse/concourse?v=2.6.0
+    sha1: 6e4c1321768df37a0e3947f59d28ddf8804bd4c0
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: atc
+    release: concourse
+    properties:
+      external_url: &external_url https://((internal_ip))
+      basic_auth_username: admin
+      basic_auth_password: ((ui_password))
+      tls_cert: ((atc_ssl.certificate))
+      tls_key: ((atc_ssl.private_key))
+      bind_port: 80
+      tls_bind_port: 443
+      postgresql:
+        address: 127.0.0.1
+        database: &atc_db atc
+        role:
+          name: &atc_role postgres
+          password: &atc_password ((postgres_password))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: tsa
+    release: concourse
+    properties:
+      atc:
+      url: *external_url
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: groundcrew
+    release: concourse
+    properties:
+      tsa:
+        host: 127.0.0.1
+      baggageclaim:
+        url: http://127.0.0.1:7788
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
+  value: *atc_db
+
+- type: replace
+  path: /variables/-
+  value:
+    name: atc_ssl
+    type: certificate
+    options:
+      ca: default_ca
+      common_name: ((internal_ip))
+      alternative_names: [((internal_ip))]
+
+- type: replace
+  path: /variables/-
+  value:
+    name: ui_password
+    type: password

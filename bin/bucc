@@ -27,9 +27,23 @@ vars_store_arg="--vars-store ${vars_store}"
 
 int_args="${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
 
+ca_cert() {
+    local ca_cert_file="${state}/ca.pem"
+    store_int --path /default_ca/ca > $ca_cert_file
+    store_int --path /default_ca/certificate >> $ca_cert_file
+    echo $ca_cert_file
+}
+
+
 usage() {
     echo "BUCC (BOSH UAA Credhud Concourse) CLI v${version}"
-    echo "Usage: bucc [up, down, env, ssh]" 1>&2; exit 1;
+    echo "  up -- creates the bucc VM with bosh create-env "
+    echo "  down -- deletes VM with bosh delete-env"
+    echo "  ssh -- ssh into the bucc VM"
+    echo "  env -- sourceable envrionment variables for cli clients"
+    echo "  info -- displays info about bucc deployed endpoints"
+    echo "  fly -- setups a bucc target for the fly cli"
+    exit 1
 }
 
 up() {
@@ -45,6 +59,23 @@ env() {
     echo "export BOSH_CA_CERT='$(store_int --path /director_ssl/ca)'"
     echo "export BOSH_CLIENT=admin"
     echo "export BOSH_CLIENT_SECRET=$(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=admin/password)"
+}
+
+info() {
+    echo "Concourse:"
+    echo "  url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
+    echo "  username: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username)"    
+    echo "  password: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password)"
+}
+
+fly() {
+    script --return -c "fly --target bucc login \
+	--concourse-url $(int --path /instance_groups/0/jobs/name=atc/properties/external_url) \
+	--username $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username) \
+	--password $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password) \
+	--team-name main \
+	--ca-cert $(ca_cert)" /dev/null &> /dev/null
+    echo "saved target: bucc"
 }
 
 store_int() {
@@ -78,6 +109,14 @@ case "$1" in
 
     env)
 	env "$@"
+	;;
+
+    info)
+	info "$@"
+	;;
+
+    fly)
+	fly "$@"
 	;;
 
     ssh)
