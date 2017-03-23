@@ -1,3 +1,77 @@
 #!/bin/bash
+version="0.1"
+description="BUCC (BOSH UAA Credhud Concourse) CLI"
 
-bosh create-env ./manifest.yml --state ./state.json `find ops/*.yml | sort | sed 's/^/-o /' | xargs` --vars-store ./creds.yml
+repo_root=$(dirname "$0" | rev | cut -c5- | rev)
+manifest="${repo_root}/manifest.yml"
+ssh_private_key="${repo_root}/ssh.key"
+state_arg="--state ${repo_root}/state.json"
+ops_file_args=$(find ${repo_root}/ops/*.yml | sort | sed 's/^/-o /' | xargs)
+vars_store=${repo_root}/creds.yml
+vars_store_arg="--vars-store ${vars_store}"
+
+int_args="${manifest} ${ops_file_args} ${vars_store_arg}"
+
+usage() {
+    echo "Usage: bucc [up, ssh]" 1>&2; exit 1;
+}
+
+up() {
+    bosh create-env $int_args $state_arg
+}
+
+down() {
+    bosh delete-env $int_args $state_arg
+}
+
+int() {
+    bosh int $int_args
+}
+
+_ssh() {
+    local ip=$(bosh int $int_args --path /networks/name=default/subnets/0/static/0)
+    local user=$(bosh int $int_args --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
+    bosh int ${vars_store} --path=/jumpbox_ssh/private_key > $ssh_private_key
+    chmod 600 $ssh_private_key
+    ssh -i $ssh_private_key $user@$ip -t 'command; sudo su -'
+}
+
+
+default() {
+    local optind
+    while getopts ":v" opt; do
+	case "${opt}" in
+	    v)
+		echo -e "${DESCRIPTION}, Version v${VERSION}"
+		;;
+	esac
+    done
+    shift $((optind-1))
+    usage
+}
+
+
+case "$1" in
+    up)
+	up "$@"
+	;;
+
+    down)
+	down "$@"
+	;;
+
+    ssh)
+	_ssh "$@"
+	;;
+
+    int)
+	int "$@"
+	;;
+	
+
+    *)
+	default "$@"
+	exit 1
+	;;
+esac 
+
