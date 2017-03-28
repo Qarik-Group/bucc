@@ -5,12 +5,18 @@ repo_root=$(dirname "$0" | rev | cut -c5- | rev)
 state=${repo_root}/state
 mkdir -p $state
 
+if [[ $(bosh2 --version | awk '{print $2}') > 2.0 ]]; then
+   boshexec=bosh2
+else
+   boshexec=bosh
+fi
+
 vars_file() {
     local local_file=${repo_root}/local.yml
     local vars_file=${repo_root}/vars.yml
     local state_vars=${state}/vars.yml
     if [ -e $local_file ]; then
-	bosh int $vars_file -o $local_file > $state_vars
+	${boshexec} int $vars_file -o $local_file > $state_vars
     else
 	cp $vars_file $state_vars
     fi
@@ -49,11 +55,11 @@ usage() {
 }
 
 up() {
-    bosh create-env $int_args $state_arg
+   ${boshexec} create-env $int_args $state_arg
 }
 
 down() {
-    bosh delete-env $int_args $state_arg
+   ${boshexec} delete-env $int_args $state_arg
 }
 
 env() {
@@ -96,11 +102,11 @@ uaac() {
 }
 
 store_int() {
-    bosh int $vars_store $@
+    ${boshexec} int $vars_store $@
 }
 
 int() {
-    bosh int $int_args $@
+    ${boshexec} int $int_args $@
 }
 
 ip() {
