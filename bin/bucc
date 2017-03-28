@@ -47,6 +47,7 @@ usage() {
     echo "  down -- deletes VM with bosh delete-env"
     echo "  ssh -- ssh into the bucc VM"
     echo "  env -- sourceable envrionment variables for cli clients"
+    echo "  int -- wrapper for '${boshexec} int' for the bosh manifest"
     echo "  info -- displays info about bucc deployed endpoints"
     echo "  credhub -- configures credhub cli"
     echo "  uaac -- configures uaac cli"
@@ -72,7 +73,7 @@ env() {
 info() {
     echo "Concourse:"
     echo "  url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
-    echo "  username: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username)"    
+    echo "  username: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username)"
     echo "  password: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password)"
 }
 
@@ -96,7 +97,7 @@ credhub() {
 uaac() {
     script --return -c "uaac target $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/url) \
 	 --ca-cert $(ca_cert)
-    
+
     uaac token client get uaa_admin \
 	 --secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)" /dev/null | grep -v Script
 }
@@ -159,7 +160,7 @@ case "$1" in
 	shift
 	int "$@"
 	;;
-	
+
 
     *)
 	usage
