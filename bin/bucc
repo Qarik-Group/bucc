@@ -43,7 +43,7 @@ ca_cert() {
 
 usage() {
     echo "BUCC (BOSH UAA Credhud Concourse) CLI v${version}"
-    echo "  up -- creates the bucc VM with bosh create-env "
+    echo "  up -- creates the bucc VM with bosh create-env"
     echo "  down -- deletes VM with bosh delete-env"
     echo "  ssh -- ssh into the bucc VM"
     echo "  env -- sourceable envrionment variables for cli clients"
