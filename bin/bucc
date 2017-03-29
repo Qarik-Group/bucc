@@ -55,6 +55,14 @@ usage() {
     exit 1
 }
 
+faketty() {
+    if [ "$(uname)" == "Darwin" ]; then
+        script -q /dev/null "$@"
+    elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+        script -qfc "$(printf "%q " "$@")";
+    fi
+}
+
 up() {
    ${boshexec} create-env $int_args $state_arg
 }
@@ -78,28 +86,25 @@ info() {
 }
 
 fly() {
-    script --return -c "fly --target bucc login \
-	--concourse-url $(int --path /instance_groups/0/jobs/name=atc/properties/external_url) \
-	--username $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username) \
-	--password $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password) \
-	--team-name main \
-	--ca-cert $(ca_cert)" /dev/null | grep -v Script
+    faketty fly --target bucc login \
+        --concourse-url $(int --path /instance_groups/0/jobs/name=atc/properties/external_url) \
+        --username $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username) \
+        --password $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password) \
+        --team-name main \
+        --ca-cert $(ca_cert)
 }
 
 credhub() {
     # does not yet support supplying a CA cert
-    script --return -c "credhub login --server $(int --path /instance_groups/0/properties/director/config_server/url | rev | cut -c6- | rev) \
+    faketty credhub login --server $(int --path /instance_groups/0/properties/director/config_server/url | rev | cut -c6- | rev) \
             --username credhub-cli \
             --password $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=credhub-cli/password) \
-	    --skip-tls-validation" /dev/null | grep -v Script
+            --skip-tls-validation
 }
 
 uaac() {
-    script --return -c "uaac target $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/url) \
-	 --ca-cert $(ca_cert)
-
-    uaac token client get uaa_admin \
-	 --secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)" /dev/null | grep -v Script
+    faketty uaac target $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/url) --ca-cert $(ca_cert)
+    faketty uaac token client get uaa_admin --secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)
 }
 
 store_int() {
