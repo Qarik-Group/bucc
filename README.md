@@ -119,7 +119,7 @@ $ bucc credhub
   Setting the target url: https://192.168.50.6:8844
   Login Successful
 
-$ bucc generate --name test
+$ credhub generate --name test
   Type:          password
   Name:          /test
   Value:         Nfjbu0HKKI9eHmbGY6hNLjssDphpdO
