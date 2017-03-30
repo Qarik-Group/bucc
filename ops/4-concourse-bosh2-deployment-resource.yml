@@ -1,0 +1,8 @@
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=groundcrew/properties/additional_resource_types?
+  value:
+    - name: slack-notification
+      type: docker-image
+      source:
+        repository: cloudfoundry/bosh-deployment-resource
+        tag: v2.2.0
