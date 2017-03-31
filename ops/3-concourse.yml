@@ -2,8 +2,8 @@
   path: /releases/-
   value:
     name: concourse
-    url: https://bosh.io/d/github.com/concourse/concourse?v=2.6.0
-    sha1: 6e4c1321768df37a0e3947f59d28ddf8804bd4c0
+    url: https://bosh.io/d/github.com/concourse/concourse?v=2.7.0
+    sha1: 826932f631d0941b3e4cc9cb19e0017c7f989b56
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -32,7 +32,7 @@
     release: concourse
     properties:
       atc:
-      url: *external_url
+        url: *external_url
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -44,6 +44,15 @@
         host: 127.0.0.1
       baggageclaim:
         url: http://127.0.0.1:7788
+      garden:
+        address: 127.0.0.1:7777
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: baggageclaim
+    release: concourse
+    properties: {}
 
 - type: replace
   path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
