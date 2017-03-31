@@ -32,7 +32,7 @@
     release: concourse
     properties:
       atc:
-        url: *external_url
+        url: http://((internal_ip))
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
