@@ -1,12 +1,16 @@
-# Remove when merged: https://github.com/cloudfoundry/bosh-deployment/pull/42
+# Remove when merged: https://github.com/cloudfoundry/bosh-deployment/pull/37
 #
 - type: replace
   path: /releases/name=credhub/url
-  value: https://github.com/pivotal-cf/credhub-release/releases/download/0.5.1/credhub-0.5.1.tgz
+  value: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=0.6.1
+
+- type: replace
+  path: /releases/name=credhub/version?
+  value: 0.6.1
 
 - type: replace
   path: /releases/name=credhub/sha1?
-  value: fcfa37835c813b175defe01d8fae7d57e7ef669c
+  value: 5ab4c4ef3d67f8ea07d78b1a87707e7520a97ab7
 
 
 # Remove when merged: https://github.com/cloudfoundry/bosh-deployment/pull/44
@@ -31,12 +35,21 @@
     keys:
     - provider_name: internal
       active: true
-      dev_key: ((credhub_dev_key))
+      encryption_password: ((credhub_encryption_password))
     providers:
     - name: internal
-      type: dev_internal
+      type: internal
 
 
+- type: replace
+  path: /variables/-
+  value:
+    name: credhub_encryption_password
+    type: password
+
+- type: replace
+  path: /variables/name=credhub_tls/options/alternative_names/-
+  value: "127.0.0.1"
 
 # Remove when merged https://github.com/cloudfoundry/bosh-deployment/pull/37
 #
