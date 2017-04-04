@@ -3,3 +3,4 @@
 .#*
 state/
 local.yml
+*.DS_Store
