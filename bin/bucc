@@ -5,7 +5,7 @@ repo_root=$(dirname "$0" | rev | cut -c5- | rev)
 state=${repo_root}/state
 mkdir -p $state
 
-if [[ $(bosh2 --version | awk '{print $2}') > 2.0 ]]; then
+if [[ -x "$(command -v bosh2)" && $(bosh2 --version | awk '{print $2}') > 2.0 ]]; then
    boshexec=bosh2
 else
    boshexec=bosh
@@ -16,9 +16,9 @@ vars_file() {
     local vars_file=${repo_root}/vars.yml
     local state_vars=${state}/vars.yml
     if [ -e $local_file ]; then
-	${boshexec} int $vars_file -o $local_file > $state_vars
+        ${boshexec} int $vars_file -o $local_file > $state_vars
     else
-	cp $vars_file $state_vars
+        cp $vars_file $state_vars
     fi
     echo $state_vars
 }
