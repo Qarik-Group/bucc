@@ -23,6 +23,19 @@ vars_file() {
     echo $state_vars
 }
 
+validate_cpi() {
+    CPI="${CPI:-virtualbox}"
+    local cpis_dir=${repo_root}/cpis
+    local cpi_ops_file=${cpis_dir}/${CPI}.yml
+    if [ ! -f ${cpi_ops_file} ]; then
+        echo "CPI=${CPI} not supported, please one of the following:"
+        echo $(ls ${cpis_dir} | cut -d "." -f 1 | xargs)
+        exit 1
+    fi
+    cpi_arg="-o ${cpi_ops_file}"
+}
+validate_cpi
+
 manifest="${repo_root}/src/bosh-deployment/bosh.yml"
 vars_file_arg="--vars-file $(vars_file)"
 ssh_private_key="${state}/ssh.key"
@@ -31,7 +44,7 @@ ops_file_args=$(find ${repo_root}/ops/*.yml | sort | sed 's/^/-o /' | xargs)
 vars_store=${state}/creds.yml
 vars_store_arg="--vars-store ${vars_store}"
 
-int_args="${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
+int_args="${manifest} ${cpi_arg} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
 
 ca_cert() {
     local ca_cert_file="${state}/ca.pem"
