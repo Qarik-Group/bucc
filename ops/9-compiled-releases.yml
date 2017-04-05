@@ -1,79 +1,54 @@
 # BOSH
 - type: replace
-  path: /releases/name=bosh/version
-  value: 261.4
-
-- type: replace
-  path: /releases/name=bosh/url
-  value: https://s3.amazonaws.com/million-monkeys-releases/cloudfoundry/bosh-261.4-ubuntu-trusty-3363.12.tgz
-
-- type: replace
-  path: /releases/name=bosh/sha1
-  value: a4c648d0fcc6c818cb35ba7aead6a4d9ddb32826
+  path: /releases/name=bosh?
+  value:
+    name: bosh
+    version: 261.4
+    url: https://s3.amazonaws.com/million-monkeys-releases/cloudfoundry/bosh-261.4-ubuntu-trusty-3363.12.tgz
+    sha1: a4c648d0fcc6c818cb35ba7aead6a4d9ddb32826
 
 # UAA
 - type: replace
-  path: /releases/name=uaa/version
-  value: 29
-
-- type: replace
-  path: /releases/name=uaa/url
-  value: https://s3.amazonaws.com/million-monkeys-releases/cloudfoundry/uaa-release-29-ubuntu-trusty-3363.12.tgz
-
-- type: replace
-  path: /releases/name=uaa/sha1
-  value: 344a59b6161e355e1fe367860ab9716cabceb5ae
+  path: /releases/name=uaa?
+  value:
+    name: uaa
+    version: 29
+    url: https://s3.amazonaws.com/million-monkeys-releases/cloudfoundry/uaa-release-29-ubuntu-trusty-3363.12.tgz
+    sha1: 344a59b6161e355e1fe367860ab9716cabceb5ae
 
 # Credhub
 - type: replace
-  path: /releases/name=credhub/version
-  value: 0.6.1
-
-- type: replace
-  path: /releases/name=credhub/url
-  value: https://s3.amazonaws.com/million-monkeys-releases/pivotal-cf/credhub-release-0.6.1-ubuntu-trusty-3363.12.tgz
-
-- type: replace
-  path: /releases/name=credhub/sha1
-  value: 6f7fe30e6d289a733bbdc0e9d33771c894d09de3
+  path: /releases/name=credhub?
+  value:
+    name: credhub
+    version: 0.6.1
+    url: https://s3.amazonaws.com/million-monkeys-releases/pivotal-cf/credhub-release-0.6.1-ubuntu-trusty-3363.12.tgz
+    sha1: 6f7fe30e6d289a733bbdc0e9d33771c894d09de3
 
 # OS Conf
 - type: replace
-  path: /releases/name=os-conf/version
-  value: 11
-
-- type: replace
-  path: /releases/name=os-conf/url
-  value: https://s3.amazonaws.com/million-monkeys-releases/cloudfoundry/os-conf-release-11-ubuntu-trusty-3363.12.tgz
-
-- type: replace
-  path: /releases/name=os-conf/sha1
-  value: dc31ea63793b247cda6669e9cea7ed9f64e6a28d
-
+  path: /releases/name=os-conf?
+  value:
+    name: os-conf
+    version: 11
+    url: https://s3.amazonaws.com/million-monkeys-releases/cloudfoundry/os-conf-release-11-ubuntu-trusty-3363.12.tgz
+    sha1: dc31ea63793b247cda6669e9cea7ed9f64e6a28d
 
 # Warden CPI
 - type: replace
-  path: /releases/name=bosh-warden-cpi/version
-  value: 34
-
-- type: replace
-  path: /releases/name=bosh-warden-cpi/url
-  value: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-warden-cpi-34-ubuntu-trusty-3363.9-20170307-015515-141982254-20170307015518.tgz
-
-- type: replace
-  path: /releases/name=bosh-warden-cpi/sha1
-  value: ad5440143bfd447863a531dfab90c94a15a5f26e
+  path: /releases/name=bosh-warden-cpi?
+  value:
+    name: bosh-warden-cpi
+    version: 34
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-warden-cpi-34-ubuntu-trusty-3363.9-20170307-015515-141982254-20170307015518.tgz
+    sha1: ad5440143bfd447863a531dfab90c94a15a5f26e
 
 # Garden RunC
 - type: replace
   path: /releases/name=garden-runc?
-  version: 1.2.0
-
-- type: replace
-  path: /releases/name=garden-runc/url
-  value: https://s3.amazonaws.com/bosh-compiled-release-tarballs/garden-runc-1.2.0-ubuntu-trusty-3363.9-20170308-185709-250929271-20170308185714.tgz
-
-- type: replace
-  path: /releases/name=garden-runc/sha1
-  value: 7a0b95fd876bf2607c0b52d62f599ec30d73e9c7
+  value:
+    name: garden-runc
+    version: 1.2.0
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/garden-runc-1.2.0-ubuntu-trusty-3363.9-20170308-185709-250929271-20170308185714.tgz
+    sha1: 7a0b95fd876bf2607c0b52d62f599ec30d73e9c7
   
