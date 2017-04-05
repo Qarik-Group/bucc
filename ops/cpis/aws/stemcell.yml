@@ -1,0 +1,7 @@
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value: {
+  "version": "3363.14",
+  "sha1": "d5ea926f4eb888df95665a6442504e04911f3c48",
+  "url": "https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-3363.14-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"
+}

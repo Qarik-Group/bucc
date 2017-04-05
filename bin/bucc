@@ -33,14 +33,15 @@ vars_file() {
 
 validate_cpi() {
     CPI="${CPI:-virtualbox}"
-    local cpis_dir=${repo_root}/cpis
-    local cpi_ops_file=${cpis_dir}/${CPI}.yml
+    local cpis_dir=${repo_root}/ops/cpis
+    local cpi_ops_file=${cpis_dir}/${CPI}/cpi.yml
     if [ ! -f ${cpi_ops_file} ]; then
         echo "CPI=${CPI} not supported, please one of the following:"
         echo $(ls ${cpis_dir} | cut -d "." -f 1 | xargs)
         exit 1
     fi
-    cpi_arg="-o ${cpi_ops_file}"
+    local cpi_stemcell_file=${cpis_dir}/${CPI}/stemcell.yml
+    cpi_arg="-o ${cpi_ops_file} -o ${cpi_stemcell_file}"
 }
 validate_cpi
 
@@ -128,7 +129,7 @@ _fly() {
            mv fly ${repo_root}/bin/
 	popd
     fi
-    
+
     faketty fly --target bucc login \
         --concourse-url ${url} \
         --username $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username) \

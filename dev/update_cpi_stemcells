@@ -1,0 +1,30 @@
+#!/bin/bash
+repo_root=$(dirname "$0" | rev | cut -c5- | rev)
+
+latest() {
+    curl -s 'https://bosh.io/api/v1/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=' | jq -r '.[0].version'
+}
+
+stemcell_name_for_cpi() {
+    bosh int ${repo_root}/src/bosh-deployment/bosh.yml \
+         -o ${repo_root}/ops/cpis/${1}/cpi.yml --path /resource_pools/name=vms/stemcell/url \
+         | rev | cut -d'/' -f1 | rev | cut -d'?' -f1
+}
+
+stemcell_url_for_name() {
+    curl -s https://bosh.io/api/v1/stemcells/${1} \
+        | jq -r --arg version "${2}" \
+             '.[] | select( .version == $version ) | map(select(type == "object")) | reverse | .[0] | { version: $version, sha1: .sha1, url: .url }' \
+
+
+}
+
+stemcell_version=${1-$(latest)}
+
+for cpi in $(ls ${repo_root}/ops/cpis); do
+    cat > ${repo_root}/ops/cpis/$cpi/stemcell.yml <<EOF
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value: $(stemcell_url_for_name $(stemcell_name_for_cpi ${cpi}) $stemcell_version)
+EOF
+done

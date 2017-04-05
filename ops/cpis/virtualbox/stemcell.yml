@@ -1,0 +1,7 @@
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value: {
+  "version": "3363.14",
+  "sha1": "06757e5a1fb52752a62cb046d2ce7972bfcde037",
+  "url": "https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-3363.14-vsphere-esxi-ubuntu-trusty-go_agent.tgz"
+}
