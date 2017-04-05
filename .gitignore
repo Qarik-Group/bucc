@@ -4,3 +4,6 @@
 state/
 local.yml
 *.DS_Store
+.credhub/
+.flyrc
+.config/
