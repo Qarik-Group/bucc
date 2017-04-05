@@ -7,3 +7,4 @@ local.yml
 .credhub/
 .flyrc
 .config/
+/bin/fly

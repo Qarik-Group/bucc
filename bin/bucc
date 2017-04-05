@@ -5,6 +5,14 @@ repo_root=$(dirname "$0" | rev | cut -c5- | rev)
 state=${repo_root}/state
 mkdir -p $state
 
+pushd () {
+    command pushd "$@" > /dev/null
+}
+
+popd () {
+    command popd "$@" > /dev/null
+}
+
 if [[ -x "$(command -v bosh2)" && $(bosh2 --version | awk '{print $2}') > 2.0 ]]; then
    boshexec=bosh2
 else
@@ -68,12 +76,23 @@ usage() {
     exit 1
 }
 
-faketty() {
+platform() {
     if [ "$(uname)" == "Darwin" ]; then
-        script -q /dev/null "$@"
+        echo "darwin"
     elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-        script -qfc "$(printf "%q " "$@")";
+        echo "linux"
     fi
+}
+
+faketty() {
+    case $(platform) in
+	darwin)
+            script -q /dev/null "$@"
+	    ;;
+	linux)
+            script -qfc "$(printf "%q " "$@")" /dev/null
+	    ;;
+    esac
 }
 
 up() {
@@ -98,9 +117,20 @@ info() {
     echo "  password: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password)"
 }
 
-fly() {
+_fly() {
+    local url=$(int --path /instance_groups/0/jobs/name=atc/properties/external_url)
+
+    if [[ ! -x "$(command -v fly)" ]]; then
+	echo "fly not found installing.."
+	pushd $(mktemp -d)
+	   wget --no-check-certificate -q "${url}/api/v1/cli?arch=amd64&platform=$(platform)" -O fly
+           chmod +x fly
+           mv fly ${repo_root}/bin/
+	popd
+    fi
+    
     faketty fly --target bucc login \
-        --concourse-url $(int --path /instance_groups/0/jobs/name=atc/properties/external_url) \
+        --concourse-url ${url} \
         --username $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username) \
         --password $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password) \
         --team-name main \
@@ -166,7 +196,7 @@ case "$1" in
 	;;
 
     fly)
-	fly "$@"
+	_fly "$@"
 	;;
 
 
