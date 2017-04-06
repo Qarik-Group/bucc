@@ -54,11 +54,11 @@ int_args() (
         ops_file_args="${ops_file_args} $(find ${repo_root}/$1/*.yml | sort | sed 's/^/-o /' | xargs)"
     }
 
-    append_ops_args_for_dir "ops"
-
     if [ $(cat ${state}/lite) = true ]; then
         append_ops_args_for_dir "ops/lite"
     fi
+
+    append_ops_args_for_dir "ops"
 
     append_ops_args_for_dir "ops/cpis/$(cat ${state}/cpi)"
 

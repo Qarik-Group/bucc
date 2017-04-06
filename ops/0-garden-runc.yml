@@ -1,0 +1,24 @@
+# Insert dummy release for 1-garden-runc to remove
+# this way we can use upstream files
+- type: replace
+  path: /releases/name=garden-linux?
+  value:
+    name: garden-linux
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=garden?
+  value:
+    name: garden
+    release: garden-linux
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/garden?
+  value:
+    listen_network: tcp
+    listen_address: 127.0.0.1:7777
+    debug_listen_address: 127.0.0.1:17013
+    disk_quota_enabled: false
+    allow_host_access: true
+    destroy_containers_on_start: true # avoids snapshots
+    default_container_grace_time: 0
+    graph_cleanup_threshold_in_mb: 0
