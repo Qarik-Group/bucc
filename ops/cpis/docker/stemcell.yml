@@ -1,0 +1,7 @@
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value: {
+  "version": "3363.14",
+  "sha1": "c4dc7570d4b2381eb5442eeedc85601e8765593a",
+  "url": "https://s3.amazonaws.com/bosh-core-stemcells/warden/bosh-stemcell-3363.14-warden-boshlite-ubuntu-trusty-go_agent.tgz"
+}

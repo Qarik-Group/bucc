@@ -31,28 +31,39 @@ vars_file() {
     echo $state_vars
 }
 
-validate_cpi() {
-    CPI="${CPI:-virtualbox}"
-    local cpis_dir=${repo_root}/cpis
-    local cpi_ops_file=${cpis_dir}/${CPI}.yml
-    if [ ! -f ${cpi_ops_file} ]; then
-        echo "CPI=${CPI} not supported, please one of the following:"
-        echo $(ls ${cpis_dir} | cut -d "." -f 1 | xargs)
-        exit 1
-    fi
-    cpi_arg="-o ${cpi_ops_file}"
-}
-validate_cpi
-
 manifest="${repo_root}/src/bosh-deployment/bosh.yml"
 vars_file_arg="--vars-file $(vars_file)"
 ssh_private_key="${state}/ssh.key"
 state_arg="--state ${state}/state.json"
-ops_file_args=$(find ${repo_root}/ops/*.yml | sort | sed 's/^/-o /' | xargs)
 vars_store=${state}/creds.yml
 vars_store_arg="--vars-store ${vars_store}"
 
-int_args="${manifest} ${cpi_arg} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
+validate_cpi() {
+    cpi=$(cat ${state}/cpi)
+    local cpis_dir=${repo_root}/ops/cpis
+    if [ ! -d ${cpis_dir}/${cpi} ]; then
+        echo "'--cpi ${cpi}' not supported, please one of the following:"
+        echo $(ls ${cpis_dir} | cut -d "." -f 1 | xargs)
+        exit 1
+    fi
+}
+
+int_args() (
+    local ops_file_args=""
+    append_ops_args_for_dir() {
+        ops_file_args="${ops_file_args} $(find ${repo_root}/$1/*.yml | sort | sed 's/^/-o /' | xargs)"
+    }
+
+    if [ $(cat ${state}/lite) = true ]; then
+        append_ops_args_for_dir "ops/lite"
+    fi
+
+    append_ops_args_for_dir "ops"
+
+    append_ops_args_for_dir "ops/cpis/$(cat ${state}/cpi)"
+
+    echo "${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
+)
 
 ca_cert() {
     local ca_cert_file="${state}/ca.pem"
@@ -60,7 +71,6 @@ ca_cert() {
     store_int --path /default_ca/certificate >> $ca_cert_file
     echo $ca_cert_file
 }
-
 
 usage() {
     echo "BUCC (BOSH UAA Credhud Concourse) CLI v${version}"
@@ -96,11 +106,11 @@ faketty() {
 }
 
 up() {
-   ${boshexec} create-env $int_args $state_arg
+   ${boshexec} create-env $(int_args) $state_arg
 }
 
 down() {
-   ${boshexec} delete-env $int_args $state_arg
+   ${boshexec} delete-env $(int_args) $state_arg
 }
 
 env() {
@@ -128,7 +138,7 @@ _fly() {
            mv fly ${repo_root}/bin/
 	popd
     fi
-    
+
     faketty fly --target bucc login \
         --concourse-url ${url} \
         --username $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username) \
@@ -155,7 +165,7 @@ store_int() {
 }
 
 int() {
-    ${boshexec} int $int_args $@
+    ${boshexec} int $(int_args) $@
 }
 
 ip() {
@@ -172,46 +182,61 @@ _ssh() {
 
 case "$1" in
     up)
-	up "$@"
-	;;
+        # defaults
+        echo "virtualbox" > ${state}/cpi
+        echo "false" > ${state}/lite
+
+        shift
+        while [[ $# -gt 0 ]]; do
+            case "$1" in
+                --cpi)
+                    echo "$2" > ${state}/cpi
+                    ;;
+                --lite)
+                    echo "true" > ${state}/lite
+                    ;;
+            esac
+            shift
+        done
+        validate_cpi
+        up "$@"
+        ;;
 
     down)
-	down "$@"
-	;;
+        down "$@"
+        ;;
 
     env)
-	env "$@"
-	;;
+        env "$@"
+        ;;
 
     info)
-	info "$@"
-	;;
+        info "$@"
+        ;;
 
     credhub)
-	credhub "$@"
-	;;
+        credhub "$@"
+        ;;
 
     uaac)
-	uaac "$@"
-	;;
+        uaac "$@"
+        ;;
 
     fly)
-	_fly "$@"
-	;;
-
+        _fly "$@"
+        ;;
 
     ssh)
-	_ssh "$@"
-	;;
+        _ssh "$@"
+        ;;
 
     int)
-	shift
-	int "$@"
-	;;
-
+        shift
+        int "$@"
+        ;;
 
     *)
-	usage
-	exit 1
-	;;
+        usage
+        exit 1
+        ;;
 esac

@@ -1,0 +1,7 @@
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value: {
+  "version": "3363.14",
+  "sha1": "68cd5a8adaabe4d19d4d0d69bef3577b8961c11b",
+  "url": "https://s3.amazonaws.com/bosh-core-stemcells/azure/bosh-stemcell-3363.14-azure-hyperv-ubuntu-trusty-go_agent.tgz"
+}
