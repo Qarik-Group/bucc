@@ -1,8 +1,8 @@
-# BUCC Lite
+# BUCC
 
 A lite development env for BUCC (BOSH, UAA Credhub and Concourse)
 
-## Install BUCC Lite
+## Install BUCC
 
 ### Prepare the Environment
 
@@ -31,7 +31,7 @@ cd bucc
 git submodule update --init
 ```
 
-### Boot your BUCC Lite VM
+### Boot your BUCC VM
 
 From the repo root run:
 ```
@@ -43,7 +43,7 @@ To delete your VM run:
 $ bucc down
 ```
 
-## Using BUCC Lite
+## Using BUCC
 
 ### Using BOSH
 
@@ -53,7 +53,8 @@ $ source <(bucc env) # should not be necessary when using direnv
 $ bosh alias-env bucc
   Using environment '192.168.50.6' as client 'admin'
 
-  Name      Bosh Lite Director
+  Name      Bosh 
+  Director
   UUID      3e107016-3fc2-40af-8ac5-8e53025d53f3
   Version   260.5.0 (00000000)
   CPI       virtualbox_cpi
