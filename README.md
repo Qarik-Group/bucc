@@ -26,8 +26,8 @@ Note: If you encounter problems with VirtualBox networking try installing [Oracl
 5. Clone this repository
 
 ```
-git clone https://github.com/starkandwayne/bucc-lite.git
-cd bucc-lite
+git clone https://github.com/starkandwayne/bucc.git
+cd bucc
 git submodule update --init
 ```
 
