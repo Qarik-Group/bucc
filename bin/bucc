@@ -4,6 +4,12 @@ version="0.1"
 repo_root=$(dirname "$0" | rev | cut -c5- | rev)
 state=${repo_root}/state
 mkdir -p $state/manifests
+manifest="${repo_root}/src/bosh-deployment/bosh.yml"
+ssh_private_key="${state}/ssh.key"
+state_arg="--state ${state}/state.json"
+vars_store=${state}/creds.yml
+vars_store_arg="--vars-store ${vars_store}"
+vars_file=${repo_root}/vars.yml
 
 pushd () {
     command pushd "$@" > /dev/null
@@ -34,27 +40,10 @@ validate_vars_file() {
 }
 
 vars_file() {
-    local local_file=${repo_root}/local.yml
-    local vars_file=${repo_root}/vars.yml
     local state_vars=${state}/vars.yml
-    if [ -e $local_file ]; then
-        ${boshexec} int $vars_file -o $local_file > $state_vars
-    else
-        cp $vars_file $state_vars
-    fi
+    cp $vars_file $state_vars
     echo $state_vars
 }
-
-vars_file_arg() {
-    vars_file_arg="--vars-file $(vars_file)"
-}
-
-manifest="${repo_root}/src/bosh-deployment/bosh.yml"
-#vars_file_arg="--vars-file $(vars_file)"
-ssh_private_key="${state}/ssh.key"
-state_arg="--state ${state}/state.json"
-vars_store=${state}/creds.yml
-vars_store_arg="--vars-store ${vars_store}"
 
 validate_cpi() {
     cpi=$(cat ${state}/cpi)
@@ -72,7 +61,7 @@ int_args() (
       rm ${state}/manifests/*
     fi
 
-    vars_file_arg
+    vars_file_arg="--vars-file $(vars_file)"
 
     append_ops_args_for_dir() {
         cp_files="${ops_file_args} $(cp ${repo_root}/$1/*.yml ${state}/manifests/)"
