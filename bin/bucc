@@ -127,12 +127,12 @@ platform() {
 
 faketty() {
     case $(platform) in
-	darwin)
+        darwin)
             script -q /dev/null "$@"
-	    ;;
-	linux)
+            ;;
+        linux)
             script -qfc "$(printf "%q " "$@")" /dev/null
-	    ;;
+            ;;
     esac
 }
 
@@ -146,7 +146,7 @@ down() {
 
 env() {
     echo "export BOSH_ENVIRONMENT=$(ip)"
-    echo "export BOSH_CA_CERT='$(ca_cert)'"
+    echo "export BOSH_CA_CERT='$(cat $(ca_cert))'"
     echo "export BOSH_CLIENT=admin"
     echo "export BOSH_CLIENT_SECRET=$(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=admin/password)"
 }
@@ -173,12 +173,12 @@ _fly() {
     local url=$(int --path /instance_groups/0/jobs/name=atc/properties/external_url)
 
     if [[ ! -x "$(command -v fly)" ]]; then
-	echo "fly not found installing.."
-	pushd $(mktemp -d)
-	   wget --no-check-certificate -q "${url}/api/v1/cli?arch=amd64&platform=$(platform)" -O fly
+        echo "fly not found installing.."
+        pushd $(mktemp -d)
+           wget --no-check-certificate -q "${url}/api/v1/cli?arch=amd64&platform=$(platform)" -O fly
            chmod +x fly
            mv fly ${repo_root}/bin/
-	popd
+        popd
     fi
 
     faketty fly --target bucc login \
