@@ -1,5 +1,0 @@
-- type: remove
-  path: /networks/name=outbound
-
-- type: remove
-  path: /instance_groups/name=bosh/networks/name=outbound
