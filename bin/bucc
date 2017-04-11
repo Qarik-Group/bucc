@@ -113,6 +113,7 @@ usage() {
     echo "  credhub -- configures credhub cli"
     echo "  uaac -- configures uaac cli"
     echo "  fly -- configures fly cli"
+    echo "  routes -- add routes for virtualbox"
     exit 1
 }
 
