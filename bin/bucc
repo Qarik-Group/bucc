@@ -25,13 +25,29 @@ else
    boshexec=bosh
 fi
 
+cpi() {
+    local cpi_file=${state}/cpi
+    if [[ ! -f $cpi_file ]]; then
+        echo "virtualbox" > ${cpi_file}
+    fi
+    cat ${cpi_file}
+}
+
+lite() {
+    local lite_file=${state}/lite
+    if [[ ! -f $lite_file ]]; then
+        echo "false" > ${lite_file}
+    fi
+    cat ${lite_file}
+}
+
 validate_vars_file() {
     # Todo: prettify
-    local cpi_vars=${repo_root}/ops/cpis/$(cat ${state}/cpi)/vars.tmpl
+    local cpi_vars=${repo_root}/ops/cpis/$(cpi)/vars.tmpl
     local vars_file=${repo_root}/vars.yml
     if [ ! -e $vars_file ]; then
       cp $cpi_vars $vars_file
-      if [ $(cat ${state}/lite) = false ]; then
+      if [ $(lite) = false ]; then
         echo "We just copied a template in $vars_file please adjust it to your needs"
       # we should break here or check file contents and see if we still have the right var file for the cpi
         exit 1
@@ -46,10 +62,9 @@ vars_file() {
 }
 
 validate_cpi() {
-    cpi=$(cat ${state}/cpi)
     local cpis_dir=${repo_root}/ops/cpis
-    if [ ! -d ${cpis_dir}/${cpi} ]; then
-        echo "'--cpi ${cpi}' not supported, please one of the following:"
+    if [ ! -d ${cpis_dir}/$(cpi) ]; then
+        echo "'--cpi $(cpi)' not supported, please one of the following:"
         echo $(ls ${cpis_dir} | cut -d "." -f 1 | xargs)
         exit 1
     fi
@@ -68,18 +83,16 @@ int_args() (
         ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
     }
 
-    if [ $(cat ${state}/lite) = true ]; then
+    if [ $(lite) = true ]; then
         append_ops_args_for_dir "ops/lite"
-    fi
-
-    if [ $(cat ${state}/lite) = false ]; then
+    elif [ $(lite) = false ]; then
         append_ops_args_for_dir "ops/runc"
     fi
 
 
     append_ops_args_for_dir "ops"
 
-    append_ops_args_for_dir "ops/cpis/$(cat ${state}/cpi)"
+    append_ops_args_for_dir "ops/cpis/$(cpi)"
 
     echo "${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
 )
@@ -134,6 +147,9 @@ down() {
 }
 
 env() {
+    if [[ ! -f ${vars_store} ]]; then
+      exit 0
+    fi
     echo "export BOSH_ENVIRONMENT=$(ip)"
     echo "export BOSH_CA_CERT='$(cat $(ca_cert))'"
     echo "export BOSH_CLIENT=admin"
@@ -213,10 +229,6 @@ _ssh() {
 
 case "$1" in
     up)
-        # defaults
-        echo "virtualbox" > ${state}/cpi
-        echo "false" > ${state}/lite
-
         shift
         while [[ $# -gt 0 ]]; do
             case "$1" in
