@@ -150,6 +150,17 @@ env() {
     echo "export BOSH_CLIENT_SECRET=$(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=admin/password)"
 }
 
+routes() {
+  case $(platform) in
+    darwin)
+          sudo route add -net 10.244.0.0/16    192.168.50.6
+    ;;
+    linux)
+          sudo route add -net 10.244.0.0/16 gw 192.168.50.6
+    ;;
+  esac
+}
+
 info() {
     echo "Concourse:"
     echo "  url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
@@ -267,6 +278,9 @@ case "$1" in
         int "$@"
         ;;
 
+    routes)
+        routes
+        ;;
     *)
         usage
         exit 1
