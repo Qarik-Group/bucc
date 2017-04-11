@@ -53,9 +53,8 @@ int_args() (
     rm ${state}/manifests/*
 
     append_ops_args_for_dir() {
-        #ops_file_args="${ops_file_args} $(find ${repo_root}/$1/*.yml | sort | sed 's/^/-o /' | xargs)"
-         cp_files="${ops_file_args} $(cp ${repo_root}/$1/*.yml ${state}/manifests/)"
-         ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
+        cp_files="${ops_file_args} $(cp ${repo_root}/$1/*.yml ${state}/manifests/)"
+        ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
     }
 
     if [ $(cat ${state}/lite) = true ]; then
