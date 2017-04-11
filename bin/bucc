@@ -19,7 +19,7 @@ else
    boshexec=bosh
 fi
 
-vailidate_vars_file() {
+validate_vars_file() {
     # Todo: prettify
     local cpi_vars=${repo_root}/ops/cpis/$(cat ${state}/cpi)/vars.tmpl
     local vars_file=${repo_root}/vars.yml
@@ -241,7 +241,7 @@ case "$1" in
             shift
         done
         validate_cpi
-        vailidate_vars_file
+        validate_vars_file
 
         up "$@"
         ;;
