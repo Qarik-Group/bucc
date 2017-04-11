@@ -8,3 +8,4 @@ local.yml
 .flyrc
 .config/
 /bin/fly
+/vars.yml
