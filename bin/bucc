@@ -3,7 +3,7 @@ version="0.1"
 
 repo_root=$(dirname "$0" | rev | cut -c5- | rev)
 state=${repo_root}/state
-mkdir -p $state
+mkdir -p $state/manifests
 
 pushd () {
     command pushd "$@" > /dev/null
@@ -19,6 +19,20 @@ else
    boshexec=bosh
 fi
 
+vailidate_vars_file() {
+    # Todo: prettify
+    local cpi_vars=${repo_root}/ops/cpis/$(cat ${state}/cpi)/vars.tmpl
+    local vars_file=${repo_root}/vars.yml
+    if [ ! -e $vars_file ]; then
+      cp $cpi_vars $vars_file
+      if [ $(cat ${state}/lite) = false ]; then
+        echo "We just copied a template in $vars_file please adjust it to your needs"
+      # we should break here or check file contents and see if we still have the right var file for the cpi
+        exit 1
+      fi
+    fi
+}
+
 vars_file() {
     local local_file=${repo_root}/local.yml
     local vars_file=${repo_root}/vars.yml
@@ -31,8 +45,12 @@ vars_file() {
     echo $state_vars
 }
 
+vars_file_arg() {
+    vars_file_arg="--vars-file $(vars_file)"
+}
+
 manifest="${repo_root}/src/bosh-deployment/bosh.yml"
-vars_file_arg="--vars-file $(vars_file)"
+#vars_file_arg="--vars-file $(vars_file)"
 ssh_private_key="${state}/ssh.key"
 state_arg="--state ${state}/state.json"
 vars_store=${state}/creds.yml
@@ -50,7 +68,11 @@ validate_cpi() {
 
 int_args() (
     local ops_file_args=""
-    rm ${state}/manifests/*
+    if [ -e ${state}/manifests/0-cpi.yml ]; then
+      rm ${state}/manifests/*
+    fi
+
+    vars_file_arg
 
     append_ops_args_for_dir() {
         cp_files="${ops_file_args} $(cp ${repo_root}/$1/*.yml ${state}/manifests/)"
@@ -207,6 +229,8 @@ case "$1" in
             shift
         done
         validate_cpi
+        vailidate_vars_file
+
         up "$@"
         ;;
 
