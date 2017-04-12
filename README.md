@@ -18,7 +18,7 @@ $ VBoxManage --version
 ```
 
 Note: If you encounter problems with VirtualBox networking try installing [Oracle VM VirtualBox Extension Pack](https://www.virtualbox.org/wiki/Downloads) as suggested by [Issue 202](https://github.com/cloudfoundry/bosh-lite/issues/202). Alternatively make sure you are on VirtualBox 5.1+ since previous versions had a [network connectivity bug](https://github.com/concourse/concourse-lite/issues/9).
-    
+
 3. Install [BOSH CLI v2.0.1+](https://bosh.io/docs/cli-v2.html)
 
 4. Optionall install [`direnv`](https://direnv.net/)
@@ -33,9 +33,14 @@ git submodule update --init
 
 ### Boot your BUCC VM
 
+#### Choose your cpi
+"--cpi" you can choose your cpi "/aws,docker,openstack,gcp,vsphere/"
+
+"--lite" options is for the use of virtualbox
+
 From the repo root run:
 ```
-$ bucc up
+$ bucc up --lite
 ```
 
 To delete your VM run:
@@ -53,7 +58,7 @@ $ source <(bucc env) # should not be necessary when using direnv
 $ bosh alias-env bucc
   Using environment '192.168.50.6' as client 'admin'
 
-  Name      Bosh 
+  Name      Bosh
   Director
   UUID      3e107016-3fc2-40af-8ac5-8e53025d53f3
   Version   260.5.0 (00000000)
@@ -64,7 +69,7 @@ $ bosh alias-env bucc
   User      admin
 
   Succeeded
-  
+
 $ bosh vms
   Using environment '192.168.50.6' as client 'admin'
 
@@ -160,7 +165,3 @@ $ bucc fly
 $ fly -t bucc pipelines
   name  paused  public
 ```
-
-
-
-
