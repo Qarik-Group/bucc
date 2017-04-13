@@ -244,7 +244,8 @@ _ssh() {
 _vars() {
     cat ${vars_file}
     echo "bosh_environment: $(ip)"
-    echo "bosh_ca_cert: '$(cat $(ca_cert))'"
+    echo "bosh_ca_cert: |"
+    echo "$(cat $(ca_cert) | sed 's/^/  /')"
     echo "bosh_client: admin"
     echo "bosh_client_secret: '$(bosh_client_secret)'"
     echo "credhub_url: $(credhub_url)"
