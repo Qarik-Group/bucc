@@ -162,6 +162,8 @@ vars() {
     echo "concourse_url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
     echo "concourse_username: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username)"
     echo "concourse_password: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password)"
+    echo "concourse_ca_cert: |"
+    echo "$(cat $(ca_cert) | sed 's/^/  /')"
 }
 
 get_var() {
