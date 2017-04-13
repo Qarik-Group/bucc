@@ -169,6 +169,18 @@ routes() {
   esac
 }
 
+bosh_client_secret() {
+    int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=admin/password
+}
+
+credhub_url() {
+    int --path /instance_groups/0/properties/director/config_server/url | rev | cut -c6- | rev
+}
+
+credhub_password() {
+    int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=credhub-cli/password
+}
+
 info() {
     echo "Concourse:"
     echo "  url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
@@ -200,7 +212,7 @@ credhub() {
     # does not yet support supplying a CA cert
     faketty credhub login --server $(config_server_url) \
             --username credhub-cli \
-            --password $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=credhub-cli/password) \
+            --password $(credhub_password) \
             --skip-tls-validation
 }
 
@@ -235,12 +247,9 @@ _vars() {
     echo "bosh_ca_cert: '$(cat $(ca_cert))'"
     echo "bosh_client: admin"
     echo "bosh_client_secret: '$(bosh_client_secret)'"
-    echo "config_server_url: $(config_server_url)"
-    echo ""
-}
-
-var_get() {
-    _vars | grep $1 | cut -d ':' -f2
+    echo "credhub_url: $(credhub_url)"
+    echo "credhub_username: credhub-cli"
+    echo "credhub_password: $(credhub_password)"
 }
 
 case "$1" in
