@@ -148,14 +148,34 @@ down() {
    ${boshexec} delete-env $(int_args) $state_arg
 }
 
+vars() {
+    cat ${vars_file}
+    echo "bosh_environment: $(ip)"
+    echo "bosh_target: $(ip)"
+    echo "bosh_ca_cert: |"
+    echo "$(cat $(ca_cert) | sed 's/^/  /')"
+    echo "bosh_client: admin"
+    echo "bosh_client_secret: '$(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=admin/password)'"
+    echo "credhub_url: $(int --path /instance_groups/0/properties/director/config_server/url | rev | cut -c6- | rev)"
+    echo "credhub_username: credhub-cli"
+    echo "credhub_password: $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=credhub-cli/password)"
+    echo "concourse_url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
+    echo "concourse_username: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username)"
+    echo "concourse_password: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password)"
+}
+
+get_var() {
+    bosh int <(vars) --path /$1
+}
+
 env() {
     if [[ ! -f ${vars_store} ]]; then
       exit 0
     fi
-    echo "export BOSH_ENVIRONMENT=$(ip)"
+    echo "export BOSH_ENVIRONMENT=$(get_var bosh_target)"
     echo "export BOSH_CA_CERT='$(cat $(ca_cert))'"
-    echo "export BOSH_CLIENT=admin"
-    echo "export BOSH_CLIENT_SECRET=$(bosh_client_secret)"
+    echo "export BOSH_CLIENT=$(get_var bosh_client)"
+    echo "export BOSH_CLIENT_SECRET=$(get_var bosh_client_secret)"
 }
 
 routes() {
@@ -169,27 +189,16 @@ routes() {
   esac
 }
 
-bosh_client_secret() {
-    int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=admin/password
-}
-
-credhub_url() {
-    int --path /instance_groups/0/properties/director/config_server/url | rev | cut -c6- | rev
-}
-
-credhub_password() {
-    int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=credhub-cli/password
-}
 
 info() {
     echo "Concourse:"
-    echo "  url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
-    echo "  username: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username)"
-    echo "  password: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password)"
+    echo "  url: $(get_var concourse_url)"
+    echo "  username: $(get_var concourse_username)"
+    echo "  password: $(get_var concourse_password)"
 }
 
 _fly() {
-    local url=$(int --path /instance_groups/0/jobs/name=atc/properties/external_url)
+    local url=$(get_var concourse_url)
 
     if [[ ! -x "$(command -v fly)" ]]; then
         echo "fly not found installing.."
@@ -202,17 +211,17 @@ _fly() {
 
     faketty fly --target bucc login \
         --concourse-url ${url} \
-        --username $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username) \
-        --password $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password) \
+        --username $(get_var concourse_username) \
+        --password $(get_var concourse_password) \
         --team-name main \
         --ca-cert $(ca_cert)
 }
 
 credhub() {
     # does not yet support supplying a CA cert
-    faketty credhub login --server $(config_server_url) \
+    faketty credhub login --server $(get_var credhub_url) \
             --username credhub-cli \
-            --password $(credhub_password) \
+            --password $(get_var credhub_password) \
             --skip-tls-validation
 }
 
@@ -238,19 +247,6 @@ _ssh() {
     store_int --path /jumpbox_ssh/private_key > $ssh_private_key
     chmod 600 $ssh_private_key
     ssh -i $ssh_private_key $user@$(ip) -t 'command; sudo su -'
-}
-
-
-_vars() {
-    cat ${vars_file}
-    echo "bosh_environment: $(ip)"
-    echo "bosh_ca_cert: |"
-    echo "$(cat $(ca_cert) | sed 's/^/  /')"
-    echo "bosh_client: admin"
-    echo "bosh_client_secret: '$(bosh_client_secret)'"
-    echo "credhub_url: $(credhub_url)"
-    echo "credhub_username: credhub-cli"
-    echo "credhub_password: $(credhub_password)"
 }
 
 case "$1" in
@@ -286,7 +282,7 @@ case "$1" in
         ;;
 
     vars)
-        _vars "$@"
+        vars "$@"
         ;;
 
     credhub)
