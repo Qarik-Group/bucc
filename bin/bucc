@@ -166,8 +166,14 @@ vars() {
     echo "$(cat $(ca_cert) | sed 's/^/  /')"
 }
 
+var_cache=${state}/vars_cache.yml
+rm -f ${var_cache}
+
 get_var() {
-    bosh int <(vars) --path /$1
+    if [[ ! -f ${var_cache} ]]; then
+        vars > ${var_cache}
+    fi
+    bosh int ${var_cache} --path /$1
 }
 
 env() {
