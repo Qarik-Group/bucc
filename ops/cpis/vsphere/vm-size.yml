@@ -2,6 +2,6 @@
   path: /resource_pools/name=vms/cloud_properties?
   value:
     cpu: 4
-    disk: 20000
+    disk: 50000
     ram: 16640
       
