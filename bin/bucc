@@ -173,7 +173,7 @@ get_var() {
     if [[ ! -f ${var_cache} ]]; then
         vars > ${var_cache}
     fi
-    bosh int ${var_cache} --path /$1
+    ${boshexec} int ${var_cache} --path /$1
 }
 
 env() {
