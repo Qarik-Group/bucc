@@ -23,7 +23,7 @@
     name: credhub
     version: 0.6.1
     url: https://s3.amazonaws.com/million-monkeys-releases/pivotal-cf/credhub-release-0.6.1-ubuntu-trusty-3363.12.tgz
-    sha1: 6f7fe30e6d289a733bbdc0e9d33771c894d09de3
+    sha1: eb66f72119b7a619e1a353832d5c077c008fc566
 
 # OS Conf
 - type: replace
