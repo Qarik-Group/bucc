@@ -112,8 +112,8 @@ $ uaac client get admin
 1. Install the cli
 
 ```
-curl -s -L 'https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/0.5.1/credhub-linux-0.5.1.tgz' | tar -xz # Linux
-curl -s -L 'https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/0.5.1/credhub-darwin-0.5.1.tgz' | tar -xz # OSX
+curl -s -L 'https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/0.7.0/credhub-linux-0.7.0.tgz' | tar -xz # Linux
+curl -s -L 'https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/0.7.0/credhub-darwin-0.7.0.tgz' | tar -xz # OSX
 mv credhub /usr/local/bin
 ```
 
