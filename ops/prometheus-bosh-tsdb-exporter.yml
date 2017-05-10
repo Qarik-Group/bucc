@@ -14,8 +14,8 @@
     properties:
       bosh_tsdb_exporter:
         metrics:
-          namespace: bucc
-          environment: bucc
+          namespace: ((director_name))
+          environment: ((director_name))
         web:
           port: 9194
           auth_username: bosh_tsdb_exporter
