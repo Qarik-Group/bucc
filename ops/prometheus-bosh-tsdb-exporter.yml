@@ -19,7 +19,8 @@
         web:
           port: 9194
           auth_username: bosh_tsdb_exporter
-          auth_password: ((bosh_tsdb_exporter_password))
+          auth_password: &password ((bosh_tsdb_exporter_password))
+          auth_pasword: *password # there is a typo in the release
           tls_cert: ((bosh_tsdb_exporter_tls.certificate))
           tls_key: ((bosh_tsdb_exporter_tls.private_key))
 
