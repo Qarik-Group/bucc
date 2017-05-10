@@ -1,0 +1,50 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: prometheus
+    version: 15.2.2
+    url: https://bosh.io/d/github.com/cloudfoundry-community/prometheus-boshrelease?v=15.2.2
+    sha1: c413734d17825a9a78e30663b2b00c7f864c0d64
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: bosh_tsdb_exporter
+    release: prometheus
+    properties:
+      bosh_tsdb_exporter:
+        metrics:
+          namespace: bucc
+          environment: bucc
+        web:
+          port: 9194
+          auth_username: bosh_tsdb_exporter
+          auth_password: ((bosh_tsdb_exporter_password))
+          tls_cert: ((bosh_tsdb_exporter_tls.certificate))
+          tls_key: ((bosh_tsdb_exporter_tls.private_key))
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/hm/tsdb_enabled?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/hm/tsdb?
+  value:
+    address: localhost
+    port: 13321
+  
+- type: replace
+  path: /variables/-
+  value:
+    name: bosh_tsdb_exporter_password
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: bosh_tsdb_exporter_tls
+    type: certificate
+    options:
+      ca: default_ca
+      common_name: ((internal_ip))
+      alternative_names: [((internal_ip))]

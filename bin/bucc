@@ -164,6 +164,9 @@ vars() {
     echo "concourse_password: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password)"
     echo "concourse_ca_cert: |"
     echo "$(cat $(ca_cert) | sed 's/^/  /')"
+    echo "bosh_tsdb_exporter_target: $(ip):$(int --path /instance_groups/name=bosh/jobs/name=bosh_tsdb_exporter/properties/bosh_tsdb_exporter/web/port)"
+    echo "bosh_tsdb_exporter_username: $(int --path /instance_groups/name=bosh/jobs/name=bosh_tsdb_exporter/properties/bosh_tsdb_exporter/web/auth_username)"
+    echo "bosh_tsdb_exporter_password: $(int --path /instance_groups/name=bosh/jobs/name=bosh_tsdb_exporter/properties/bosh_tsdb_exporter/web/auth_password)"
 }
 
 var_cache=${state}/vars_cache.yml
