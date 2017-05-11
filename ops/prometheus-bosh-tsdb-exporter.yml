@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: prometheus
-    version: 15.2.2
-    url: https://bosh.io/d/github.com/cloudfoundry-community/prometheus-boshrelease?v=15.2.2
-    sha1: c413734d17825a9a78e30663b2b00c7f864c0d64
+    version: 16.0.0
+    url: https://bosh.io/d/github.com/cloudfoundry-community/prometheus-boshrelease?v=16.0.0
+    sha1: 5cd0a326599c3c0ec7df406371b836cdebd37f00
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -20,7 +20,6 @@
           port: 9194
           auth_username: bosh_tsdb_exporter
           auth_password: &password ((bosh_tsdb_exporter_password))
-          auth_pasword: *password # there is a typo in the release
           tls_cert: ((bosh_tsdb_exporter_tls.certificate))
           tls_key: ((bosh_tsdb_exporter_tls.private_key))
 
