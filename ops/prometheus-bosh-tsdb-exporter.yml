@@ -14,7 +14,7 @@
     properties:
       bosh_tsdb_exporter:
         metrics:
-          namespace: ((director_name))
+          namespace: bosh_tsdb # as expected by bosh_alerts
           environment: ((director_name))
         web:
           port: 9194
