@@ -44,7 +44,7 @@
         web: *web
         bosh:
           url: https://localhost:25555
-          ca_cert: ((default_ca))
+          ca_cert: ((director_ssl.ca))
           uaa:
             client_id: prometheus
             client_secret: ((prometheus_bosh_password))

@@ -101,7 +101,6 @@ int_args() (
 ca_cert() {
     local ca_cert_file="${state}/ca.pem"
     store_int --path /default_ca/ca > $ca_cert_file
-    store_int --path /default_ca/certificate >> $ca_cert_file
     echo $ca_cert_file
 }
 
