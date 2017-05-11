@@ -1,0 +1,80 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: prometheus
+    version: 16.0.0
+    url: https://bosh.io/d/github.com/cloudfoundry-community/prometheus-boshrelease?v=16.0.0
+    sha1: 5cd0a326599c3c0ec7df406371b836cdebd37f00
+
+# bosh_tsdb_exporter
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: bosh_tsdb_exporter
+    release: prometheus
+    properties:
+      bosh_tsdb_exporter:
+        metrics: &metrics
+          environment: ((director_name))
+        web: &web
+          auth_username: exporter
+          auth_password: ((exporter_password))
+          tls_cert: ((exporter_tls.certificate))((exporter_tls.ca))
+          tls_key: ((exporter_tls.private_key))
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/hm/tsdb_enabled?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/hm/tsdb?
+  value:
+    address: localhost
+    port: 13321
+
+# bosh_exporter    
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: bosh_exporter
+    release: prometheus
+    properties:
+      bosh_exporter:
+        metrics: *metrics
+        web: *web
+        bosh:
+          url: https://localhost:25555
+          ca_cert: ((default_ca))
+          uaa:
+            client_id: prometheus
+            client_secret: ((prometheus_bosh_password))
+          
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
+  value:
+    name: prometheus
+    password: ((prometheus_bosh_password))
+    groups:
+    - bosh.read
+
+- type: replace
+  path: /variables/-
+  value:
+    name: prometheus_bosh_password
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: exporter_password
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: exporter_tls
+    type: certificate
+    options:
+      ca: default_ca
+      common_name: ((internal_ip))
+      alternative_names: [((internal_ip))]
