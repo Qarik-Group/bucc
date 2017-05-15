@@ -47,20 +47,21 @@
           ca_cert: ((director_ssl.ca))
           uaa:
             client_id: prometheus
-            client_secret: ((prometheus_bosh_password))
+            client_secret: ((prometheus_bosh_client_secret))
           
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/prometheus?
   value:
-    name: prometheus
-    password: ((prometheus_bosh_password))
-    groups:
-    - bosh.read
+    authorities: bosh.read
+    authorized-grant-types: client_credentials
+    override: true
+    scope: ""
+    secret: ((prometheus_bosh_client_secret))
 
 - type: replace
   path: /variables/-
   value:
-    name: prometheus_bosh_password
+    name: prometheus_bosh_client_secret
     type: password
 
 - type: replace
