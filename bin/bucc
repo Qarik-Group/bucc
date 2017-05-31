@@ -101,6 +101,7 @@ int_args() (
 ca_cert() {
     local ca_cert_file="${state}/ca.pem"
     store_int --path /default_ca/ca > $ca_cert_file
+    store_int --path /default_ca/certificate >> $ca_cert_file
     echo $ca_cert_file
 }
 
@@ -163,11 +164,6 @@ vars() {
     echo "concourse_password: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password)"
     echo "concourse_ca_cert: |"
     echo "$(cat $(ca_cert) | sed 's/^/  /')"
-    echo "bucc_exporter_targets:"
-    echo "- $(ip):9190"
-    echo "- $(ip):9194"
-    echo "bucc_exporter_username: $(int --path /instance_groups/name=bosh/jobs/name=bosh_exporter/properties/bosh_exporter/web/auth_username)"
-    echo "bucc_exporter_password: $(int --path /instance_groups/name=bosh/jobs/name=bosh_exporter/properties/bosh_exporter/web/auth_password)"
 }
 
 var_cache=${state}/vars_cache.yml
