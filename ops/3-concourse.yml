@@ -4,6 +4,7 @@
     name: concourse
     url: https://bosh.io/d/github.com/concourse/concourse?v=2.7.0
     sha1: 826932f631d0941b3e4cc9cb19e0017c7f989b56
+    version: 2.7.0
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
