@@ -1,0 +1,68 @@
+#!/bin/bash
+
+set -e
+
+header() {
+	echo
+	echo "###############################################"
+	echo
+	echo $*
+	echo
+}
+
+cd ${REPO_ROOT}
+#testing on bosh
+# set cpi to vspehere
+# set lite to false
+# get stemcell that is compatibale with compiled releases?
+# bosh -n deploy <(bucc int) -o src/bosh-deployment/bosh-dev.yml -d bosh
+
+header "Setting up varsfile"
+cat > vars.yml << EOF
+director_name: Bosh Lite Director
+internal_cidr: 10.244.0.0/24
+internal_gw: 10.244.0.1
+internal_ip: 10.244.0.46
+outbound_network_name: NatNetwork
+vm_cpus: 2
+vm_memory: 4096
+vm_ephemeral_disk: 16_384
+
+vcenter_cluster: test
+vcenter_dc: test
+vcenter_disks: test
+vcenter_dns: test
+vcenter_ds: test
+vcenter_ip: test
+vcenter_password: test
+vcenter_rp: test
+vcenter_templates: test
+vcenter_user: test
+vcenter_vms: test
+EOF
+
+header "Pulling in any git submodules..."
+git submodule update --init --recursive --force
+
+if [[ ! -d ${BIN_DIR} ]]; then
+	echo "${BIN_DIR} does not exist as a directory inside ${REPO_ROOT}"
+	exit 1
+fi
+
+for file in $(cd ${BIN_DIR} && ls ${BINARIES}); do
+	echo 'Verifying that `'${file}'` is a valid bash script'
+	${BIN_DIR}/$file -h >/dev/null 2>&1
+done
+
+header "get and setup direnv?"
+
+header "set up bucc variables"
+# set cpi
+echo "false" > state/lite
+echo "vsphere" > state/cpi
+
+header "Deploying bucc"
+bosh -n deploy <(${BIN_DIR}/bucc int) -o src/bosh-deployment/bosh-dev.yml -d bosh
+
+
+exit 0

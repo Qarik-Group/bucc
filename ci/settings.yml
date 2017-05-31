@@ -1,0 +1,21 @@
+---
+meta:
+  name: bucc
+  target: sw
+  url:     https://ci.starkandwayne.com
+  aws:
+    access_key: (( vault "secret/aws/cfcommunity:access" ))
+    secret_key: (( vault "secret/aws/cfcommunity:secret" ))
+  github:
+    owner: starkandwayne
+    repo:  bucc
+    private_key:  (( vault "secret/pipelines/bucc/github:private" ))
+    access_token: (( vault "secret/pipelines/bucc/github:token" ))
+  bosh-lite:
+    target: https://10.58.111.49:25555
+    deployment: habitat
+    ca_cert: (( vault "secret/bosh-lites/lite49/certs:rootCA.pem" ))
+    manifest: ./git/templates/supervisor.yml
+  slack:
+    webhook: (( vault "secret/pipelines/habitat-boshrelease/slack:webhook" ))
+    channel: "#cf-community-pipeline"
