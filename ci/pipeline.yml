@@ -78,13 +78,13 @@ jobs:
               REPO_ROOT: git
               BIN_DIR: (( grab meta.bin_dir ))
               BINARIES: (( grab meta.binaries ))
-        on_failure:
-          put: notify
-          params:
-            channel:  (( grab meta.slack.channel ))
-            username: (( grab meta.slack.username ))
-            icon_url: (( grab meta.slack.icon ))
-            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
+        # on_failure:
+        #   put: notify
+        #   params:
+        #     channel:  (( grab meta.slack.channel ))
+        #     username: (( grab meta.slack.username ))
+        #     icon_url: (( grab meta.slack.icon ))
+        #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
 
   - name: rc
     public: true
@@ -95,13 +95,13 @@ jobs:
             - { get: version, trigger: true, params: {pre: rc} }
         - put: version
           params: {file: version/number}
-        on_failure:
-          put: notify
-          params:
-            channel:  (( grab meta.slack.channel ))
-            username: (( grab meta.slack.username ))
-            icon_url: (( grab meta.slack.icon ))
-            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": rc job failed" ))'
+        # on_failure:
+        #   put: notify
+        #   params:
+        #     channel:  (( grab meta.slack.channel ))
+        #     username: (( grab meta.slack.username ))
+        #     icon_url: (( grab meta.slack.icon ))
+        #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": rc job failed" ))'
 
   - name: bump-patch
     public: true
@@ -192,13 +192,13 @@ jobs:
             tag:    gh/tag
             body:   gh/notes.md
             globs: [gh/artifacts/*]
-        on_failure:
-          put: notify
-          params:
-            channel:  (( grab meta.slack.channel ))
-            username: (( grab meta.slack.username ))
-            icon_url: (( grab meta.slack.icon ))
-            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'
+        # on_failure:
+        #   put: notify
+        #   params:
+        #     channel:  (( grab meta.slack.channel ))
+        #     username: (( grab meta.slack.username ))
+        #     icon_url: (( grab meta.slack.icon ))
+        #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'
 
 resource_types:
   - name: slack-notification

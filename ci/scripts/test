@@ -49,10 +49,10 @@ if [[ ! -d ${BIN_DIR} ]]; then
 	exit 1
 fi
 
-for file in $(cd ${BIN_DIR} && ls ${BINARIES}); do
-	echo 'Verifying that `'${file}'` is a valid bash script'
-	${BIN_DIR}/$file -h >/dev/null 2>&1
-done
+# for file in $(cd ${BIN_DIR} && ls ${BINARIES}); do
+# 	echo 'Verifying that `'${file}'` is a valid bash script'
+# 	${BIN_DIR}/$file -h >/dev/null 2>&1
+# done
 
 header "get and setup direnv?"
 
