@@ -8,29 +8,33 @@ header() {
         echo
 }
 
-header "Setting up varsfile"
 pushd bucc > /dev/null
-bosh int <(
-     cat ops/cpis/${CPI}/vars.tmpl && \
-     echo "director_name: bucc-ci" && \
-     bosh int <(echo ${VARS})
-) > vars.yml
-cat vars.yml | grep -v 'password\|secret\|key'
-
 header "Pulling in any git submodules..."
 git submodule update --init --recursive --force
 
-header "Generate manifest"
-rm -rf state && mkdir state
-echo ${LITE} > state/lite
-echo ${CPI} > state/cpi
+cat support_matrix.yml | while read config; do
+    cpi=$(bosh int <(echo ${config}) --path /0/cpi)
+    lite=$(bosh int <(echo ${config}) --path /0/lite)
 
-manifest_name=${CPI}
-if [ ${LITE} = "true" ]; then
-   manifest_name+="-lite"
-fi
+    header "Manifest CPI: ${cpi} LITE: ${lite}"
+    bosh int <(
+         cat ops/cpis/${cpi}/vars.tmpl && \
+         echo "director_name: bucc-ci" && \
+         bosh int <(echo ${VARS})
+    ) > vars.yml
+    cat vars.yml | grep -v 'password\|secret\|key'
 
-popd > /dev/null
-./bucc/bin/bucc int > ./bucc-generated-manifest/${manifest_name}.yml
+    rm -rf state && mkdir state
+    echo ${lite} > state/lite
+    echo ${cpi} > state/cpi
 
-echo "bucc-generated-manifest/${manifest_name}.yml"
+    manifest_name=${cpi}
+    if [ ${lite} = "true" ]; then
+       manifest_name+="-lite"
+    fi
+
+    ./bin/bucc int > ../bucc-generated-manifest/${manifest_name}.yml
+
+    echo ""
+    echo "bucc-generated-manifest/${manifest_name}.yml"
+done

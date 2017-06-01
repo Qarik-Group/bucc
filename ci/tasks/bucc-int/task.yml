@@ -17,7 +17,5 @@ run:
   path: bucc-ci/ci/tasks/bucc-int/task
 
 params:
-  LITE:
-  CPI:
   VARS:
 
