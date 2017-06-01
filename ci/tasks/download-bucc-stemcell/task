@@ -2,11 +2,7 @@
 
 pushd bucc > /dev/null
 
-version=$(bosh int src/bosh-deployment/bosh.yml \
-               -o ops/cpis/vsphere/0-cpi.yml \
-               --path /resource_pools/name=vms/stemcell/url | \
-               cut -d'=' -f2
-         )
+version=$(./bin/bucc int --pathreleases/name=bosh/url | cut -d'-' -f7 | rev | cut -c 5- | rev)
 
 popd > /dev/null
 
