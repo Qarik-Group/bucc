@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+header() {
+        echo
+        echo "###############################################"
+        echo
+        echo $*
+        echo
+}
+
+header "Setting up varsfile"
+pushd bucc > /dev/null
+bosh int <(
+     cat ops/cpis/${CPI}/vars.tmpl && \
+     echo "director_name: bucc-ci" && \
+     bosh int <(echo ${VARS})
+) > vars.yml
+cat vars.yml | grep -v 'password\|secret\|key'
+
+header "Pulling in any git submodules..."
+git submodule update --init --recursive --force
+
+header "Generate manifest"
+rm -rf state && mkdir state
+echo ${LITE} > state/lite
+echo ${CPI} > state/cpi
+
+manifest_name=${CPI}
+if [ ${LITE} = "true" ]; then
+   manifest_name+="-lite"
+fi
+
+popd > /dev/null
+./bucc/bin/bucc int > ./bucc-generated-manifest/${manifest_name}.yml
+
+echo "bucc-generated-manifest/${manifest_name}.yml"
