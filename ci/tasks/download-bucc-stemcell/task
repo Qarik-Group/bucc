@@ -2,9 +2,11 @@
 
 pushd bucc > /dev/null
 
-rm -r state && mkdir state
+rm -fr state && mkdir state
+touch vars.yml
 echo "virtualbox" > state/cpi
 echo "true" > state/lite
+
 version=$(./bin/bucc int --path /releases/name=bosh/url | cut -d'-' -f7 | rev | cut -c 5- | rev)
 
 popd > /dev/null
