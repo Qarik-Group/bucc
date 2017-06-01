@@ -14,8 +14,7 @@ outputs:
 - name: bucc-generated-manifest
 
 run:
-  path: bucc-ci/ci/tasks/bucc-int/task
+  path: bucc-ci/ci/tasks/bucc-manifests/task
 
 params:
   VARS:
-

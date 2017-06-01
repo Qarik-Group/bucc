@@ -9,8 +9,6 @@ header() {
 }
 
 pushd bucc > /dev/null
-header "Pulling in any git submodules..."
-git submodule update --init --recursive --force
 
 cat support_matrix.yml | while read config; do
     cpi=$(bosh int <(echo ${config}) --path /0/cpi)
@@ -20,7 +18,8 @@ cat support_matrix.yml | while read config; do
     bosh int <(
          cat ops/cpis/${cpi}/vars.tmpl && \
          echo "director_name: bucc-ci" && \
-         bosh int <(echo ${VARS})
+         echo "internal_ip: 127.0.0.1" && \
+         if [ ! -z ${VARS} ]; then bosh int <(echo ${VARS}); fi
     ) > vars.yml
     cat vars.yml | grep -v 'password\|secret\|key'
 
