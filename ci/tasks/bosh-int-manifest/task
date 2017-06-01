@@ -1,2 +1,0 @@
-#!/bin/bash -e
-bosh int <(echo ${ARGS}) | cut -c 3- | xargs bosh int > bosh-int-manifest/manifest.yml
