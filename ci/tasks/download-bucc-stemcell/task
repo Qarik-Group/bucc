@@ -2,7 +2,10 @@
 
 pushd bucc > /dev/null
 
-version=$(./bin/bucc int --pathreleases/name=bosh/url | cut -d'-' -f7 | rev | cut -c 5- | rev)
+mkdir -p state
+echo "virtualbox" > state/cpi
+echo "true" > state/lite
+version=$(./bin/bucc int --path /releases/name=bosh/url | cut -d'-' -f7 | rev | cut -c 5- | rev)
 
 popd > /dev/null
 
