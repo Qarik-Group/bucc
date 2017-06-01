@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+pushd bucc > /dev/null
+
+version=$(bosh int src/bosh-deployment/bosh.yml \
+               -o src/bosh-deployment/bosh-dev.yml \
+               --path /stemcells/alias=default/version
+         )
+
+popd > /dev/null
+
+pushd bucc-stemcell > /dev/null
+
+url="https://bosh.io/d/stemcells/bosh-${CPI}-ubuntu-trusty-go_agent?v=${version}"
+
+echo "Downloading: ${url}"
+curl -L -J -O https://bosh.io/d/stemcells/bosh-${CPI}-ubuntu-trusty-go_agent?v=${version}
+
+echo "Downloaded: $(ls)"
