@@ -8,12 +8,13 @@ image_resource:
 
 inputs:
 - name: bucc
+- name: bucc-ci
 
 outputs:
 - name: bucc-generated-manifest
 
 run:
-  path: bucc/ci/tasks/bucc-int/task
+  path: bucc-ci/ci/tasks/bucc-int/task
 
 params:
   LITE:
