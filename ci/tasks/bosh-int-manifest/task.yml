@@ -17,5 +17,4 @@ run:
   path: bucc-ci/ci/tasks/bosh-int-manifest/task
 
 params:
-  MANIFEST:
-  OPS_FILES:
+  ARGS:
