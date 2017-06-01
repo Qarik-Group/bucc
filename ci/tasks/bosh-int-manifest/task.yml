@@ -1,0 +1,21 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: relintdockerhubpushbot/bosh-cli
+
+inputs:
+- name: bucc
+- name: bucc-ci
+
+outputs:
+- name: bosh-int-manifest
+
+run:
+  path: bucc-ci/ci/tasks/bosh-int-manifest/task
+
+params:
+  MANIFEST:
+  OPS_FILES:

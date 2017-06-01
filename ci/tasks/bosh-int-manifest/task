@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+cmd="bosh int ${MANIFEST}"
+
+echo ${OPS_FILES} | while read ops_file; do
+  cmd+=" -o $(bosh int <(echo ${ops_file} --path /0))"
+done
+
+eval ${cmd} > bosh-int-manifest/manifest.yml
