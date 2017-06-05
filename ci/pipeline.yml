@@ -1,31 +1,15 @@
----
-#
-# ci/pipeline.yml
-#
-# Pipeline structure file for a Go Project pipeline
-#
-# DO NOT MAKE CHANGES TO THIS FILE.  Instead, modify
-# ci/settings.yml and override what needs overridden.
-# This uses spruce, so you have some options there.
-#
-# author:  James Hunt <james@niftylogic.com>
-# created: 2016-03-30
-
 meta:
   name:     (( param "Please name your pipeline" ))
-  release:  (( concat meta.name " Release" ))
   target:   (( param "Please identify the name of the target Concourse CI" ))
-  pipeline: (( grab meta.name ))
+  pipeline: bucc
 
-  image:    docker:///starkandwayne/concourse
-
-  binaries: '*'
-  bin_dir: bin
-
-  aws:
-    bucket:     (( concat meta.pipeline "-pipeline" ))
-    access_key: (( param "Please set your AWS Access Key ID" ))
-    secret_key: (( param "Please set your AWS Secret Key ID" ))
+  bosh_lite:
+    target:     (( param "Please specify the BOSH target URI for the bosh-lite to run test deployments against" ))
+    deployment: (( param "Please specify the name of the local bosh-lite (warden) deployment" ))
+    ca_cert:    (( param "Please specify the ca certificate of the local bosh-lite (warden) deployment" ))
+    static_ip:  (( param "Static IP in the warden network range which is free" ))
+    username:   admin
+    password:   admin
 
   github:
     uri:          (( concat "git@github.com:" meta.github.owner "/" meta.github.repo ))
@@ -51,6 +35,7 @@ meta:
 groups:
   - name: (( grab meta.pipeline ))
     jobs:
+      - sanity-check
       - test
       - rc
       - shipit
@@ -59,25 +44,17 @@ groups:
       - bump-patch
 
 jobs:
-  - name: test
+  - name: sanity-check
     public: true
     serial: true
     plan:
       - do:
-        - { get: git, trigger: true }
-        - task: test
-          config:
-            platform: linux
-            rootfs_uri: (( grab meta.image ))
-            inputs:
-              - name: git
-            run:
-              path: "git/ci/scripts/test"
-              args: []
-            params:
-              REPO_ROOT: git
-              BIN_DIR: (( grab meta.bin_dir ))
-              BINARIES: (( grab meta.binaries ))
+        - aggregate:
+          - { get: bucc, trigger: true }
+          - { get: bucc-ci }
+        - task: bucc-manifests
+          file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+          
         # on_failure:
         #   put: notify
         #   params:
@@ -86,12 +63,61 @@ jobs:
         #     icon_url: (( grab meta.slack.icon ))
         #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
 
+  - name: test
+    public: true
+    serial: true
+    plan:
+      - do:
+        - aggregate:
+          - { get: bucc, passed: [sanity-check] }
+          - { get: bucc-ci }
+        - task: bucc-manifests
+          file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+          params:
+            VARS: 
+              internal_ip: 10.244.0.46
+              vcenter_cluster: test
+              vcenter_dc: test
+              vcenter_disks: test
+              vcenter_dns: test
+              vcenter_ds: test
+              vcenter_ip: test
+              vcenter_password: test
+              vcenter_rp: test
+              vcenter_templates: test
+              vcenter_user: test
+              vcenter_vms: test
+        # Workaround for: https://github.com/cloudfoundry/bosh-deployment-resource/issues/14
+        - task: bosh-int-manifest
+          config:
+            platform: linux
+            image_resource: { type: docker-image, source: { repository: relintdockerhubpushbot/bosh-cli } } 
+            inputs: [ name: bucc-generated-manifest, name: bucc, name: bucc-ci ]
+            outputs: [ name: bosh-int-manifest ]
+            run:
+              path: sh
+              args: 
+                - -exc
+                - |
+                  bosh int bucc-generated-manifest/vsphere-lite.yml \
+                    --ops-file bucc/dev/bosh-dev.yml > \
+                    bosh-int-manifest/manifest.yml
+        - task: download-bucc-stemcell
+          file: bucc-ci/ci/tasks/download-bucc-stemcell/task.yml
+          params:
+            CPI: warden-boshlite
+        - put: bosh-lite
+          params:
+            manifest: bosh-int-manifest/manifest.yml
+            stemcells:
+              - bucc-stemcell/bosh-*
+
   - name: rc
     public: true
     plan:
       - do:
         - aggregate:
-            - { get: git,     trigger: true,  passed: [test] }
+            - { get: bucc,    trigger: true,  passed: [test] }
             - { get: version, trigger: true, params: {pre: rc} }
         - put: version
           params: {file: version/number}
@@ -153,35 +179,35 @@ jobs:
         - name: inputs
           aggregate:
             - { get: version, passed: [rc], params: {bump: final} }
-            - { get: git,     passed: [rc] }
-        - name: release
-          task: release
-          config:
-            rootfs_uri: (( grab meta.image ))
-            platform: linux
-            inputs:
-              - name: version
-              - name: git
-            outputs:
-              - name: gh
-              - name: pushme
-            run:
-              path: "git/ci/scripts/shipit"
-              args: []
-            params:
-              BIN_DIR: (( grab meta.bin_dir ))
-              BINARIES: (( grab meta.binaries ))
-              REPO_ROOT: git
-              VERSION_FROM: version/number
-              RELEASE_NAME: (( grab meta.release ))
-              RELEASE_ROOT: gh
-              REPO_OUT:     pushme
-              BRANCH:       (( grab meta.github.branch ))
+            - { get: bucc,    passed: [rc] }
+        # - name: release
+        #   task: release
+        #   config:
+        #     rootfs_uri: (( grab meta.image ))
+        #     platform: linux
+        #     inputs:
+        #       - name: version
+        #       - name: git
+        #     outputs:
+        #       - name: gh
+        #       - name: pushme
+        #     run:
+        #       path: "git/ci/scripts/shipit"
+        #       args: []
+        #     params:
+        #       BIN_DIR: (( grab meta.bin_dir ))
+        #       BINARIES: (( grab meta.binaries ))
+        #       REPO_ROOT: git
+        #       VERSION_FROM: version/number
+        #       RELEASE_NAME: (( grab meta.release ))
+        #       RELEASE_ROOT: gh
+        #       REPO_OUT:     pushme
+        #       BRANCH:       (( grab meta.github.branch ))
         - name: version
           put: version
           params: { bump: final }
-        - name: git
-          put: git
+        - name: bucc
+          put: bucc
           params:
             rebase: true
             repository: pushme/git
@@ -201,27 +227,41 @@ jobs:
         #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'
 
 resource_types:
+  - name: bosh-deployment
+    type: docker-image
+    source:
+      repository: cloudfoundry/bosh-deployment-resource
   - name: slack-notification
     type: docker-image
     source:
       repository: cfcommunity/slack-notification-resource
 
 resources:
-  - name: git
+  - name: bucc
     type: git
     source:
       uri:         (( grab meta.github.uri ))
       branch:      (( grab meta.github.branch ))
       private_key: (( grab meta.github.private_key ))
+      ignore_paths: [ci/*]      
+      submodules: all
+
+  - name: bucc-ci
+    type: git
+    source:
+      uri:         (( grab meta.github.uri ))
+      branch:      (( grab meta.github.branch ))
+      private_key: (( grab meta.github.private_key ))
+      paths: [ci/*]
 
   - name: version
     type: semver
     source :
-      driver:            s3
-      bucket:            (( grab meta.aws.bucket ))
-      key:               version
-      access_key_id:     (( grab meta.aws.access_key ))
-      secret_access_key: (( grab meta.aws.secret_key ))
+      driver: git
+      uri: (( grab meta.github.uri ))
+      private_key: (( grab meta.github.private_key ))
+      branch: version
+      file: version
       initial_version:   (( grab meta.initial_version || "0.0.1" ))
 
   - name: notify
@@ -235,3 +275,12 @@ resources:
       user:         (( grab meta.github.owner ))
       repository:   (( grab meta.github.repo ))
       access_token: (( grab meta.github.access_token ))
+
+  - name: bosh-lite
+    type: bosh-deployment
+    source:
+      deployment: bosh
+      target: (( grab meta.bosh_lite.target ))
+      client: (( grab meta.bosh_lite.username ))
+      client_secret: (( grab meta.bosh_lite.password ))
+      ca_cert: (( grab meta.bosh_lite.ca_cert ))
