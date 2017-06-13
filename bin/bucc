@@ -114,6 +114,7 @@ usage() {
     echo "  int -- wrapper for '${boshexec} int' for the bosh manifest"
     echo "  info -- displays info about bucc deployed endpoints"
     echo "  vars -- print vars (yaml formatted) for use in pipelines"
+    echo "  bosh -- configures bosh cli"
     echo "  credhub -- configures credhub cli"
     echo "  uaac -- configures uaac cli"
     echo "  fly -- configures fly cli"
@@ -225,6 +226,16 @@ _fly() {
         --ca-cert $(ca_cert)
 }
 
+_bosh() {
+    ${boshexec} alias-env bucc \
+                --environment $(get_var bosh_target) \
+                --ca-cert "$(cat $(ca_cert))"
+
+    printf '%s\n%s\n' $(get_var bosh_client) $(get_var bosh_client_secret) | \
+        ${boshexec} log-in -e bucc
+
+}
+
 credhub() {
     # does not yet support supplying a CA cert
     faketty credhub login --server $(get_var credhub_url) \
@@ -291,6 +302,10 @@ case "$1" in
 
     vars)
         vars "$@"
+        ;;
+
+    bosh)
+        _bosh "$@"
         ;;
 
     credhub)
