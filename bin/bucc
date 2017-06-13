@@ -119,6 +119,7 @@ usage() {
     echo "  uaac -- configures uaac cli"
     echo "  fly -- configures fly cli"
     echo "  routes -- add routes for virtualbox"
+    echo "  test -- check if all systems are operational"
     exit 1
 }
 
@@ -280,6 +281,28 @@ _ssh() {
     ssh -i $ssh_private_key $user@$(ip) -t 'command; sudo su -'
 }
 
+header() {
+    printf "\n\033[0;34m${1}\033[0m\n\n"
+}
+
+smoke_tests() {
+    local bucc=${repo_root}/bin/bucc
+    set -e
+
+    header "testing bosh uaa auth"
+    bucc bosh
+    ${boshexec} -e bucc vms
+
+    header "testing credhub"
+    bucc credhub
+    credhub set --no-overwrite --name secret/handshake:knock --value know --type value
+    credhub delete --name secret/handshake:knock
+
+    header "testing concourse"
+    bucc fly
+    fly -t bucc workers | grep running
+}
+
 case "$1" in
     up)
 	shift
@@ -342,8 +365,13 @@ case "$1" in
 	;;
 
     routes)
-        routes
-        ;;
+	routes
+	;;
+
+    test)
+	smoke_tests
+	;;
+
     *)
 	usage
 	exit 1
