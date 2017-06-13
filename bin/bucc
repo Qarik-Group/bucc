@@ -257,7 +257,7 @@ _credhub() {
 	    --password $(get_var credhub_password)
 }
 
-uaac() {
+_uaac() {
     faketty uaac target $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/url) --ca-cert $(ca_cert)
     faketty uaac token client get uaa_admin --secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)
 }
@@ -348,8 +348,8 @@ case "$1" in
 	;;
 
     uaac)
-        uaac "$@"
-        ;;
+	_uaac "$@"
+	;;
 
     fly)
 	_fly "$@"

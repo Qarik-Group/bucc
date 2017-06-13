@@ -8,4 +8,5 @@ local.yml
 .flyrc
 .config/
 /bin/fly
+/bin/credhub
 /vars.yml
