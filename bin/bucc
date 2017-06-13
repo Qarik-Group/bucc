@@ -20,17 +20,17 @@ popd () {
 }
 
 if [[ -x "$(command -v bosh2)" && $(bosh2 --version | awk '{print $2}') > 2.0 ]]; then
-   boshexec=bosh2
+    boshexec=bosh2
 else
-   boshexec=bosh
+    boshexec=bosh
 fi
 
 cpi() {
     local cpi_file=${state}/cpi
     local lite_file=${state}/lite
     if [[ ! -f $cpi_file ]]; then
-        echo "virtualbox" > ${cpi_file}
-        echo "true" > ${lite_file}
+	echo "virtualbox" > ${cpi_file}
+	echo "true" > ${lite_file}
     fi
     cat ${cpi_file}
 }
@@ -38,7 +38,7 @@ cpi() {
 lite() {
     local lite_file=${state}/lite
     if [[ ! -f $lite_file ]]; then
-        echo "false" > ${lite_file}
+	echo "false" > ${lite_file}
     fi
     cat ${lite_file}
 }
@@ -48,12 +48,12 @@ validate_vars_file() {
     local cpi_vars=${repo_root}/ops/cpis/$(cpi)/vars.tmpl
     local vars_file=${repo_root}/vars.yml
     if [ ! -e $vars_file ]; then
-      cp $cpi_vars $vars_file
-      if [ ! $(cpi) = "virtualbox" ]; then
-        echo "We just copied a template in $vars_file please adjust it to your needs"
-        # we should break here or check file contents and see if we still have the right var file for the cpi
-        exit 1
-      fi
+	cp $cpi_vars $vars_file
+	if [ ! $(cpi) = "virtualbox" ]; then
+	    echo "We just copied a template in $vars_file please adjust it to your needs"
+	    # we should break here or check file contents and see if we still have the right var file for the cpi
+	    exit 1
+	fi
     fi
 }
 
@@ -66,29 +66,29 @@ vars_file() {
 validate_cpi() {
     local cpis_dir=${repo_root}/ops/cpis
     if [ ! -d ${cpis_dir}/$(cpi) ]; then
-        echo "'--cpi $(cpi)' not supported, please one of the following:"
-        echo $(ls ${cpis_dir} | cut -d "." -f 1 | xargs)
-        exit 1
+	echo "'--cpi $(cpi)' not supported, please one of the following:"
+	echo $(ls ${cpis_dir} | cut -d "." -f 1 | xargs)
+	exit 1
     fi
 }
 
 int_args() (
     local ops_file_args=""
     if [ -e ${state}/manifests/0-cpi.yml ]; then
-      rm ${state}/manifests/*
+	rm ${state}/manifests/*
     fi
 
     vars_file_arg="--vars-file $(vars_file)"
 
     append_ops_args_for_dir() {
-        cp_files="${ops_file_args} $(cp ${repo_root}/$1/*.yml ${state}/manifests/)"
-        ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
+	cp_files="${ops_file_args} $(cp ${repo_root}/$1/*.yml ${state}/manifests/)"
+	ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
     }
 
     if [ $(lite) = true ]; then
-        append_ops_args_for_dir "ops/lite"
+	append_ops_args_for_dir "ops/lite"
     elif [ $(lite) = false ]; then
-        append_ops_args_for_dir "ops/runc"
+	append_ops_args_for_dir "ops/runc"
     fi
 
     append_ops_args_for_dir "ops"
@@ -124,29 +124,29 @@ usage() {
 
 platform() {
     if [ "$(uname)" == "Darwin" ]; then
-        echo "darwin"
+	echo "darwin"
     elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-        echo "linux"
+	echo "linux"
     fi
 }
 
 faketty() {
     case $(platform) in
-        darwin)
-            script -q /dev/null "$@"
-            ;;
-        linux)
-            script -qfc "$(printf "%q " "$@")" /dev/null
-            ;;
+	darwin)
+	    script -q /dev/null "$@"
+	    ;;
+	linux)
+	    script -qfc "$(printf "%q " "$@")" /dev/null
+	    ;;
     esac
 }
 
 up() {
-   ${boshexec} create-env $(int_args) $state_arg
+    ${boshexec} create-env $(int_args) $state_arg
 }
 
 down() {
-   ${boshexec} delete-env $(int_args) $state_arg
+    ${boshexec} delete-env $(int_args) $state_arg
 }
 
 vars() {
@@ -172,14 +172,14 @@ rm -f ${var_cache}
 
 get_var() {
     if [[ ! -f ${var_cache} ]]; then
-        vars > ${var_cache}
+	vars > ${var_cache}
     fi
     ${boshexec} int ${var_cache} --path /$1
 }
 
 env() {
     if [[ ! -f ${vars_store} ]]; then
-      exit 0
+	exit 0
     fi
     echo "export BOSH_ENVIRONMENT=$(get_var bosh_target)"
     echo "export BOSH_CA_CERT='$(cat $(ca_cert))'"
@@ -188,14 +188,14 @@ env() {
 }
 
 routes() {
-  case $(platform) in
-    darwin)
-          sudo route add -net 10.244.0.0/16    192.168.50.6
-    ;;
-    linux)
-          sudo route add -net 10.244.0.0/16 gw 192.168.50.6
-    ;;
-  esac
+    case $(platform) in
+	darwin)
+	    sudo route add -net 10.244.0.0/16    192.168.50.6
+	    ;;
+	linux)
+	    sudo route add -net 10.244.0.0/16 gw 192.168.50.6
+	    ;;
+    esac
 }
 
 
@@ -219,20 +219,20 @@ _fly() {
     fi
 
     faketty fly --target bucc login \
-        --concourse-url ${url} \
-        --username $(get_var concourse_username) \
-        --password $(get_var concourse_password) \
-        --team-name main \
-        --ca-cert $(ca_cert)
+	    --concourse-url ${url} \
+	    --username $(get_var concourse_username) \
+	    --password $(get_var concourse_password) \
+	    --team-name main \
+	    --ca-cert $(ca_cert)
 }
 
 _bosh() {
     ${boshexec} alias-env bucc \
-                --environment $(get_var bosh_target) \
-                --ca-cert "$(cat $(ca_cert))"
+		--environment $(get_var bosh_target) \
+		--ca-cert "$(cat $(ca_cert))"
 
     printf '%s\n%s\n' $(get_var bosh_client) $(get_var bosh_client_secret) | \
-        ${boshexec} log-in -e bucc
+	${boshexec} log-in -e bucc
 
 }
 
@@ -282,43 +282,43 @@ _ssh() {
 
 case "$1" in
     up)
-        shift
-        while [[ $# -gt 0 ]]; do
-            case "$1" in
-                --cpi)
-                    echo "$2" > ${state}/cpi
-                    ;;
-                --lite)
-                    echo "true" > ${state}/lite
-                    ;;
-            esac
-            shift
-        done
-        validate_cpi
-        validate_vars_file
+	shift
+	while [[ $# -gt 0 ]]; do
+	    case "$1" in
+		--cpi)
+		    echo "$2" > ${state}/cpi
+		    ;;
+		--lite)
+		    echo "true" > ${state}/lite
+		    ;;
+	    esac
+	    shift
+	done
+	validate_cpi
+	validate_vars_file
 
-        up "$@"
-        ;;
+	up "$@"
+	;;
 
     down)
-        down "$@"
-        ;;
+	down "$@"
+	;;
 
     env)
-        env "$@"
-        ;;
+	env "$@"
+	;;
 
     info)
-        info "$@"
-        ;;
+	info "$@"
+	;;
 
     vars)
-        vars "$@"
-        ;;
+	vars "$@"
+	;;
 
     bosh)
-        _bosh "$@"
-        ;;
+	_bosh "$@"
+	;;
 
     credhub)
 	_credhub "$@"
@@ -329,23 +329,23 @@ case "$1" in
         ;;
 
     fly)
-        _fly "$@"
-        ;;
+	_fly "$@"
+	;;
 
     ssh)
-        _ssh "$@"
-        ;;
+	_ssh "$@"
+	;;
 
     int)
-        shift
-        int "$@"
-        ;;
+	shift
+	int "$@"
+	;;
 
     routes)
         routes
         ;;
     *)
-        usage
-        exit 1
-        ;;
+	usage
+	exit 1
+	;;
 esac
