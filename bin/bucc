@@ -101,7 +101,7 @@ int_args() (
 ca_cert() {
     local ca_cert_file="${state}/ca.pem"
     store_int --path /default_ca/ca > $ca_cert_file
-    store_int --path /default_ca/certificate >> $ca_cert_file
+    store_int --path /credhub_ca/ca >> $ca_cert_file
     echo $ca_cert_file
 }
 
@@ -210,12 +210,12 @@ _fly() {
     local url=$(get_var concourse_url)
 
     if [[ ! -x "$(command -v fly)" ]]; then
-        echo "fly not found installing.."
-        pushd $(mktemp -d)
-           wget --no-check-certificate -q "${url}/api/v1/cli?arch=amd64&platform=$(platform)" -O fly
-           chmod +x fly
-           mv fly ${repo_root}/bin/
-        popd
+	echo "fly not found installing.."
+	pushd $(mktemp -d)
+	wget --no-check-certificate -q "${url}/api/v1/cli?arch=amd64&platform=$(platform)" -O fly
+	chmod +x fly
+	mv fly ${repo_root}/bin/
+	popd
     fi
 
     faketty fly --target bucc login \
@@ -236,12 +236,24 @@ _bosh() {
 
 }
 
-credhub() {
-    # does not yet support supplying a CA cert
-    faketty credhub login --server $(get_var credhub_url) \
-            --username credhub-cli \
-            --password $(get_var credhub_password) \
-            --skip-tls-validation
+_credhub() {
+    local url="https://github.com/cloudfoundry-incubator/credhub-cli/releases/download"
+    local version="1.0.0"
+
+    if [[ ! -x "$(command -v credhub)" ]]; then
+	echo "credhub not found installing.."
+	pushd $(mktemp -d)
+	wget -q "${url}/${version}/credhub-$(platform)-${version}.tgz"
+	tar -xzf credhub-*.tgz
+	chmod +x credhub
+	mv credhub ${repo_root}/bin/
+	popd
+    fi
+
+    credhub login --server $(get_var credhub_url) \
+	    --ca-cert $(ca_cert) \
+	    --username credhub-cli \
+	    --password $(get_var credhub_password)
 }
 
 uaac() {
@@ -309,8 +321,8 @@ case "$1" in
         ;;
 
     credhub)
-        credhub "$@"
-        ;;
+	_credhub "$@"
+	;;
 
     uaac)
         uaac "$@"
