@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+mv bucc-state/{vars.yml,state} bucc/
+./bucc/bin/bucc down

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+pushd bucc > /dev/null
+
+echo ${VARS} > "vars.yml"
+
+args="--cpi ${CPI}"
+if ${LITE}; then args+=" --lite"; fi
+
+./bin/bucc up ${args}
+
+popd > /dev/null
+
+mv bucc/{vars.yml,state} bucc-state/
