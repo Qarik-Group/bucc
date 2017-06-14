@@ -8,15 +8,17 @@ curl -L >/usr/local/bin/spruce https://github.com/geofffranks/spruce/releases/do
 
 curl -L >/usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && chmod 755 /usr/local/bin/jq
 
+curl -L >/usr/local/bin/bosh https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.10-linux-amd64 && chmod 755 /usr/local/bin/bosh
+
 generate_compile_manifest() {
     ops=$(find ops/cpis/*/0-cpi.yml | grep -v virtualbox | sed 's/^/-o /' | xargs)
 
     echo "virtualbox" > state/cpi
     mv ops/9-compiled-releases.yml{,.tmp}
-    releases=$(spruce json <(echo "releases:"; bucc int ${ops} --path /releases))
+    releases=$(spruce json <(echo "releases:"; ./bin/bucc int ${ops} --path /releases))
     mv ops/9-compiled-releases.yml{.tmp,}
 
-    already_compiled_releases=$(spruce json <(echo "releases:"; bucc int ${ops} --path /releases))
+    already_compiled_releases=$(spruce json <(echo "releases:"; ./bin/bucc int ${ops} --path /releases))
     compiled_relases_candidates=$(echo ${releases} | jq '.releases[] | select(.url | contains("ubuntu-trusty") | not)')
     stemcell_version=$(echo ${releases} | jq '.releases[0].url' | cut -d- -f8)
 
