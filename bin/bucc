@@ -215,7 +215,7 @@ _fly() {
     if [[ ! -x "$(command -v fly)" ]]; then
         echo "fly not found installing.."
         pushd $(mktemp -d)
-        wget --no-check-certificate -q "${url}/api/v1/cli?arch=amd64&platform=$(platform)" -O fly
+	curl -s -k -L >fly "${url}/api/v1/cli?arch=amd64&platform=$(platform)"
         chmod +x fly
         mv fly ${repo_root}/bin/
         popd
@@ -246,8 +246,8 @@ _credhub() {
     if [[ ! -x "$(command -v credhub)" ]]; then
         echo "credhub not found installing.."
         pushd $(mktemp -d)
-        wget -q "${url}/${version}/credhub-$(platform)-${version}.tgz"
-        tar -xzf credhub-*.tgz
+	curl -s -L >credhub.tgz "${url}/${version}/credhub-$(platform)-${version}.tgz"
+        tar -xzf credhub.tgz
         chmod +x credhub
         mv credhub ${repo_root}/bin/
         popd
