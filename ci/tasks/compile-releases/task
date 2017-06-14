@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+set -ex
+
+SPRUCE_VERSION=1.9.0
+
+curl -L >/usr/local/bin/spruce https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce-linux-amd64 && chmod 0755 /usr/local/bin/spruce
+
+curl -L >/usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && chmod 755 /usr/local/bin/jq
+
+generate_compile_manifest() {
+    ops=$(find ops/cpis/*/0-cpi.yml | grep -v virtualbox | sed 's/^/-o /' | xargs)
+
+    echo "virtualbox" > state/cpi
+    mv ops/9-compiled-releases.yml{,.tmp}
+    releases=$(spruce json <(echo "releases:"; bucc int ${ops} --path /releases))
+    mv ops/9-compiled-releases.yml{.tmp,}
+
+    already_compiled_releases=$(spruce json <(echo "releases:"; bucc int ${ops} --path /releases))
+    compiled_relases_candidates=$(echo ${releases} | jq '.releases[] | select(.url | contains("ubuntu-trusty") | not)')
+    stemcell_version=$(echo ${releases} | jq '.releases[0].url' | cut -d- -f8)
+
+    releases_to_compile="releases:\n"
+    for release in $(echo ${compiled_relases_candidates} | jq -c '.'); do
+        name=$(echo ${release} | jq -r '.name')
+        version=$(echo ${release} | jq -r '.version')
+        compiled_release_url=$(echo ${already_compiled_releases} | jq --arg name "${name}" '.releases[] | select(.name | contains($name)).url')
+        if [[ ${compiled_release_url} != *"${version}"*"${stemcell_version}"* ]]; then
+            releases_to_compile+="- ${release}\n"
+        fi
+    done
+
+    cat > manifest.yml <<EOF
+---
+name: bucc-compiled-releases
+stemcells:
+- alias: large
+  os: ubuntu-trusty
+  version: ${stemcell_version}
+update:
+  canaries: 1
+  max_in_flight: 1
+  canary_watch_time: 1000 - 90000
+  update_watch_time: 1000 - 90000
+instance_groups: []
+EOF
+
+    bosh int <(echo -e ${releases_to_compile}) >> manifest.yml
+}
+
+export_releases() {
+    for release in $(bosh releases --json | jq -r '.Tables[0].Rows[] | (.name + "/" + .version)'); do
+        bosh export-release ${release} ubuntu-trusty/${1}
+    done
+}
+
+update_compiled_releases_ops_file() {
+    ops_file=$(spruce json <(echo "ops:" && cat ops/9-compiled-releases.yml) | jq '.ops')
+    for release in $(bosh releases --json | jq '.Tables[0].Rows'); do
+        name=$(echo ${release} | jq '.name')
+        version=$(echo ${release} | jq '.version')
+        file=$(ls ../compile-releases/ | grep ${name})
+        url="https://s3.amazonaws.com/bucc-compiled-release-tarballs/${file}"
+        sha1=$(sha1sum ../compile-releases/${name}*.tgz)
+
+        ops_file=$(echo ${ops_file} | jq --arg name ${name} --arg version ${version} 'map((select(.value.name == $name) | .value.version) |= $version)')
+        ops_file=$(echo ${ops_file} | jq --arg name ${name} --arg url ${url} 'map((select(.value.name == $name) | .value.url) |= $url)')
+        ops_file=$(echo ${ops_file} | jq --arg name ${name} --arg sha1 ${sha1} 'map((select(.value.name == $name) | .value.sha1) |= $sha1)')
+    done
+
+    bosh int <(echo ${ops_file}) ops/9-compiled-releases.yml
+}
+
+git_commit() {
+    if [[ -z $(git config --global user.email) ]]; then
+        git config --global user.email "ci@starkandwayne.com"
+    fi
+    if [[ -z $(git config --global user.name) ]]; then
+        git config --global user.name "CI Bot"
+    fi
+
+    local release=$(bosh releases --json | jq -r '.Tables[0].Rows[] | (.name + "/" + .version)' | xargs)
+    local stemcell=$(bosh stemcells --json | jq -r '.Tables[0].Rows[] | (.os + "/" + .version)')
+
+    git merge --no-edit master
+    git add ops/9-compiled-releases.yml
+    git status
+    git commit -m "Compiled releases update for stemcell: ${stemcell}\nReleases: ${releases}"
+}
+
+pushd bucc > /dev/null
+generate_compile_manifest
+
+if bosh int manifest.yml --path /releases/0; then
+    start-bosh
+    source /tmp/local-bosh/director/env
+
+    version=$(bosh int manifest.yml --path /stemcells/0/version)
+    bosh upload-stemcell "https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=${version}"
+
+    bosh deploy -d bucc-compiled-releases manifest.yml
+    popd > /dev/null
+
+    pushd compiled-releases > /dev/null
+    export_releases ${version}
+    popd > /dev/null
+
+    pushd bucc > /dev/null
+    update_compiled_releases_ops_file
+
+    git_commit
+else
+    echo "Nothing to compile"
+fi

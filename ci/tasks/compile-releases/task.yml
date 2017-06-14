@@ -1,0 +1,19 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: bosh/main-bosh-garden
+
+inputs:
+  - name: bucc-ci
+  - name: bucc
+
+outputs:
+  - name: compiled-releases
+
+params: []
+
+run:
+  path: bucc-ci/ci/tasks/compile-releases/task
