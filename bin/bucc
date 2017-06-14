@@ -59,7 +59,7 @@ validate_vars_file() {
 vars_file() {
     local state_vars=${state}/vars.yml
     local vars_file=${repo_root}/vars.yml
-    bosh int $vars_file > $state_vars
+    ${boshexec} int $vars_file > $state_vars
     echo $state_vars
 }
 
