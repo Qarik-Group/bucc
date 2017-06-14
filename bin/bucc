@@ -10,6 +10,8 @@ state_arg="--state ${state}/state.json"
 vars_store=${state}/creds.yml
 vars_store_arg="--vars-store ${vars_store}"
 
+PATH=${PATH}:${repo_root}/bin
+
 pushd () {
     command pushd "$@" > /dev/null
 }
