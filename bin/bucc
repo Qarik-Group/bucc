@@ -290,16 +290,16 @@ smoke_tests() {
     set -e
 
     header "testing bosh uaa auth"
-    bucc bosh
+    ${bucc} bosh
     ${boshexec} -e bucc vms
 
     header "testing credhub"
-    bucc credhub
+    ${bucc} credhub
     credhub set --no-overwrite --name secret/handshake:knock --value know --type value
     credhub delete --name secret/handshake:knock
 
     header "testing concourse"
-    bucc fly
+    ${bucc} fly
     fly -t bucc workers | grep running
 }
 
