@@ -14,11 +14,11 @@ header() {
 gen_manifest() {
     cpi=${1}; lite=${2}
     header "Manifest CPI: ${cpi} LITE: ${lite}"
-    bosh int <(
+    bosh2 int <(
         cat ops/cpis/${cpi}/vars.tmpl && \
             echo "director_name: bucc-ci" && \
             echo "internal_ip: 127.0.0.1" && \
-            if [ ! -z ${VARS} ]; then bosh int <(echo ${VARS}); fi
+            if [ ! -z ${VARS} ]; then bosh2 int <(echo ${VARS}); fi
     ) > vars.yml
     cat vars.yml | grep -v 'password\|secret\|key'
 
