@@ -151,7 +151,7 @@ down() {
 }
 
 vars() {
-    cat ${vars_file}
+    cat $(vars_file)
     echo "bosh_environment: $(ip)"
     echo "bosh_target: $(ip)"
     echo "bosh_ca_cert: |"
