@@ -1,25 +1,23 @@
 #!/bin/bash -e
 
 header() {
-        echo
-        echo "###############################################"
-        echo
-        echo $*
-        echo
+    echo
+    echo "###############################################"
+    echo
+    echo $*
+    echo
 }
 
 pushd bucc > /dev/null
 
-cat support_matrix.yml | while read config; do
-    cpi=$(bosh int <(echo ${config}) --path /0/cpi)
-    lite=$(bosh int <(echo ${config}) --path /0/lite)
-
+gen_manifest() {
+    cpi=${1}; lite=${2}
     header "Manifest CPI: ${cpi} LITE: ${lite}"
     bosh int <(
-         cat ops/cpis/${cpi}/vars.tmpl && \
-         echo "director_name: bucc-ci" && \
-         echo "internal_ip: 127.0.0.1" && \
-         if [ ! -z ${VARS} ]; then bosh int <(echo ${VARS}); fi
+        cat ops/cpis/${cpi}/vars.tmpl && \
+            echo "director_name: bucc-ci" && \
+            echo "internal_ip: 127.0.0.1" && \
+            if [ ! -z ${VARS} ]; then bosh int <(echo ${VARS}); fi
     ) > vars.yml
     cat vars.yml | grep -v 'password\|secret\|key'
 
@@ -29,11 +27,24 @@ cat support_matrix.yml | while read config; do
 
     manifest_name=${cpi}
     if [ ${lite} = "true" ]; then
-       manifest_name+="-lite"
+        manifest_name+="-lite"
     fi
 
     ./bin/bucc int > ../bucc-generated-manifest/${manifest_name}.yml
 
     echo ""
     echo "bucc-generated-manifest/${manifest_name}.yml"
-done
+}
+
+
+while read config; do
+    cpi=$(echo ${config} | cut -d: -f1)
+
+    if $(echo ${config} | grep lite); then
+        gen_manifest ${cpi} "true"
+    fi
+
+    if $(echo ${config} | grep normal); then
+        gen_manifest ${cpi} "false"
+    fi
+done <support_matrix.yml

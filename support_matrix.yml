@@ -1,3 +1,2 @@
-- { cpi: virtualbox, lite: true }
-- { cpi: vsphere,    lite: true }
-- { cpi: vsphere,    lite: false }
+virtualbox: [ lite ]
+vsphere: [ lite, normal ]
