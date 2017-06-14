@@ -1,7 +1,7 @@
 #!/bin/bash
 version="0.1"
 
-repo_root=$(dirname "$0" | rev | cut -c5- | rev)
+repo_root=$(dirname $(realpath "$0") | rev | cut -c5- | rev)
 state=${repo_root}/state
 mkdir -p $state/manifests
 manifest="${repo_root}/src/bosh-deployment/bosh.yml"
@@ -9,6 +9,8 @@ ssh_private_key="${state}/ssh.key"
 state_arg="--state ${state}/state.json"
 vars_store=${state}/creds.yml
 vars_store_arg="--vars-store ${vars_store}"
+
+PATH=${PATH}:${repo_root}/bin
 
 pushd () {
     command pushd "$@" > /dev/null
