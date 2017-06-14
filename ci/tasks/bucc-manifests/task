@@ -8,8 +8,6 @@ header() {
     echo
 }
 
-pushd bucc > /dev/null
-
 gen_manifest() {
     cpi=${1}; lite=${2}
     header "Manifest CPI: ${cpi} LITE: ${lite}"
@@ -36,15 +34,16 @@ gen_manifest() {
     echo "bucc-generated-manifest/${manifest_name}.yml"
 }
 
+pushd bucc > /dev/null
 
 while read config; do
     cpi=$(echo ${config} | cut -d: -f1)
 
-    if $(echo ${config} | grep lite); then
-        gen_manifest ${cpi} "true"
+    if echo ${config} | grep lite; then
+        gen_manifest ${cpi} true
     fi
 
-    if $(echo ${config} | grep normal); then
-        gen_manifest ${cpi} "false"
+    if echo ${config} | grep normal; then
+        gen_manifest ${cpi} false
     fi
 done <support_matrix.yml
