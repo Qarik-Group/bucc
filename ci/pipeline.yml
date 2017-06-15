@@ -3,6 +3,10 @@ meta:
   target:   (( param "Please identify the name of the target Concourse CI" ))
   pipeline: bucc
 
+  vcenter:
+    username: (( param "Please specify the username used for vCenter" ))
+    password: (( param "Please specify the password used for vCenter" ))
+
   bosh_lite:
     target:     (( param "Please specify the BOSH target URI for the bosh-lite to run test deployments against" ))
     deployment: (( param "Please specify the name of the local bosh-lite (warden) deployment" ))
@@ -69,48 +73,38 @@ jobs:
     plan:
       - do:
         - aggregate:
-          - { get: bucc, passed: [sanity-check] }
+          - { get: bucc, trigger: true, passed: [sanity-check] }
           - { get: bucc-ci }
-        - task: bucc-manifests
-          file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+        - task: bucc-up-vsphere
+          file: bucc-ci/ci/tasks/bucc-up/task.yml
           params:
-            VARS: 
-              internal_ip: 10.244.0.46
-              vcenter_cluster: test
-              vcenter_dc: test
-              vcenter_disks: test
-              vcenter_dns: test
-              vcenter_ds: test
-              vcenter_ip: test
-              vcenter_password: test
-              vcenter_rp: test
-              vcenter_templates: test
-              vcenter_user: test
-              vcenter_vms: test
-        # Workaround for: https://github.com/cloudfoundry/bosh-deployment-resource/issues/14
-        - task: bosh-int-manifest
-          config:
-            platform: linux
-            image_resource: { type: docker-image, source: { repository: relintdockerhubpushbot/bosh-cli } } 
-            inputs: [ name: bucc-generated-manifest, name: bucc, name: bucc-ci ]
-            outputs: [ name: bosh-int-manifest ]
-            run:
-              path: sh
-              args: 
-                - -exc
-                - |
-                  bosh int bucc-generated-manifest/vsphere-lite.yml \
-                    --ops-file bucc/dev/bosh-dev.yml > \
-                    bosh-int-manifest/manifest.yml
-        - task: download-bucc-stemcell
-          file: bucc-ci/ci/tasks/download-bucc-stemcell/task.yml
-          params:
-            CPI: warden-boshlite
-        - put: bosh-lite
-          params:
-            manifest: bosh-int-manifest/manifest.yml
-            stemcells:
-              - bucc-stemcell/bosh-*
+            CPI: vsphere
+            LITE: true
+            VARS:
+              director_name: snw-bosh
+              internal_cidr: 10.213.0.0/20
+              internal_gw: 10.213.0.1
+              internal_ip: 10.213.8.1
+              network_name: net-10-213-0-0
+              vcenter_dns: [ 8.8.8.8 ]
+              vcenter:
+                address: 10.58.111.2
+                password: (( grab meta.vcenter.password ))
+                user: (( grab meta.vcenter.username ))
+                default_disk_type: thin
+                datacenters:
+                - name: Interxion MAD2
+                  datastore_pattern: vol309|vol310
+                  disk_path: bucc-ci
+                  persistent_datastore_pattern: vol309|vol310
+                  template_folder: bucc-ci/templates
+                  vm_folder: bucc-ci/vms
+                  clusters: [ cluster1: {} ]
+        - task: bucc-test-vsphere
+          file: bucc-ci/ci/tasks/bucc-test/task.yml
+          ensure:
+            task: bucc-down-vsphere
+            file: bucc-ci/ci/tasks/bucc-down/task.yml
 
   - name: rc
     public: true
@@ -275,12 +269,3 @@ resources:
       user:         (( grab meta.github.owner ))
       repository:   (( grab meta.github.repo ))
       access_token: (( grab meta.github.access_token ))
-
-  - name: bosh-lite
-    type: bosh-deployment
-    source:
-      deployment: bosh
-      target: (( grab meta.bosh_lite.target ))
-      client: (( grab meta.bosh_lite.username ))
-      client_secret: (( grab meta.bosh_lite.password ))
-      ca_cert: (( grab meta.bosh_lite.ca_cert ))

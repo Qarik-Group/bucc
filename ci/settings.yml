@@ -6,6 +6,9 @@ meta:
   aws:
     access_key: (( vault "secret/aws/cfcommunity:access" ))
     secret_key: (( vault "secret/aws/cfcommunity:secret" ))
+  vcenter:
+    username: (( vault "secret/pipelines/bucc/vcenter:username" ))
+    password: (( vault "secret/pipelines/bucc/vcenter:password" ))
   github:
     owner: starkandwayne
     repo:  bucc
