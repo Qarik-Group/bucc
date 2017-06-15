@@ -10,7 +10,7 @@ state_arg="--state ${state}/state.json"
 vars_store=${state}/creds.yml
 vars_store_arg="--vars-store ${vars_store}"
 
-PATH=${PATH}:${repo_root}/bin
+PATH=${repo_root}/bin:${PATH}
 
 pushd () {
     command pushd "$@" > /dev/null
@@ -212,10 +212,10 @@ info() {
 _fly() {
     local url=$(get_var concourse_url)
 
-    if [[ ! -x "$(command -v fly)" ]]; then
-        echo "fly not found installing.."
+    if [ ! -f ${repo_root}/bin/fly ]; then
+        echo "installing fly cli into: ${repo_root}/bin/"
         pushd $(mktemp -d)
-	curl -s -k -L >fly "${url}/api/v1/cli?arch=amd64&platform=$(platform)"
+        curl -s -k -L >fly "${url}/api/v1/cli?arch=amd64&platform=$(platform)"
         chmod +x fly
         mv fly ${repo_root}/bin/
         popd
@@ -243,10 +243,10 @@ _credhub() {
     local url="https://github.com/cloudfoundry-incubator/credhub-cli/releases/download"
     local version="1.0.0"
 
-    if [[ ! -x "$(command -v credhub)" ]]; then
-        echo "credhub not found installing.."
+    if [ ! -f ${repo_root}/bin/credhub ]; then
+        echo "installing credhub cli into: ${repo_root}/bin/"
         pushd $(mktemp -d)
-	curl -s -L >credhub.tgz "${url}/${version}/credhub-$(platform)-${version}.tgz"
+        curl -s -L >credhub.tgz "${url}/${version}/credhub-$(platform)-${version}.tgz"
         tar -xzf credhub.tgz
         chmod +x credhub
         mv credhub ${repo_root}/bin/
