@@ -9,10 +9,17 @@ image_resource:
 inputs:
   - name: bucc-ci
   - name: bucc
-  - name: compiled-releases-in
+  - name: compiled-releases-concourse
+  - name: compiled-releases-bosh-virtualbox-cpi
+  - name: compiled-releases-bosh-aws-cpi
+  - name: compiled-releases-bosh-azure-cpi
+  - name: compiled-releases-bosh-docker-cpi
+  - name: compiled-releases-bosh-google-cpi
+  - name: compiled-releases-bosh-openstack-cpi
+  - name: compiled-releases-bosh-vsphere-cpi
 
 outputs:
-  - name: compiled-releases-out
+  - name: compiled-releases
 
 params: []
 
