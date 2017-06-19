@@ -1,6 +1,6 @@
 # BUCC
 
-__warning: not yet stable, we are currently in the processes of setting up ci, during which there can be breaking changes. Once we have ci running we will start publishing releases to github.
+__WARNING: not yet stable, we are currently in the processes of setting up ci, during which there can be breaking changes. Once we have ci running we will start publishing releases to github.__
 
 The bucc command line utility allows for easy bootstrapping of the BUCC stack (Bosh Uaa Credhub and Concourse). Which is the starting point for many deployments.
 
