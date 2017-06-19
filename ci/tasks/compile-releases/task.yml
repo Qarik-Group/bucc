@@ -9,10 +9,9 @@ image_resource:
 inputs:
   - name: bucc-ci
   - name: bucc
-  - name: compiled-releases-in
 
 outputs:
-  - name: compiled-releases-out
+  - name: compiled-releases
 
 params: []
 

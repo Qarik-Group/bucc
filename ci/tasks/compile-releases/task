@@ -19,6 +19,7 @@ generate_compile_manifest() {
     releases=$(spruce json <(echo "releases:"; ./bin/bucc int ${ops} --path /releases))
     mv ops/9-compiled-releases.yml{.tmp,}
 
+    already_compiled_releases=$(spruce json <(echo "releases:"; ./bin/bucc int ${ops} --path /releases))
     compiled_relases_candidates=$(echo ${releases} | jq '.releases[] | select(.url | contains("ubuntu-trusty") | not)')
     stemcell_version=$(echo ${releases} | jq '.releases[0].url' | cut -d- -f8)
 
@@ -26,9 +27,8 @@ generate_compile_manifest() {
     for release in $(echo ${compiled_relases_candidates} | jq -c '.'); do
         name=$(echo ${release} | jq -r '.name')
         version=$(echo ${release} | jq -r '.version')
-        # bosh-docker-cpi-0.0.3-ubuntu-trusty-3421.3-20170619-122543-306294102.tgz
-        prefix="${name}-${version}-ubuntu-trusty-${stemcell_version}"
-        if [ ! -f ../compiled-releases-out/${prefix}*.tgz ]; then
+        compiled_release_url=$(echo ${already_compiled_releases} | jq --arg name "${name}" '.releases[] | select(.name | contains($name)).url')
+        if [[ ${compiled_release_url} != *"${version}"*"${stemcell_version}"* ]]; then
             releases_to_compile+="- $( echo ${release} | jq -c '.version = "latest"' )\n"
         fi
     done
@@ -53,8 +53,6 @@ EOF
 
 export_releases() {
     for release in $(bosh releases --json | jq -r '.Tables[0].Rows[] | (.[0] + "/" + .[1])' | sed 's/\*//g'); do
-        name=$(echo ${release} | cut -d"/" -f1)
-        rm ${name}*.tgz
         bosh export-release -d bucc-compiled-releases ${release} ubuntu-trusty/${1}
         mv ${name}*.tgz compiled-release/$( echo ${name}*.tgz | sed "s/\.tgz$/-$( date -u +%Y%m%d%H%M%S ).tgz/" )
     done
@@ -94,8 +92,6 @@ git_commit() {
     git commit -m "Compiled releases update for stemcell: ${stemcell}\nReleases: ${releases}"
 }
 
-mv compiled-releases-in/*.tgz compiled-releases-out/
-
 pushd bucc > /dev/null
 generate_compile_manifest
 
@@ -109,7 +105,7 @@ if bosh int manifest.yml --path /releases/0; then
     bosh -n deploy -d bucc-compiled-releases manifest.yml
     popd > /dev/null
 
-    pushd compiled-releases-out > /dev/null
+    pushd compiled-releases > /dev/null
     export_releases ${version}
     popd > /dev/null
 
