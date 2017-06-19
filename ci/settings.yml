@@ -14,11 +14,9 @@ meta:
     repo:  bucc
     private_key:  (( vault "secret/pipelines/bucc/github:private" ))
     access_token: (( vault "secret/pipelines/bucc/github:token" ))
-  bosh_lite:
-    target: https://10.58.111.49:25555
-    deployment: bucc
-    ca_cert: (( vault "secret/bosh-lites/lite49/certs:rootCA.pem" ))
-    static_ip: 10.244.0.46
+  aws:
+    access_key_id: (( vault "secret/pipelines/bucc/aws:access_key_id" ))
+    secret_access_key: (( vault "secret/pipelines/bucc/aws:secret_access_key_id" ))
   slack:
     webhook: (( vault "secret/pipelines/habitat-boshrelease/slack:webhook" ))
     channel: "#cf-community-pipeline"

@@ -7,14 +7,6 @@ meta:
     username: (( param "Please specify the username used for vCenter" ))
     password: (( param "Please specify the password used for vCenter" ))
 
-  bosh_lite:
-    target:     (( param "Please specify the BOSH target URI for the bosh-lite to run test deployments against" ))
-    deployment: (( param "Please specify the name of the local bosh-lite (warden) deployment" ))
-    ca_cert:    (( param "Please specify the ca certificate of the local bosh-lite (warden) deployment" ))
-    static_ip:  (( param "Static IP in the warden network range which is free" ))
-    username:   admin
-    password:   admin
-
   github:
     uri:          (( concat "git@github.com:" meta.github.owner "/" meta.github.repo ))
     owner:        (( param "Please specify the name of the user / organization that owns the Github repository" ))
@@ -22,6 +14,10 @@ meta:
     branch:       master
     private_key:  (( param "Please generate an SSH Deployment Key for this repo and specify it here" ))
     access_token: (( param "Please generate a Personal Access Token and specify it here" ))
+
+  aws:
+    access_key_id: (( param "Please provide your aws access key to access the compiled releases s3 bucket"  ))
+    secret_access_key: (( param "Please provide your aws secret access key to access the compiled releases s3 bucket"  ))
 
   slack:
     webhook:       (( param "Please specify your Slack Incoming Webhook Integration URL" ))
@@ -46,6 +42,9 @@ groups:
       - major
       - minor
       - bump-patch
+  - name: compiled-releases
+    jobs:
+      - compile-releases
 
 jobs:
   - name: sanity-check
@@ -67,6 +66,36 @@ jobs:
         #     icon_url: (( grab meta.slack.icon ))
         #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
 
+  - name: compile-releases
+    public: true
+    serial: true
+    plan:
+      - do:
+        - aggregate:
+          - { get: bucc, trigger: true, passed: [sanity-check] }
+          - { get: bucc-ci }
+        - task: compile-releases
+          file: bucc-ci/ci/tasks/compile-releases/task.yml
+          privileged: true
+        - aggregate: 
+          - put: compiled-releases
+            params: { file: "compiled-releases/concourse*.tgz", acl: public-read }
+          - put: compiled-releases
+            params: { file: "compiled-releases/bosh-virtualbox-cpi*.tgz", acl: public-read }
+          - put: compiled-releases
+            params: { file: "compiled-releases/bosh-aws-cpi*.tgz", acl: public-read }
+          - put: compiled-releases
+            params: { file: "compiled-releases/bosh-azure-cpi*.tgz", acl: public-read }
+          - put: compiled-releases
+            params: { file: "compiled-releases/bosh-docker-cpi*.tgz", acl: public-read }
+          - put: compiled-releases
+            params: { file: "compiled-releases/bosh-google-cpi*.tgz", acl: public-read }
+          - put: compiled-releases
+            params: { file: "compiled-releases/bosh-openstack-cpi*.tgz", acl: public-read }
+          - put: compiled-releases
+            params: { file: "compiled-releases/bosh-vpshere-cpi*.tgz", acl: public-read }
+
+          
   - name: test
     public: true
     serial: true
@@ -257,6 +286,15 @@ resources:
       branch: version
       file: version
       initial_version:   (( grab meta.initial_version || "0.0.1" ))
+
+  - name: compiled-releases
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      regexp: ".*-(\\d+).tgz"
+      region_name: eu-west-1
 
   - name: notify
     type: slack-notification
