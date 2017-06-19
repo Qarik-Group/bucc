@@ -53,8 +53,10 @@ EOF
 
 export_releases() {
     for release in $(bosh releases --json | jq -r '.Tables[0].Rows[] | (.[0] + "/" + .[1])' | sed 's/\*//g'); do
-        rm $(echo ${release} | cut -d"/" -f1)*.tgz
+        name=$(echo ${release} | cut -d"/" -f1)
+        rm ${name}*.tgz
         bosh export-release -d bucc-compiled-releases ${release} ubuntu-trusty/${1}
+        mv ${name}*.tgz compiled-release/$( echo ${name}*.tgz | sed "s/\.tgz$/-$( date -u +%Y%m%d%H%M%S ).tgz/" )
     done
 }
 
