@@ -1,31 +1,3 @@
-# BOSH
-- type: replace
-  path: /releases/name=bosh?
-  value:
-    name: bosh
-    version: 261.4
-    url: https://s3.amazonaws.com/million-monkeys-releases/cloudfoundry/bosh-261.4-ubuntu-trusty-3363.12.tgz
-    sha1: a4c648d0fcc6c818cb35ba7aead6a4d9ddb32826
-
-# UAA
-- type: replace
-  path: /releases/name=uaa?
-  value:
-    name: uaa
-    version: 29
-    url: https://s3.amazonaws.com/million-monkeys-releases/cloudfoundry/uaa-release-29-ubuntu-trusty-3363.12.tgz
-    sha1: 344a59b6161e355e1fe367860ab9716cabceb5ae
-
-# Credhub
-- type: replace
-  path: /releases/name=credhub?
-  value:
-    name: credhub
-    version: 0.6.1
-    url: https://s3.amazonaws.com/million-monkeys-releases/pivotal-cf/credhub-release-0.6.1-ubuntu-trusty-3363.12.tgz
-    sha1: eb66f72119b7a619e1a353832d5c077c008fc566
-
-# OS Conf
 - type: replace
   path: /releases/name=os-conf?
   value:
@@ -34,7 +6,6 @@
     url: https://s3.amazonaws.com/million-monkeys-releases/cloudfoundry/os-conf-release-11-ubuntu-trusty-3363.12.tgz
     sha1: dc31ea63793b247cda6669e9cea7ed9f64e6a28d
 
-# Warden CPI
 - type: replace
   path: /releases/name=bosh-warden-cpi?
   value:
@@ -43,7 +14,6 @@
     url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-warden-cpi-34-ubuntu-trusty-3363.9-20170307-015515-141982254-20170307015518.tgz
     sha1: ad5440143bfd447863a531dfab90c94a15a5f26e
 
-# Garden RunC
 - type: replace
   path: /releases/name=garden-runc?
   value:
