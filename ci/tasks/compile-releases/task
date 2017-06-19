@@ -13,6 +13,7 @@ curl -L >/usr/local/bin/bosh https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cl
 generate_compile_manifest() {
     ops=$(find ops/cpis/*/0-cpi.yml | grep -v virtualbox | sed 's/^/-o /' | xargs)
 
+    mkdir -p state
     echo "virtualbox" > state/cpi
     mv ops/9-compiled-releases.yml{,.tmp}
     releases=$(spruce json <(echo "releases:"; ./bin/bucc int ${ops} --path /releases))
@@ -51,19 +52,19 @@ EOF
 }
 
 export_releases() {
-    for release in $(bosh releases --json | jq -r '.Tables[0].Rows[] | (.name + "/" + .version)'); do
-        bosh export-release ${release} ubuntu-trusty/${1}
+    for release in $(bosh releases --json | jq -r '.Tables[0].Rows[] | (.[0] + "/" + .[1])' | sed 's/\*//g'); do
+        bosh export-release -d bucc-compiled-releases ${release} ubuntu-trusty/${1}
     done
 }
 
 update_compiled_releases_ops_file() {
     ops_file=$(spruce json <(echo "ops:" && cat ops/9-compiled-releases.yml) | jq '.ops')
-    for release in $(bosh releases --json | jq '.Tables[0].Rows'); do
-        name=$(echo ${release} | jq '.name')
-        version=$(echo ${release} | jq '.version')
-        file=$(ls ../compile-releases/ | grep ${name})
+    for release in $(bosh releases --json | jq -c '.Tables[0].Rows[]'); do
+        name=$(echo ${release} | jq '.[0]')
+        version=$(echo ${release} | jq '.[1]' | sed 's/\*//g')
+        file=$(ls ../compiled-releases/ | grep ${name})
         url="https://s3.amazonaws.com/bucc-compiled-release-tarballs/${file}"
-        sha1=$(sha1sum ../compile-releases/${name}*.tgz)
+        sha1=$(sha1sum ../compiled-releases/${name}*.tgz)
 
         ops_file=$(echo ${ops_file} | jq --arg name ${name} --arg version ${version} 'map((select(.value.name == $name) | .value.version) |= $version)')
         ops_file=$(echo ${ops_file} | jq --arg name ${name} --arg url ${url} 'map((select(.value.name == $name) | .value.url) |= $url)')
@@ -100,7 +101,7 @@ if bosh int manifest.yml --path /releases/0; then
     version=$(bosh int manifest.yml --path /stemcells/0/version)
     bosh upload-stemcell "https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=${version}"
 
-    bosh deploy -d bucc-compiled-releases manifest.yml
+    bosh -n deploy -d bucc-compiled-releases manifest.yml
     popd > /dev/null
 
     pushd compiled-releases > /dev/null
