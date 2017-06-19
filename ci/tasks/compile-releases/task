@@ -108,10 +108,10 @@ if bosh int manifest.yml --path /releases/0; then
     export_releases ${version}
     popd > /dev/null
 
-    pushd bucc > /dev/null
-    update_compiled_releases_ops_file
+    # pushd bucc > /dev/null
+    # update_compiled_releases_ops_file
 
-    git_commit
+    # git_commit
 else
     echo "Nothing to compile"
 fi
