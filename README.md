@@ -1,29 +1,18 @@
 # BUCC
 
-A lite development env for BUCC (BOSH, UAA Credhub and Concourse)
+__WARNING: not yet stable, we are currently in the processes of setting up ci, during which there can be breaking changes. Once we have ci running we will start publishing releases to github.__
+
+The bucc command line utility allows for easy bootstrapping of the BUCC stack (Bosh Uaa Credhub and Concourse). Which is the starting point for many deployments.
 
 ## Install BUCC
 
 ### Prepare the Environment
 
-1. Check that your machine has at least 8GB RAM, and 100GB free disk space. Smaller configurations may work.
+1. Install [BOSH CLI v2.0.1+](https://bosh.io/docs/cli-v2.html)
 
-2. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+2. Optionall install [`direnv`](https://direnv.net/)
 
-Known working version:
-
-```
-$ VBoxManage --version
-  5.1...
-```
-
-Note: If you encounter problems with VirtualBox networking try installing [Oracle VM VirtualBox Extension Pack](https://www.virtualbox.org/wiki/Downloads) as suggested by [Issue 202](https://github.com/cloudfoundry/bosh-lite/issues/202). Alternatively make sure you are on VirtualBox 5.1+ since previous versions had a [network connectivity bug](https://github.com/concourse/concourse-lite/issues/9).
-
-3. Install [BOSH CLI v2.0.1+](https://bosh.io/docs/cli-v2.html)
-
-4. Optionall install [`direnv`](https://direnv.net/)
-
-5. Clone this repository
+3. Clone this repository
 
 ```
 git clone https://github.com/starkandwayne/bucc.git
@@ -34,9 +23,9 @@ git submodule update --init
 ### Boot your BUCC VM
 
 #### Choose your cpi
-"--cpi" you can choose your cpi "/aws,docker,openstack,gcp,vsphere/"
+"--cpi" you can choose your cpi "[virtualbox,aws,docker,openstack,gcp,vsphere]" (defaults to virtualbox)
 
-"--lite" options is for the use of virtualbox
+"--lite" options is for the use with warden cpi (defaults to false).
 
 From the repo root run:
 ```
@@ -109,19 +98,8 @@ $ uaac client get admin
 
 ### Using Credhub
 
-1. Install the cli
-
-```
-curl -s -L 'https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/0.7.0/credhub-linux-0.7.0.tgz' | tar -xz # Linux
-curl -s -L 'https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/0.7.0/credhub-darwin-0.7.0.tgz' | tar -xz # OSX
-mv credhub /usr/local/bin
-```
-
-2. Use Credhub
-
 ```
 $ bucc credhub
-  Warning: The targeted TLS certificate has not been verified for this connection.
   Setting the target url: https://192.168.50.6:8844
   Login Successful
 
@@ -144,18 +122,6 @@ bucc info
 
 
 #### With Fly
-
-1. Install the fly cli:
-
-```
-wget --no-check-certificate 'https://192.168.50.6/api/v1/cli?arch=amd64&platform=darwin' -O fly # OSX
-wget --no-check-certificate 'https://192.168.50.6/api/v1/cli?arch=amd64&platform=linux' -O fly  # Linux
-
-chmod +x fly
-mv fly /usr/local/bin
-```
-
-2. Use Fly
 
 ```
 $ bucc fly
