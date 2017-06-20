@@ -1,5 +1,5 @@
 aws: [ lite, normal ]
-azuere: [ lite, normal ]
+azure: [ lite, normal ]
 docker: [ lite ]
 gcp: [ lite, normal ]
 openstack: [ lite, normal ]
