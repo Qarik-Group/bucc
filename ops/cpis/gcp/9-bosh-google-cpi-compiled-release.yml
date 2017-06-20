@@ -1,0 +1,7 @@
+- type: replace
+  path: /releases/name=bosh-google-cpi?
+  value:
+    name: bosh-google-cpi
+    version: 25.9.0
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bosh-google-cpi-25.9.0-ubuntu-trusty-3421.3-20170620-100926-283932019-20170620100931.tgz
+    sha1: f272291599a1ef693523faa018b73f58948d8c76
