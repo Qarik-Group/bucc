@@ -1,0 +1,7 @@
+- type: replace
+  path: /releases/name=bosh-aws-cpi?
+  value:
+    name: bosh-aws-cpi
+    version: 65
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bosh-aws-cpi-65-ubuntu-trusty-3421.3-20170620-100203-500714397-20170620100204.tgz
+    sha1: 8883a5e7f9e8c9811284c8bc112e33c7e68897e2
