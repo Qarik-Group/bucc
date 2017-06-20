@@ -39,5 +39,4 @@ if [[ -n $(git status -s) ]]; then
 fi
 popd > /dev/null
 
-cp -r bucc/.git bucc-out
-cd bucc-out && git reset --hard
+git clone bucc bucc-out
