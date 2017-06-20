@@ -3,15 +3,18 @@
 set -e
 set -o pipefail
 
+# Get release details
 pushd compiled-release > /dev/null
 tar -xzf *.tgz $( tar -tzf *.tgz | grep 'release.MF' )
 release_name=$( grep -E '^name: ' release.MF | awk '{print $2}' | tr -d "\"'" )
 release_version=$( grep -E '^version: ' release.MF | awk '{print $2}' | tr -d "\"'" )
-sha1=$(sha1sum *.tgz)
+sha1=$(sha1sum *.tgz | cut -d' ' -f1)
 url=$(cat url)
 popd > /dev/null
 
-cat > bucc/${OPS_FILE_PATH} <<YML
+# Create ops-file
+pushd bucc > /dev/null
+cat > ${OPS_FILE_PATH} <<YML
 - type: replace
   path: /releases/name=${release_name}?
   value:
@@ -20,3 +23,17 @@ cat > bucc/${OPS_FILE_PATH} <<YML
     url: ${url}
     sha1: ${sha1}
 YML
+
+# Commit changes
+if [[ -z $(git config --global user.email) ]]; then
+    git config --global user.email "ci@starkandwayne.com"
+fi
+if [[ -z $(git config --global user.name) ]]; then
+    git config --global user.name "CI Bot"
+fi
+
+git merge --no-edit master
+if [[ -n $(git status -s) ]]; then
+    git add ${OPS_FILE_PATH}
+    git commit -m "Compiled releases updated: ${release_name}/${release_version}"
+fi
