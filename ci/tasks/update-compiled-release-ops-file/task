@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+pushd compiled-release > /dev/null
+tar -xzf *.tgz $( tar -tzf *.tgz | grep 'release.MF' )
+release_name=$( grep -E '^name: ' release.MF | awk '{print $2}' | tr -d "\"'" )
+release_version=$( grep -E '^version: ' release.MF | awk '{print $2}' | tr -d "\"'" )
+sha1=$(sha1sum *.tgz)
+url=$(cat url)
+popd > /dev/null
+
+cat > bucc/${OPS_FILE_PATH} <<YML
+- type: replace
+  path: /releases/name=${release_name}?
+  value:
+    name: ${release_name}
+    version: ${release_version}
+    url: ${url}
+    sha1: ${sha1}
+YML

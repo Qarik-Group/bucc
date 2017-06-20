@@ -1,0 +1,21 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: starkandwayne/concourse
+
+inputs:
+- name: bucc
+- name: bucc-ci
+- name: compiled-release
+
+outputs:
+- name: bucc-out
+
+run:
+  path: bucc-ci/ci/tasks/update-compiled-release-ops-file/task
+
+params:
+  OPS_FILE_PATH:
