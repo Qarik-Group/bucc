@@ -1,0 +1,7 @@
+- type: replace
+  path: /releases/name=bosh-vsphere-cpi?
+  value:
+    name: bosh-vsphere-cpi
+    version: 41
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bosh-vsphere-cpi-41-ubuntu-trusty-3421.3-20170620-102015-860208982-20170620102017.tgz
+    sha1: f9e51258abe01a0905a8aca3553b4af0174e57ef
