@@ -46,6 +46,7 @@ groups:
     jobs:
       - compile-releases
       - concourse-compiled-release-ops-file
+      - os-conf-compiled-release-ops-file      
       
 jobs:
   - name: sanity-check
@@ -235,6 +236,9 @@ jobs:
           - try:
               put: compiled-releases-concourse
               params: { file: "compiled-releases/concourse*.tgz", acl: public-read }
+          - try:
+              put: compiled-releases-os-conf
+              params: { file: "compiled-releases/os-conf*.tgz", acl: public-read }
 
   - name: concourse-compiled-release-ops-file
     public: true
@@ -256,6 +260,26 @@ jobs:
             rebase: true
             repository: bucc-out
 
+  - name: os-conf-compiled-release-ops-file
+    public: true
+    serial: true
+    plan:
+      - do:
+        - aggregate:
+          - get: bucc 
+          - get: bucc-ci 
+          - { get: compiled-releases-os-conf, trigger: true }
+        - task: update-os-conf-compiled-release-ops-file
+          file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
+          input_mapping:
+            compiled-release: compiled-releases-os-conf
+          params:
+            OPS_FILE_PATH: ops/9-os-conf-compiled-release.yml
+        - put: bucc
+          params:
+            rebase: true
+            repository: bucc-out
+            
 resource_types:
   - name: bosh-deployment
     type: docker-image
@@ -302,6 +326,15 @@ resources:
       secret_access_key: (( grab meta.aws.secret_access_key ))
       region_name: eu-west-1
       regexp: "concourse.*-(\\d+).tgz"
+
+  - name: compiled-releases-os-conf
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      region_name: eu-west-1
+      regexp: "os-conf.*-(\\d+).tgz"
 
   - name: notify
     type: slack-notification
