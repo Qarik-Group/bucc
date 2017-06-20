@@ -1,0 +1,7 @@
+- type: replace
+  path: /releases/name=bosh-virtualbox-cpi?
+  value:
+    name: bosh-virtualbox-cpi
+    version: 0.0.11
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bosh-virtualbox-cpi-0.0.11-ubuntu-trusty-3421.3-20170620-083217-585394789-20170620083222.tgz
+    sha1: 61e0fca45ce14c4b99d83f943dae30ef7670f954
