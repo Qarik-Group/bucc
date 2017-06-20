@@ -31,7 +31,26 @@ gen_manifest() {
         manifest_name+="-lite"
     fi
 
-    ./bin/bucc int > ../bucc-generated-manifest/${manifest_name}.yml
+    manifest="../bucc-generated-manifest/${manifest_name}.yml"
+
+    ./bin/bucc int > ${manifest}
+
+    if ! grep -q ${cpi} ${manifest}; then
+        echo "Invalid manifest missing cpi: ${cpi}"
+        echo ""
+        cat ${manifest}
+        exit 1
+    fi
+
+    if [ ${lite} = "true" ]; then
+        if ! grep -q warden ${manifest}; then
+            echo "Invalid manifest missing warden"
+            echo ""
+            cat ${manifest}
+            exit 1
+        fi
+    fi
+
 
     echo ""
     echo "bucc-generated-manifest/${manifest_name}.yml"
