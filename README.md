@@ -19,12 +19,6 @@ git clone https://github.com/starkandwayne/bucc.git
 cd bucc
 ```
 
-we work with `git subtree` to get the latest Version
-`git subtree pull --prefix src/bosh-deployment https://github.com/cloudfoundry/bosh-deployment.git master master --squash`
-
-please not that this is onyl necessary for testing
-because our CI will try to fetch and the test the latest ops files
-
 ### Boot your BUCC VM
 
 #### Choose your cpi
