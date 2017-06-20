@@ -45,7 +45,8 @@ groups:
   - name: compiled-releases
     jobs:
       - compile-releases
-
+      - concourse-compiled-release-ops-file
+      
 jobs:
   - name: sanity-check
     public: true
@@ -57,7 +58,7 @@ jobs:
           - { get: bucc-ci }
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
-          
+
         # on_failure:
         #   put: notify
         #   params:
@@ -66,36 +67,6 @@ jobs:
         #     icon_url: (( grab meta.slack.icon ))
         #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
 
-  - name: compile-releases
-    public: true
-    serial: true
-    plan:
-      - do:
-        - aggregate:
-          - { get: bucc, trigger: true, passed: [sanity-check] }
-          - { get: bucc-ci }
-        - task: compile-releases
-          file: bucc-ci/ci/tasks/compile-releases/task.yml
-          privileged: true
-        - aggregate: 
-          - put: compiled-releases
-            params: { file: "compiled-releases/concourse*.tgz", acl: public-read }
-          - put: compiled-releases
-            params: { file: "compiled-releases/bosh-virtualbox-cpi*.tgz", acl: public-read }
-          - put: compiled-releases
-            params: { file: "compiled-releases/bosh-aws-cpi*.tgz", acl: public-read }
-          - put: compiled-releases
-            params: { file: "compiled-releases/bosh-azure-cpi*.tgz", acl: public-read }
-          - put: compiled-releases
-            params: { file: "compiled-releases/bosh-docker-cpi*.tgz", acl: public-read }
-          - put: compiled-releases
-            params: { file: "compiled-releases/bosh-google-cpi*.tgz", acl: public-read }
-          - put: compiled-releases
-            params: { file: "compiled-releases/bosh-openstack-cpi*.tgz", acl: public-read }
-          - put: compiled-releases
-            params: { file: "compiled-releases/bosh-vpshere-cpi*.tgz", acl: public-read }
-
-          
   - name: test
     public: true
     serial: true
@@ -249,6 +220,42 @@ jobs:
         #     icon_url: (( grab meta.slack.icon ))
         #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'
 
+  - name: compile-releases
+    public: true
+    serial: true
+    plan:
+      - do:
+        - aggregate:
+          - { get: bucc, trigger: true, passed: [sanity-check] }
+          - { get: bucc-ci }
+        - task: compile-releases
+          file: bucc-ci/ci/tasks/compile-releases/task.yml
+          privileged: true
+        - aggregate: 
+          - try:
+              put: compiled-releases-concourse
+              params: { file: "compiled-releases/concourse*.tgz", acl: public-read }
+
+  - name: concourse-compiled-release-ops-file
+    public: true
+    serial: true
+    plan:
+      - do:
+        - aggregate:
+          - get: bucc 
+          - get: bucc-ci 
+          - { get: compiled-releases-concourse, trigger: true }
+        - task: update-concourse-compiled-release-ops-file
+          file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
+          input_mapping:
+            compiled-release: compiled-releases-concourse
+          params:
+            OPS_FILE_PATH: ops/9-concourse-compiled-release.yml
+        - put: bucc
+          params:
+            rebase: true
+            repository: bucc-out
+
 resource_types:
   - name: bosh-deployment
     type: docker-image
@@ -266,7 +273,7 @@ resources:
       uri:         (( grab meta.github.uri ))
       branch:      (( grab meta.github.branch ))
       private_key: (( grab meta.github.private_key ))
-      ignore_paths: [ci/*]      
+      ignore_paths: [ci/*]
       submodules: all
 
   - name: bucc-ci
@@ -287,14 +294,14 @@ resources:
       file: version
       initial_version:   (( grab meta.initial_version || "0.0.1" ))
 
-  - name: compiled-releases
+  - name: compiled-releases-concourse
     type: s3
     source:
       bucket: "bucc-compiled-releases"
       access_key_id: (( grab meta.aws.access_key_id ))
       secret_access_key: (( grab meta.aws.secret_access_key ))
-      regexp: ".*-(\\d+).tgz"
       region_name: eu-west-1
+      regexp: "concourse.*-(\\d+).tgz"
 
   - name: notify
     type: slack-notification
