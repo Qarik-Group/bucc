@@ -1,2 +1,10 @@
+aws: [ lite, normal ]
+azuere: [ lite, normal ]
+docker: [ lite ]
+gcp: [ lite, normal ]
+openstack: [ lite, normal ]
 virtualbox: [ lite ]
 vsphere: [ lite, normal ]
+
+
+
