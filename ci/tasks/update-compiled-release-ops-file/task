@@ -37,3 +37,6 @@ if [[ -n $(git status -s) ]]; then
     git add ${OPS_FILE_PATH}
     git commit -m "Compiled releases updated: ${release_name}/${release_version}"
 fi
+popd > /dev/null
+
+cp -r bucc bucc-out
