@@ -1,7 +1,0 @@
-- type: replace
-  path: /releases/name=bosh-vsphere-cpi?
-  value:
-    name: bosh-vsphere-cpi
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release?v=38
-    sha1: cd964bb1858d6533efb1192b00afac76e80cb602
-    version: 38
