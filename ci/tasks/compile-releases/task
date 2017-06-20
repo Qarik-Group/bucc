@@ -29,6 +29,12 @@ generate_compile_manifest() {
         name=$(echo ${release} | jq -r '.name')
         version=$(echo ${release} | jq -r '.version')
         compiled_release_url=$(echo ${already_compiled_releases} | jq --arg name "${name}" '.releases[] | select(.name | contains($name)).url')
+
+        # Compiled cpi releases are not yet supported
+        # https://github.com/cloudfoundry/bosh-cli/issues/239#issuecomment-307197103
+        if [[ "${name}" == *cpi* ]]; then
+            continue
+        fi
         if [[ ${compiled_release_url} != *"${version}"*"${stemcell_version}"* ]]; then
             releases_to_compile+="- $( echo ${release} | jq -c '.version = "latest"' )\n"
         fi

@@ -1,7 +1,0 @@
-- type: replace
-  path: /releases/name=bosh-docker-cpi?
-  value:
-    name: bosh-docker-cpi
-    version: 0.0.3
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bosh-docker-cpi-0.0.3-ubuntu-trusty-3421.3-20170620-100750-990772853-20170620100756.tgz
-    sha1: 7b1849b4d3c73690e1c172bb719b98833b6fd3a7

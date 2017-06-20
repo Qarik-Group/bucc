@@ -1,7 +1,0 @@
-- type: replace
-  path: /releases/name=bosh-openstack-cpi?
-  value:
-    name: bosh-openstack-cpi
-    version: 32
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bosh-openstack-cpi-32-ubuntu-trusty-3421.3-20170620-101254-032833266-20170620101254.tgz
-    sha1: e1343d6ffd4bb21c0d5abf58d0a6a2f73126b132

@@ -1,7 +1,0 @@
-- type: replace
-  path: /releases/name=bosh-azure-cpi?
-  value:
-    name: bosh-azure-cpi
-    version: 24
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bosh-azure-cpi-24-ubuntu-trusty-3421.3-20170620-100610-988109676-20170620100613.tgz
-    sha1: b0a4e067de3c1e472e51c9fc727bcf803119cd7a
