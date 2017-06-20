@@ -1,0 +1,7 @@
+- type: replace
+  path: /releases/name=concourse?
+  value:
+    name: concourse
+    version: 2.7.0
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-2.7.0-ubuntu-trusty-3421.3-20170620-084426-067131741-20170620084446.tgz
+    sha1: 57d796832de16e413c37763dd088dbad9c636077
