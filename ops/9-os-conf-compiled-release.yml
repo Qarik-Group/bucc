@@ -1,0 +1,7 @@
+- type: replace
+  path: /releases/name=os-conf?
+  value:
+    name: os-conf
+    version: 11
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-11-ubuntu-trusty-3421.3-20170620-113424-1545687-20170620113424.tgz
+    sha1: acc7f3b841823ff48930d4cc3af63aabbaad69ae
