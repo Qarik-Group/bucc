@@ -351,7 +351,10 @@ smoke_tests() {
 
     header "testing concourse"
     ${bucc} fly
-    fly -t bucc workers | grep running
+
+    if ! fly -t bucc workers | grep running; then
+	>&2 echo "no concourse workers"; exit 1
+    fi
 }
 
 case "$1" in
