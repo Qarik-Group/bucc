@@ -47,6 +47,9 @@ groups:
       - compile-releases
       - concourse-compiled-release-ops-file
       - os-conf-compiled-release-ops-file
+
+  - name: get-latest-bosh-deployment
+    jobs:
       - get-latest-bosh-deployment
 
 jobs:
@@ -281,7 +284,7 @@ jobs:
             rebase: true
             repository: bucc-out
 
-  - name: bosh-deployment
+  - name: get-latest-bosh-deployment
     public: true
     serial: true
     plan:
