@@ -12,7 +12,8 @@
       bind_port: 80
       tls_bind_port: 443
       postgresql:
-        address: 127.0.0.1
+        host: 127.0.0.1
+        sslmode: disable
         database: &atc_db atc
         role:
           name: &atc_role postgres
