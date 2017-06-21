@@ -74,6 +74,22 @@ validate_cpi() {
     fi
 }
 
+validate_cpi_flags() {
+    for option in $(cat ${state}/flags); do
+        local flags_dir=${repo_root}/ops/cpis/$(cpi)/flags
+        if [ ! -d ${flags_dir} ]; then
+            echo "unsupported flag: --${option}"
+            echo "no flags suppored for '--cpi $(cpi)'"
+            exit 1
+        fi
+        if [ ! -f ${flags_dir}/${option}.yml ]; then
+            echo "unsupported flag: --${option}"
+            echo "flags for '--cpi $(cpi)' are: $(ls ${flags_dir} | cut -d "." -f 1 | sed 's/^/--/' | xargs)"
+            exit 1
+        fi
+    done
+}
+
 int_args() (
     local ops_file_args=""
     if [ -e ${state}/manifests/0-cpi.yml ]; then
@@ -87,6 +103,11 @@ int_args() (
         ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
     }
 
+    append_ops_args_for_file() {
+        cp_files="${ops_file_args} $(cp ${repo_root}/$1 ${state}/manifests/)"
+        ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
+    }
+
     if [ $(lite) = true ]; then
         append_ops_args_for_dir "ops/lite"
     elif [ $(lite) = false ]; then
@@ -96,6 +117,10 @@ int_args() (
     append_ops_args_for_dir "ops"
 
     append_ops_args_for_dir "ops/cpis/$(cpi)"
+
+    for flag in $(cat ${state}/flags); do
+        append_ops_args_for_file "ops/cpis/$(cpi)/flags/${flag}.yml"
+    done
 
     echo "${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
 )
@@ -308,19 +333,24 @@ smoke_tests() {
 case "$1" in
     up)
         shift
+        rm -f ${state}/flags
         while [[ $# -gt 0 ]]; do
             case "$1" in
                 --cpi)
                     echo "$2" > ${state}/cpi
+                    shift
                     ;;
                 --lite)
                     echo "true" > ${state}/lite
                     ;;
+                *)
+                    echo ${1#*--} >> ${state}/flags
             esac
             shift
         done
         validate_cpi
         validate_vars_file
+        validate_cpi_flags
 
         up "$@"
         ;;
