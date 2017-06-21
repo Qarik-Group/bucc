@@ -44,6 +44,10 @@ lite() {
     cat ${lite_file}
 }
 
+cpis() {
+    find ${repo_root}/ops/cpis -mindepth 1 -maxdepth 1 ! -type l -exec basename {} +;
+}
+
 validate_vars_file() {
     # Todo: prettify
     local cpi_vars=${repo_root}/ops/cpis/$(cpi)/vars.tmpl
@@ -69,7 +73,7 @@ validate_cpi() {
     local cpis_dir=${repo_root}/ops/cpis
     if [ ! -d ${cpis_dir}/$(cpi) ]; then
         echo "'--cpi $(cpi)' not supported, please one of the following:"
-        echo $(ls ${cpis_dir} | cut -d "." -f 1 | xargs)
+        echo $(cpis | xargs)
         exit 1
     fi
 }
@@ -151,13 +155,13 @@ usage() {
 }
 
 up_usage() {
-    echo "  --cpi    Cloud provider: [$(ls ${repo_root}/ops/cpis | cut -d "." -f 1 | xargs | sed 's/ /, /g')]"
+    echo "  --cpi    Cloud provider: [$(cpis | xargs | sed 's/ /, /g')]"
     echo "  --lite   Created bosh will use the warden cpi with garden runc"
     echo ""
     echo "  Optional cpi specific flags:"
 
     local cpis_dir=${repo_root}/ops/cpis
-    for cpi in $(ls ${cpis_dir}); do
+    for cpi in $(cpis); do
         local flags_dir=${repo_root}/ops/cpis/${cpi}/flags
         if [ -d ${flags_dir} ]; then
             echo "    ${cpi}: $(ls ${flags_dir} | cut -d "." -f 1 | sed 's/^/--/' | xargs)"

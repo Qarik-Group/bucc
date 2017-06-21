@@ -1,10 +1,13 @@
-director_name: Bosh GCP Director
-gcp_credentials_json:
-internal_cidr:
-internal_gw:
-internal_ip:
-network:
-project_id:
-subnetwork:
-tags:
-zone:
+director_name: # bosh
+gcp_credentials_json: # inline gcp credentail json/yaml {}
+internal_cidr: # 10.0.0.0/24
+internal_gw: # 10.0.0.1
+internal_ip: # 10.0.0.6 
+network: # default
+project_id: # moonlight-2389ry3
+subnetwork: # default
+tags: # [internal]
+zone: # us-east-1
+
+# flag: --service-account
+service_account: # service-account
