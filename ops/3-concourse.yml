@@ -26,7 +26,7 @@
     release: concourse
     properties:
       atc:
-        url: http://((internal_ip))
+        urls: [ "http://127.0.0.1" ]
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
