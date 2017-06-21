@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-git subtree pull --prefix src/bosh-deployment https://github.com/cloudfoundry/bosh-deployment.git master --squash
+git subtree pull --prefix src/bosh-deployment https://github.com/cloudfoundry/bosh-deployment.git master --squash -m "merging the latest bosh-deployment repo"
 
 git clone bucc bucc-out
