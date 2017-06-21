@@ -47,11 +47,10 @@ groups:
       - compile-releases
       - concourse-compiled-release-ops-file
       - os-conf-compiled-release-ops-file
-
-  - name: get-latest-bosh-deployment
+  - name: upstream
     jobs:
-      - get-latest-bosh-deployment
-
+      - bosh-deployment-repo
+      - concourse-release
 jobs:
   - name: sanity-check
     public: true
@@ -284,7 +283,7 @@ jobs:
             rebase: true
             repository: bucc-out
 
-  - name: get-latest-bosh-deployment
+  - name: bosh-deployment-repo
     public: true
     serial: true
     plan:
@@ -295,6 +294,27 @@ jobs:
           - { get: bucc-ci }
         - task: bosh-deployment
           file: bucc-ci/ci/tasks/get-latest-bosh-deployment/task.yml
+          privileged: true
+        - task: bucc-manifests
+          file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+        - put: bucc
+          params:
+            rebase: true
+            repository: bucc-out
+
+  - name: concourse-release
+    public: true
+    serial: true
+    plan:
+      - do:
+        - aggregate:
+          - { get: bucc, trigger: true, passed: [sanity-check] }
+          - { get: bucc-ci }
+          - get: bosh-release-concourse
+            params:
+              tarball: false
+        - task: bosh-deployment
+          file: bucc-ci/ci/tasks/update-concourse-release/task.yml
           privileged: true
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
@@ -336,6 +356,7 @@ resources:
     source:
       uri:    https://github.com/cloudfoundry/bosh-deployment.git
       branch: (( grab meta.github.branch ))
+      ignore_paths: [ci/*]
 
   - name: version
     type: semver
@@ -376,3 +397,8 @@ resources:
       user:         (( grab meta.github.owner ))
       repository:   (( grab meta.github.repo ))
       access_token: (( grab meta.github.access_token ))
+
+  - name: bosh-release-concourse
+    type: bosh-io-release
+    source:
+      repository: concourse/concourse
