@@ -14,9 +14,8 @@ outputs:
   - name: bucc-state
 
 params:
-  CPI:
   VARS:
-  LITE: false
+  ARGS: 
 
 run:
   path: bucc-ci/ci/tasks/bucc-up/task
