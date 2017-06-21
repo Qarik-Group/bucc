@@ -3,5 +3,5 @@
   value:
     name: os-conf
     version: 11
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-11-ubuntu-trusty-3421.9-20170621-190222-201770087-20170621190222.tgz
-    sha1: 41886f21915c1bbd96441be665cdf2beaf51bdf4
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-11-ubuntu-trusty-3421.9-20170621-192158-377516778-20170621192158.tgz
+    sha1: 2dfab570328689ae91277afeb0e768a146a623bc
