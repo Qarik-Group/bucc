@@ -291,9 +291,10 @@ jobs:
       - do:
         - aggregate:
           - { get: bucc, trigger: true, passed: [sanity-check] }
+          - { get: bosh-deployment }
           - { get: bucc-ci }
         - task: bosh-deployment
-          file: bucc-ci/ci/tasks/bosh-deployment/task.yml
+          file: bucc-ci/ci/tasks/get-latest-bosh-deployment/task.yml
           privileged: true
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
@@ -329,6 +330,12 @@ resources:
       branch:      (( grab meta.github.branch ))
       private_key: (( grab meta.github.private_key ))
       paths: [ci/*]
+
+  - name: bosh-deployment
+    type: git
+    source:
+      uri:    https://github.com/cloudfoundry/bosh-deployment.git
+      branch: (( grab meta.github.branch ))
 
   - name: version
     type: semver

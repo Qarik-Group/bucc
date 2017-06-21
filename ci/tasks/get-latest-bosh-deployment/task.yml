@@ -16,4 +16,4 @@ outputs:
 params: []
 
 run:
-  path: bucc-ci/ci/tasks/bosh-deployment/task
+  path: bucc-ci/ci/tasks/get-latest-bosh-deployment/task
