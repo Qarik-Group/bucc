@@ -308,7 +308,7 @@ jobs:
       - do:
         - aggregate:
           - { get: bucc, trigger: false, passed: [sanity-check] }
-          - { get: bosh-deployment }
+          - { get: bosh-deployment, trigger: true }
           - { get: bucc-ci, trigger: false}
         - task: bosh-deployment
           file: bucc-ci/ci/tasks/get-latest-bosh-deployment/task.yml
@@ -329,6 +329,7 @@ jobs:
           - { get: bucc, trigger: false, passed: [sanity-check] }
           - { get: bucc-ci, trigger: false }
           - get: bosh-release-concourse
+            trigger: true
             params:
               tarball: false
         - task: bosh-deployment
