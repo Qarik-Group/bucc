@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+# Get release details
+pushd bosh-release-concourse > /dev/null
+release_name=$RELEASE_NAME
+release_version=$( cat version )
+url=$( cat url )
+sha=$( cat sha1 )
+popd > /dev/null
+
+
+# Create ops-file
+pushd bucc > /dev/null
+cat > ${OPS_FILE_PATH} <<YML
+- type: replace
+  path: /releases/name=${release_name}?
+  value:
+    name: ${release_name}
+    version: ${release_version}
+    url: ${url}
+    sha1: ${sha1}
+YML
+
+# Commit changes
+if [[ -z $(git config --global user.email) ]]; then
+    git config --global user.email "ci@starkandwayne.com"
+fi
+if [[ -z $(git config --global user.name) ]]; then
+    git config --global user.name "CI Bot"
+fi
+
+git merge --no-edit master
+if [[ -n $(git status -s) ]]; then
+    git add ${OPS_FILE_PATH}
+    git commit -m "Releases updated: ${release_name}/${release_version}"
+fi
+popd > /dev/null
+
+git clone bucc bucc-out
