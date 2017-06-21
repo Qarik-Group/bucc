@@ -150,6 +150,22 @@ usage() {
     exit 1
 }
 
+up_usage() {
+    echo "  --cpi    Cloud provider: [$(ls ${repo_root}/ops/cpis | cut -d "." -f 1 | xargs | sed 's/ /, /g')]"
+    echo "  --lite   Created bosh will use the warden cpi with garden runc"
+    echo ""
+    echo "  Optional cpi specific flags:"
+
+    local cpis_dir=${repo_root}/ops/cpis
+    for cpi in $(ls ${cpis_dir}); do
+        local flags_dir=${repo_root}/ops/cpis/${cpi}/flags
+        if [ -d ${flags_dir} ]; then
+            echo "    ${cpi}: $(ls ${flags_dir} | cut -d "." -f 1 | sed 's/^/--/' | xargs)"
+        fi
+    done
+
+}
+
 platform() {
     if [ "$(uname)" == "Darwin" ]; then
         echo "darwin"
@@ -336,6 +352,10 @@ case "$1" in
         rm -f ${state}/flags
         while [[ $# -gt 0 ]]; do
             case "$1" in
+                -h|--help|help)
+                    up_usage
+                    exit 0
+                    ;;
                 --cpi)
                     echo "$2" > ${state}/cpi
                     shift
