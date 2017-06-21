@@ -83,28 +83,22 @@ jobs:
         - task: bucc-up-vsphere
           file: bucc-ci/ci/tasks/bucc-up/task.yml
           params:
-            CPI: vsphere
-            LITE: true
+            ARGS: --cpi vsphere --lite
             VARS:
               director_name: snw-bosh
               internal_cidr: 10.213.0.0/20
               internal_gw: 10.213.0.1
               internal_ip: 10.213.8.1
               network_name: net-10-213-0-0
-              vcenter_dns: [ 8.8.8.8 ]
-              vcenter:
-                address: 10.58.111.2
-                password: (( grab meta.vcenter.password ))
-                user: (( grab meta.vcenter.username ))
-                default_disk_type: thin
-                datacenters:
-                - name: Interxion MAD2
-                  datastore_pattern: vol309|vol310
-                  disk_path: bucc-ci
-                  persistent_datastore_pattern: vol309|vol310
-                  template_folder: bucc-ci/templates
-                  vm_folder: bucc-ci/vms
-                  clusters: [ cluster1: {} ]
+              vcenter_ip: 10.58.111.2
+              vcenter_password: (( grab meta.vcenter.password ))
+              vcenter_user: (( grab meta.vcenter.username ))
+              vcenter_dc: Interxion MAD2
+              vcenter_ds: vol309|vol310
+              vcenter_disks: bucc-ci
+              vcenter_templates: bucc-ci/templates
+              vcenter_vms: bucc-ci/vms
+              vcenter_cluster: cluster1
         - task: bucc-test-vsphere
           file: bucc-ci/ci/tasks/bucc-test/task.yml
           ensure:
