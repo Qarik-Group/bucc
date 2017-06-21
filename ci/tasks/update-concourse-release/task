@@ -8,7 +8,7 @@ pushd bosh-release-concourse > /dev/null
 release_name=$RELEASE_NAME
 release_version=$( cat version )
 url=$( cat url )
-sha=$( cat sha1 )
+sha1=$( cat sha1 )
 popd > /dev/null
 
 
