@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 
+set -e
+set -o pipefail
+
+pushd bucc > /dev/null
+
+if [[ -z $(git config --global user.email) ]]; then
+    git config --global user.email "ci@starkandwayne.com"
+fi
+if [[ -z $(git config --global user.name) ]]; then
+    git config --global user.name "CI Bot"
+fi
+
+echo "MERGE bosh-deployment repo with git subtree"
 git subtree pull --prefix src/bosh-deployment https://github.com/cloudfoundry/bosh-deployment.git master --squash -m "merging the latest bosh-deployment repo"
 
+popd > /dev/null
+
+echo "CLONE repository"
 git clone bucc bucc-out
