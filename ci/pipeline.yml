@@ -46,8 +46,9 @@ groups:
     jobs:
       - compile-releases
       - concourse-compiled-release-ops-file
-      - os-conf-compiled-release-ops-file      
-      
+      - os-conf-compiled-release-ops-file
+      - get-latest-bosh-deployment
+
 jobs:
   - name: sanity-check
     public: true
@@ -232,7 +233,7 @@ jobs:
         - task: compile-releases
           file: bucc-ci/ci/tasks/compile-releases/task.yml
           privileged: true
-        - aggregate: 
+        - aggregate:
           - try:
               put: compiled-releases-concourse
               params: { file: "compiled-releases/concourse*.tgz", acl: public-read }
@@ -246,8 +247,8 @@ jobs:
     plan:
       - do:
         - aggregate:
-          - get: bucc 
-          - get: bucc-ci 
+          - get: bucc
+          - get: bucc-ci
           - { get: compiled-releases-concourse, trigger: true }
         - task: update-concourse-compiled-release-ops-file
           file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
@@ -266,8 +267,8 @@ jobs:
     plan:
       - do:
         - aggregate:
-          - get: bucc 
-          - get: bucc-ci 
+          - get: bucc
+          - get: bucc-ci
           - { get: compiled-releases-os-conf, trigger: true }
         - task: update-os-conf-compiled-release-ops-file
           file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
@@ -279,7 +280,25 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
-            
+
+  - name: bosh-deployment
+    public: true
+    serial: true
+    plan:
+      - do:
+        - aggregate:
+          - { get: bucc, trigger: true, passed: [sanity-check] }
+          - { get: bucc-ci }
+        - task: bosh-deployment
+          file: bucc-ci/ci/tasks/bosh-deployment/task.yml
+          privileged: true
+        - task: bucc-manifests
+          file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+        - put: bucc
+          params:
+            rebase: true
+            repository: bucc-out
+
 resource_types:
   - name: bosh-deployment
     type: docker-image
