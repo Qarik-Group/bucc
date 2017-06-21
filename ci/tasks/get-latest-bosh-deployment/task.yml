@@ -9,6 +9,7 @@ image_resource:
 inputs:
   - name: bucc-ci
   - name: bucc
+  - name: bosh-deployment
 
 outputs:
 - name: bucc-out
