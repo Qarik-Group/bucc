@@ -10,3 +10,4 @@ local.yml
 /bin/fly
 /bin/credhub
 /vars.yml
+/src/bosh-deployment/ci
