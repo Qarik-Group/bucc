@@ -79,19 +79,21 @@ validate_cpi() {
 }
 
 validate_cpi_flags() {
-    for option in $(cat ${state}/flags); do
-        local flags_dir=${repo_root}/ops/cpis/$(cpi)/flags
-        if [ ! -d ${flags_dir} ]; then
-            echo "unsupported flag: --${option}"
-            echo "no flags suppored for '--cpi $(cpi)'"
-            exit 1
-        fi
-        if [ ! -f ${flags_dir}/${option}.yml ]; then
-            echo "unsupported flag: --${option}"
-            echo "flags for '--cpi $(cpi)' are: $(ls ${flags_dir} | cut -d "." -f 1 | sed 's/^/--/' | xargs)"
-            exit 1
-        fi
-    done
+    if [ -f ${state}/flags ]; then
+        for option in $(cat ${state}/flags); do
+            local flags_dir=${repo_root}/ops/cpis/$(cpi)/flags
+            if [ ! -d ${flags_dir} ]; then
+                echo "unsupported flag: --${option}"
+                echo "no flags suppored for '--cpi $(cpi)'"
+                exit 1
+            fi
+            if [ ! -f ${flags_dir}/${option}.yml ]; then
+                echo "unsupported flag: --${option}"
+                echo "flags for '--cpi $(cpi)' are: $(ls ${flags_dir} | cut -d "." -f 1 | sed 's/^/--/' | xargs)"
+                exit 1
+            fi
+        done
+    fi
 }
 
 int_args() (
@@ -122,9 +124,11 @@ int_args() (
 
     append_ops_args_for_dir "ops/cpis/$(cpi)"
 
-    for flag in $(cat ${state}/flags); do
-        append_ops_args_for_file "ops/cpis/$(cpi)/flags/${flag}.yml"
-    done
+    if [ -f ${state}/flags ]; then
+        for flag in $(cat ${state}/flags); do
+            append_ops_args_for_file "ops/cpis/$(cpi)/flags/${flag}.yml"
+        done
+    fi
 
     echo "${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
 )
