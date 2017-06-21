@@ -1,21 +1,16 @@
-director_name: bosh
-internal_cidr: 10.0.0.0/24
-internal_gw: 10.0.0.1
-internal_ip: 10.0.0.2
-network_name: network1
-vcenter_dns: [ 8.8.8.8 ]
-vcenter:
-  address: example.com # ip or hostname (should be resolvable by vcenter_dns)
-  password: password
-  user: admin
-  default_disk_type: thin
-  datacenters:
-  - name: datacenter1
-    datastore_pattern: volume1|volume2
-    disk_path: bucc
-    persistent_datastore_pattern: volume1|volume2
-    template_folder: bucc/templates
-    vm_folder: bucc/vms
-    clusters:
-    - cluster1: {}
-    #    resource_pool: pool1
+director_name:
+internal_cidr:
+internal_gw:
+internal_ip:
+network_name:
+vcenter_cluster:
+vcenter_dc:
+vcenter_disks:
+vcenter_dns:
+vcenter_ds:
+vcenter_ip:
+vcenter_password:
+vcenter_rp:
+vcenter_templates:
+vcenter_user:
+vcenter_vms:

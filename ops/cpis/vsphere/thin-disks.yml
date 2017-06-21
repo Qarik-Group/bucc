@@ -1,0 +1,7 @@
+- type: replace
+  path: /instance_groups/name=bosh/properties/vcenter/default_disk_type?
+  value: thin
+
+- type: replace
+  path: /cloud_provider/properties/vcenter/default_disk_type?
+  value: thin
