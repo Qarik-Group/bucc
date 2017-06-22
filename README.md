@@ -113,7 +113,7 @@ $ credhub generate --name test
 
 #### Via the GUI
 
-To get the login details for your consoure GUI run:
+To get the login details for your concourse GUI run:
 
 ```
 bucc info
