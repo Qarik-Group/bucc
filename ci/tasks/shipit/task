@@ -9,7 +9,7 @@ if [[ ! -f bucc-ci/ci/release_notes.md ]]; then
 fi
 
 echo ${VERSION}                         > github/tag
-echo "$BUCC v${VERSION}"                > github/name
+echo "BUCC v${VERSION}"                 > github/name
 mv bucc-ci/ci/release_notes.md          github/notes.md
 
 cat > github/notification <<EOF
