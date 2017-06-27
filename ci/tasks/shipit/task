@@ -8,7 +8,7 @@ if [[ ! -f bucc-ci/ci/release_notes.md ]]; then
   exit 1
 fi
 
-echo ${VERSION}                         > github/tag
+echo "v${VERSION}"                      > github/tag
 echo "BUCC v${VERSION}"                 > github/name
 mv bucc-ci/ci/release_notes.md          github/notes.md
 
@@ -16,26 +16,19 @@ cat > github/notification <<EOF
 <!here> New BUCC v${VERSION} released!
 EOF
 
-# Commit changes
-if [[ -z $(git config --global user.email) ]]; then
-    git config --global user.email "ci@starkandwayne.com"
-fi
-if [[ -z $(git config --global user.name) ]]; then
-    git config --global user.name "CI Bot"
-fi
+git config --global user.email "ci@starkandwayne.com"
+git config --global user.name "CI Bot"
 
 pushd bucc > /dev/null
 
+rm ci/release_notes.md
+
 sed -i "2s/version.*/version=\"${VERSION}\"/" bin/bucc
 
-git merge --no-edit master
-if [[ -n $(git status -s) ]]; then
-    git add -A
-    git commit -m "release: v${VERSION}"
-fi
+git add -A
+git commit -m "release: v${VERSION}"
+
 REF=$(git rev-parse HEAD)
 popd > /dev/null
 
 git clone bucc bucc-out
-
-echo ${REF} > github/commit

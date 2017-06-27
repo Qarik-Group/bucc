@@ -182,13 +182,12 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+            tag: github/tag
         - name: github
           put: github
           params:
-            tag_prefix: v
             name:       github/name
             tag:        github/tag
-            commitish:  github/commit
             body:       github/notes.md
         # on_failure:
         #   put: notify
