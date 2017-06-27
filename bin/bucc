@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1"
+version="0.0.1"
 
 repo_root=$(dirname $(realpath "$0") | rev | cut -c5- | rev)
 state=${repo_root}/state
