@@ -8,11 +8,9 @@ if [[ ! -f bucc/ci/release_notes.md ]]; then
   exit 1
 fi
 
-
-
 echo ${VERSION}                         > github/tag
 echo "${RELEASE_NAME} v${VERSION}"      > github/name
-mv bucc/ci/release_notes.md               github/notes.md
+mv bucc-ci/ci/release_notes.md          github/notes.md
 
 cat > github/notification <<EOF
 <!here> New ${RELEASE_NAME} v${VERSION} released!
