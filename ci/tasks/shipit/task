@@ -21,7 +21,7 @@ git config --global user.name "CI Bot"
 
 pushd bucc > /dev/null
 
-rm ci/release_notes.md
+rm -f ci/release_notes.md
 
 sed -i "2s/version.*/version=\"${VERSION}\"/" bin/bucc
 
