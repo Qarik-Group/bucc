@@ -25,6 +25,9 @@ if [[ -z $(git config --global user.name) ]]; then
 fi
 
 pushd bucc > /dev/null
+
+sed -i "2s/version.*/version=\"${VERSION}\"/" bin/bucc
+
 git merge --no-edit master
 if [[ -n $(git status -s) ]]; then
     git add -A
