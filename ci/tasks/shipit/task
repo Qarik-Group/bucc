@@ -3,7 +3,7 @@
 set -eu
 
 VERSION=$(cat version/number)
-if [[ ! -f bucc/ci/release_notes.md ]]; then
+if [[ ! -f bucc-ci/ci/release_notes.md ]]; then
   echo >&2 "ci/release_notes.md not found.  Did you forget to write them?"
   exit 1
 fi
