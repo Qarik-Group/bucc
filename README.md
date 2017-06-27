@@ -22,9 +22,15 @@ cd bucc
 ### Boot your BUCC VM
 
 #### Choose your cpi
-"--cpi" you can choose your cpi "[virtualbox,aws,docker,openstack,gcp,vsphere]" (defaults to virtualbox)
+```
+bucc up --help
+  --cpi    Cloud provider: [aws, azure, docker, gcp, openstack, virtualbox, vsphere]
+  --lite   Created bosh will use the warden cpi with garden runc
 
-"--lite" options is for the use with warden cpi (defaults to false).
+  Optional cpi specific flags:
+    gcp: --service-account
+    vsphere: --dns --resource-pool
+```
 
 From the repo root run:
 ```
