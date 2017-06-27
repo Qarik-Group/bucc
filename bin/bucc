@@ -148,7 +148,6 @@ usage() {
     echo "  env -- sourceable envrionment variables for cli clients"
     echo "  int -- wrapper for '${boshexec} int' for the bosh manifest"
     echo "  info -- displays info about bucc deployed endpoints"
-    echo "  vars -- print vars (yaml formatted) for use in pipelines"
     echo "  bosh -- configures bosh cli"
     echo "  credhub -- configures credhub cli"
     echo "  uaac -- configures uaac cli"
