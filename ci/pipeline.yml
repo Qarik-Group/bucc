@@ -173,44 +173,23 @@ jobs:
           aggregate:
             - { get: version, passed: [rc], params: {bump: final} }
             - { get: bucc,    passed: [rc] }
-        # - name: release
-        #   task: release
-        #   config:
-        #     rootfs_uri: (( grab meta.image ))
-        #     platform: linux
-        #     inputs:
-        #       - name: version
-        #       - name: git
-        #     outputs:
-        #       - name: gh
-        #       - name: pushme
-        #     run:
-        #       path: "git/ci/scripts/shipit"
-        #       args: []
-        #     params:
-        #       BIN_DIR: (( grab meta.bin_dir ))
-        #       BINARIES: (( grab meta.binaries ))
-        #       REPO_ROOT: git
-        #       VERSION_FROM: version/number
-        #       RELEASE_NAME: (( grab meta.release ))
-        #       RELEASE_ROOT: gh
-        #       REPO_OUT:     pushme
-        #       BRANCH:       (( grab meta.github.branch ))
-        - name: version
-          put: version
+            - { get: bucc-ci }
+        - task: release
+          file: bucc-ci/ci/tasks/shipit/task.yml
+        - put: version
           params: { bump: final }
-        - name: bucc
-          put: bucc
+        - put: bucc
           params:
             rebase: true
-            repository: pushme/git
+            repository: bucc-out
         - name: github
           put: github
           params:
-            name:   gh/name
-            tag:    gh/tag
-            body:   gh/notes.md
-            globs: [gh/artifacts/*]
+            tag_prefix: v
+            name:       github/name
+            tag:        github/tag
+            commitish:  github/commit
+            body:       github/notes.md
         # on_failure:
         #   put: notify
         #   params:

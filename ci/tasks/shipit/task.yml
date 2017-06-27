@@ -1,0 +1,19 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: starkandwayne/concourse
+
+inputs:
+- name: version
+- name: bucc
+- name: bucc-ci
+
+outputs:
+- name: github
+- name: bucc-out
+
+run:
+  path: bucc-ci/ci/tasks/shipit/task
