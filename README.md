@@ -21,7 +21,7 @@ cd bucc
 
 ### Boot your BUCC VM
 
-#### Choose your cpi
+Choose your cpi:
 ```
 bucc up --help
   --cpi    Cloud provider: [aws, azure, docker, gcp, openstack, virtualbox, vsphere]
