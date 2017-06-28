@@ -361,7 +361,7 @@ resources:
     type: git
     source:
       uri:    https://github.com/cloudfoundry/bosh-deployment.git
-      branch: (( grab meta.github.branch ))
+      branch: master
       ignore_paths: [ci/*]
 
   - name: version
