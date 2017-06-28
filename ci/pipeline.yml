@@ -12,6 +12,7 @@ meta:
     owner:        (( param "Please specify the name of the user / organization that owns the Github repository" ))
     repo:         (( param "Please specify the name of the Github repository" ))
     branch:       develop
+    master-branch: master
     private_key:  (( param "Please generate an SSH Deployment Key for this repo and specify it here" ))
     access_token: (( param "Please generate a Personal Access Token and specify it here" ))
 
@@ -344,7 +345,7 @@ resources:
     type: git
     source:
       uri:         (( grab meta.github.uri ))
-      branch:      master
+      branch:      (( grab meta.github.master-branch ))
       private_key: (( grab meta.github.private_key ))
       ignore_paths: [ci/*]
       submodules: all
@@ -361,7 +362,7 @@ resources:
     type: git
     source:
       uri:    https://github.com/cloudfoundry/bosh-deployment.git
-      branch: master
+      branch: (( grab meta.github.master-branch ))
       ignore_paths: [ci/*]
 
   - name: version
