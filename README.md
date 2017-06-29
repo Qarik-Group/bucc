@@ -1,7 +1,5 @@
 # BUCC ([BOSH](http://bosh.io/), [UAA](https://github.com/cloudfoundry/uaa), [Credhub](https://github.com/cloudfoundry-incubator/credhub) and [Concourse](http://concourse.ci/)) [![BUCC CI](https://ci.starkandwayne.com/api/v1/pipelines/bucc/jobs/test/badge)](https://ci.starkandwayne.com/teams/main/pipelines/bucc)
 
-__WARNING: not yet stable, we are currently in the processes of setting up ci, during which there can be breaking changes. Once we have ci running we will start publishing releases to github.__
-
 The bucc command line utility allows for easy bootstrapping of the BUCC stack (Bosh Uaa Credhub and Concourse). Which is the starting point for many deployments.
 
 ## Install the bucc-cli
