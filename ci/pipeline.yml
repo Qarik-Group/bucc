@@ -64,14 +64,13 @@ jobs:
           - { get: bucc-ci }
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
-
-        # on_failure:
-        #   put: notify
-        #   params:
-        #     channel:  (( grab meta.slack.channel ))
-        #     username: (( grab meta.slack.username ))
-        #     icon_url: (( grab meta.slack.icon ))
-        #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": sanity-check job failed" ))'
 
   - name: test
     public: true
@@ -105,6 +104,14 @@ jobs:
           ensure:
             task: bucc-down-vsphere
             file: bucc-ci/ci/tasks/bucc-down/task.yml
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
+
 
   - name: rc
     public: true
@@ -115,13 +122,13 @@ jobs:
             - { get: version, trigger: true, params: {pre: rc} }
         - put: version
           params: {file: version/number}
-        # on_failure:
-        #   put: notify
-        #   params:
-        #     channel:  (( grab meta.slack.channel ))
-        #     username: (( grab meta.slack.username ))
-        #     icon_url: (( grab meta.slack.icon ))
-        #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": rc job failed" ))'
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": rc job failed" ))'
 
   - name: bump-patch
     public: true
@@ -190,13 +197,13 @@ jobs:
             name:       github/name
             tag:        github/tag
             body:       github/notes.md
-        # on_failure:
-        #   put: notify
-        #   params:
-        #     channel:  (( grab meta.slack.channel ))
-        #     username: (( grab meta.slack.username ))
-        #     icon_url: (( grab meta.slack.icon ))
-        #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'
 
   - name: compile-releases
     public: true
@@ -219,6 +226,13 @@ jobs:
           - try:
               put: compiled-releases-credhub
               params: { file: "compiled-releases/credhub*.tgz", acl: public-read }
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": compiled-releases job failed" ))'
 
   - name: concourse-compiled-release-ops-file
     public: true
@@ -239,6 +253,13 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": concourse-compiled-release-ops-file job failed" ))'
 
   - name: os-conf-compiled-release-ops-file
     public: true
@@ -259,6 +280,13 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": os-conf-compiled-release-ops-file job failed" ))'
 
   - name: credhub-compiled-release-ops-file
     public: true
@@ -279,6 +307,13 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": concourse-compiled-release-ops-file job failed" ))'
 
   - name: bosh-deployment-repo
     public: true
@@ -298,6 +333,13 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": bosh-deployment-repo job failed" ))'
 
   - name: concourse-release
     public: true
@@ -320,6 +362,13 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": concourse-release job failed" ))'
 
 resource_types:
   - name: bosh-deployment
