@@ -5,7 +5,6 @@ repo_root=$(dirname $(realpath "$0") | rev | cut -c5- | rev)
 state=${repo_root}/state
 mkdir -p $state/manifests
 manifest="${repo_root}/src/bosh-deployment/bosh.yml"
-ssh_private_key="${state}/ssh.key"
 state_arg="--state ${state}/state.json"
 vars_store=${state}/creds.yml
 vars_store_arg="--vars-store ${vars_store}"
@@ -236,6 +235,9 @@ env() {
     echo "export BOSH_CA_CERT='$(cat $(ca_cert))'"
     echo "export BOSH_CLIENT=$(get_var bosh_client)"
     echo "export BOSH_CLIENT_SECRET=$(get_var bosh_client_secret)"
+    echo "export BOSH_GW_USER=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)"
+    echo "export BOSH_GW_HOST=$(ip)"
+    echo "export BOSH_GW_PRIVATE_KEY=$(ssh_private_key)"
 }
 
 routes() {
@@ -324,11 +326,16 @@ ip() {
     int --path /networks/name=default/subnets/0/static/0
 }
 
-_ssh() {
-    local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
+ssh_private_key() {
+    local ssh_private_key="${state}/ssh.key"
     store_int --path /jumpbox_ssh/private_key > $ssh_private_key
     chmod 600 $ssh_private_key
-    ssh -i $ssh_private_key $user@$(ip) -t 'command; sudo su -'
+    echo $ssh_private_key
+}
+
+_ssh() {
+    local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
+    ssh -i $(ssh_private_key) $user@$(ip) -t 'command; sudo su -'
 }
 
 header() {
