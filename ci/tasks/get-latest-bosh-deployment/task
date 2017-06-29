@@ -13,7 +13,7 @@ if [[ -z $(git config --global user.name) ]]; then
 fi
 
 echo "MERGE bosh-deployment repo with git subtree"
-git subtree pull --prefix src/bosh-deployment ../bosh-deployment master --squash -m "merging the latest bosh-deployment repo"
+git subtree pull --prefix src/bosh-deployment ../bosh-deployment develop --squash -m "merging the latest bosh-deployment repo"
 
 popd > /dev/null
 

@@ -311,7 +311,7 @@ jobs:
             trigger: true
             params:
               tarball: false
-        - task: bosh-deployment
+        - task: update-concourse-release
           file: bucc-ci/ci/tasks/update-concourse-release/task.yml
           privileged: true
         - task: bucc-manifests
