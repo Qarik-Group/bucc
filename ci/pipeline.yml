@@ -396,7 +396,6 @@ resources:
       uri:         (( grab meta.github.uri ))
       branch:      (( grab meta.github.master-branch ))
       private_key: (( grab meta.github.private_key ))
-      ignore_paths: [ci/*]
       submodules: all
 
   - name: bucc-ci
