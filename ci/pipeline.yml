@@ -182,6 +182,7 @@ jobs:
             - { get: version, passed: [rc], params: {bump: final} }
             - { get: bucc,    passed: [rc] }
             - { get: bucc-ci }
+            - { get: bucc-stable }
         - task: generate-release-notes
           file: bucc-ci/ci/tasks/generate-release-notes/task.yml
         - task: release
@@ -192,7 +193,7 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
-            tag: github/tag
+            tag: release/tag
         - name: github
           put: github
           params:
@@ -399,6 +400,14 @@ resources:
       branch:      (( grab meta.github.master-branch ))
       private_key: (( grab meta.github.private_key ))
       submodules: all
+
+  - name: bucc-stable
+    type: git
+    source:
+      uri:         (( grab meta.github.uri ))
+      branch:      (( grab meta.github.master-branch ))
+      private_key: (( grab meta.github.private_key ))
+      tag_filter: "v*"
 
   - name: bucc-ci
     type: git
