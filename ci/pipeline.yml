@@ -196,8 +196,8 @@ jobs:
         - name: github
           put: github
           params:
-            name:       github/name
-            tag:        github/tag
+            name:       release/name
+            tag:        release/tag
             body:       release-notes/notes.md
         on_failure:
           put: notify
