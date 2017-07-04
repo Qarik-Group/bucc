@@ -3,16 +3,11 @@
 set -eu
 
 VERSION=$(cat version/number)
-if [[ ! -f bucc-ci/ci/release_notes.md ]]; then
-  echo >&2 "ci/release_notes.md not found.  Did you forget to write them?"
-  exit 1
-fi
 
-echo "v${VERSION}"                      > github/tag
-echo "BUCC v${VERSION}"                 > github/name
-mv bucc-ci/ci/release_notes.md          github/notes.md
+echo "v${VERSION}"                      > release/tag
+echo "BUCC v${VERSION}"                 > release/name
 
-cat > github/notification <<EOF
+cat > release/notification <<EOF
 <!here> New BUCC v${VERSION} released!
 EOF
 

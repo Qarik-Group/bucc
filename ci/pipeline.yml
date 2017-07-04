@@ -12,6 +12,7 @@ meta:
     owner:        (( param "Please specify the name of the user / organization that owns the Github repository" ))
     repo:         (( param "Please specify the name of the Github repository" ))
     branch:       develop
+    master-branch: master
     private_key:  (( param "Please generate an SSH Deployment Key for this repo and specify it here" ))
     access_token: (( param "Please generate a Personal Access Token and specify it here" ))
 
@@ -63,14 +64,13 @@ jobs:
           - { get: bucc-ci }
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
-
-        # on_failure:
-        #   put: notify
-        #   params:
-        #     channel:  (( grab meta.slack.channel ))
-        #     username: (( grab meta.slack.username ))
-        #     icon_url: (( grab meta.slack.icon ))
-        #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": sanity-check job failed" ))'
 
   - name: test
     public: true
@@ -104,6 +104,14 @@ jobs:
           ensure:
             task: bucc-down-vsphere
             file: bucc-ci/ci/tasks/bucc-down/task.yml
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
+
 
   - name: rc
     public: true
@@ -114,13 +122,13 @@ jobs:
             - { get: version, trigger: true, params: {pre: rc} }
         - put: version
           params: {file: version/number}
-        # on_failure:
-        #   put: notify
-        #   params:
-        #     channel:  (( grab meta.slack.channel ))
-        #     username: (( grab meta.slack.username ))
-        #     icon_url: (( grab meta.slack.icon ))
-        #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": rc job failed" ))'
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": rc job failed" ))'
 
   - name: bump-patch
     public: true
@@ -174,6 +182,9 @@ jobs:
             - { get: version, passed: [rc], params: {bump: final} }
             - { get: bucc,    passed: [rc] }
             - { get: bucc-ci }
+            - { get: bucc-stable }
+        - task: generate-release-notes
+          file: bucc-ci/ci/tasks/generate-release-notes/task.yml
         - task: release
           file: bucc-ci/ci/tasks/shipit/task.yml
         - put: version
@@ -182,20 +193,20 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
-            tag: github/tag
+            tag: release/tag
         - name: github
           put: github
           params:
-            name:       github/name
-            tag:        github/tag
-            body:       github/notes.md
-        # on_failure:
-        #   put: notify
-        #   params:
-        #     channel:  (( grab meta.slack.channel ))
-        #     username: (( grab meta.slack.username ))
-        #     icon_url: (( grab meta.slack.icon ))
-        #     text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'
+            name:       release/name
+            tag:        release/tag
+            body:       release-notes/notes.md
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'
 
   - name: compile-releases
     public: true
@@ -218,6 +229,13 @@ jobs:
           - try:
               put: compiled-releases-credhub
               params: { file: "compiled-releases/credhub*.tgz", acl: public-read }
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": compiled-releases job failed" ))'
 
   - name: concourse-compiled-release-ops-file
     public: true
@@ -238,6 +256,13 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": concourse-compiled-release-ops-file job failed" ))'
 
   - name: os-conf-compiled-release-ops-file
     public: true
@@ -258,6 +283,13 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": os-conf-compiled-release-ops-file job failed" ))'
 
   - name: credhub-compiled-release-ops-file
     public: true
@@ -278,6 +310,13 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": concourse-compiled-release-ops-file job failed" ))'
 
   - name: bosh-deployment-repo
     public: true
@@ -297,6 +336,13 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": bosh-deployment-repo job failed" ))'
 
   - name: concourse-release
     public: true
@@ -310,7 +356,7 @@ jobs:
             trigger: true
             params:
               tarball: false
-        - task: bosh-deployment
+        - task: update-concourse-release
           file: bucc-ci/ci/tasks/update-concourse-release/task.yml
           privileged: true
         - task: bucc-manifests
@@ -319,6 +365,13 @@ jobs:
           params:
             rebase: true
             repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": concourse-release job failed" ))'
 
 resource_types:
   - name: bosh-deployment
@@ -344,10 +397,17 @@ resources:
     type: git
     source:
       uri:         (( grab meta.github.uri ))
-      branch:      master
+      branch:      (( grab meta.github.master-branch ))
       private_key: (( grab meta.github.private_key ))
-      ignore_paths: [ci/*]
       submodules: all
+
+  - name: bucc-stable
+    type: git
+    source:
+      uri:         (( grab meta.github.uri ))
+      branch:      (( grab meta.github.master-branch ))
+      private_key: (( grab meta.github.private_key ))
+      tag_filter: "v*"
 
   - name: bucc-ci
     type: git
@@ -356,12 +416,13 @@ resources:
       branch:      (( grab meta.github.branch ))
       private_key: (( grab meta.github.private_key ))
       paths: [ci/*]
+      disable_ci_skip: true
 
   - name: bosh-deployment
     type: git
     source:
       uri:    https://github.com/cloudfoundry/bosh-deployment.git
-      branch: master
+      branch: (( grab meta.github.master-branch ))
       ignore_paths: [ci/*]
 
   - name: version

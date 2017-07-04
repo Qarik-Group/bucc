@@ -12,7 +12,7 @@ inputs:
 - name: bucc-ci
 
 outputs:
-- name: github
+- name: release
 - name: bucc-out
 
 run:

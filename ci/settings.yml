@@ -18,5 +18,5 @@ meta:
     access_key_id: (( vault "secret/pipelines/bucc/aws:access_key_id" ))
     secret_access_key: (( vault "secret/pipelines/bucc/aws:secret_access_key_id" ))
   slack:
-    webhook: (( vault "secret/pipelines/habitat-boshrelease/slack:webhook" ))
-    channel: "#cf-community-pipeline"
+    webhook: (( vault "secret/pipelines/bucc/slack:webhook" ))
+    channel: "#bucc"

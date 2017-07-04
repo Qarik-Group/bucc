@@ -36,7 +36,10 @@ generate_compile_manifest() {
             continue
         fi
         if [[ ${compiled_release_url} != *"${version}"*"${stemcell_version}"* ]]; then
+          already_exist=$(curl -s "https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/?prefix${name}" | grep "${version}-ubuntu-trusty-${stemcell_version}")
+          if [ -z $alread_exist]; then
             releases_to_compile+="- $( echo ${release} | jq -c '.version = "latest"' )\n"
+          fi
         fi
     done
 
