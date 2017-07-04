@@ -44,7 +44,7 @@ lite() {
 }
 
 cpis() {
-    find ${repo_root}/ops/cpis -mindepth 1 -maxdepth 1 ! -type l -exec basename {} +;
+    find ${repo_root}/ops/cpis -mindepth 1 -maxdepth 1 ! -type l -exec basename -a {} +;
 }
 
 validate_vars_file() {
