@@ -182,6 +182,8 @@ jobs:
             - { get: version, passed: [rc], params: {bump: final} }
             - { get: bucc,    passed: [rc] }
             - { get: bucc-ci }
+        - task: generate-release-notes
+          file: bucc-ci/ci/tasks/generate-release-notes/task.yml
         - task: release
           file: bucc-ci/ci/tasks/shipit/task.yml
         - put: version
@@ -196,7 +198,7 @@ jobs:
           params:
             name:       github/name
             tag:        github/tag
-            body:       github/notes.md
+            body:       release-notes/notes.md
         on_failure:
           put: notify
           params:
