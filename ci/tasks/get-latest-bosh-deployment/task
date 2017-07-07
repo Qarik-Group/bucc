@@ -15,13 +15,9 @@ fi
 git status
 
 echo "MERGE bosh-deployment repo with git subtree"
-if ! git subtree pull --prefix src/bosh-deployment \
+git subtree pull --prefix src/bosh-deployment \
     ../bosh-deployment master --squash \
     -m "merging the latest bosh-deployment repo"
-then
-   git rm -r src/bosh-deployment/ci
-   git commit -m "merging the latest bosh-deployment repo"
-fi
 
 popd > /dev/null
 
