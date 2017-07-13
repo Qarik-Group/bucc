@@ -14,6 +14,7 @@ curl -L >/usr/local/bin/bosh https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cl
 generate_compile_manifest() {
     mkdir -p state
     echo "virtualbox" > state/cpi
+    echo "foo: bar" > vars.yml
     ops=$(find ops/cpis/*/*.yml | grep -v virtualbox | sed 's/^/-o /' | xargs)
     already_compiled_releases=$(spruce json <(echo "releases:"; ./bin/bucc int ${ops} --path /releases))
 
@@ -36,8 +37,8 @@ generate_compile_manifest() {
             continue
         fi
         if [[ ${compiled_release_url} != *"${version}"*"${stemcell_version}"* ]]; then
-          already_exist=$(curl -s "https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/?prefix${name}" | grep "${version}-ubuntu-trusty-${stemcell_version}")
-          if [ -z $alread_exist]; then
+          releases_in_s3=$(curl -s "https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/?prefix${name}")
+          if [[ ${releases_in_s3} != "*${version}-ubuntu-trusty-${stemcell_version}*" ]]; then
             releases_to_compile+="- $( echo ${release} | jq -c '.version = "latest"' )\n"
           fi
         fi
