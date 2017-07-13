@@ -2,6 +2,6 @@
   path: /releases/name=os-conf?
   value:
     name: os-conf
-    version: 11
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-11-ubuntu-trusty-3421.9-20170621-192158-377516778-20170621192158.tgz
-    sha1: 2dfab570328689ae91277afeb0e768a146a623bc
+    version: 12
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-12-ubuntu-trusty-3421.9-20170713-210639-123239222-20170713210639.tgz
+    sha1: 9049faf340f921d684a1b02bf9851a5cc4185029
