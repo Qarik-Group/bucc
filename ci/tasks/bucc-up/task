@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export HOME=$(pwd)/bosh-cache
+
 pushd bucc > /dev/null
 
 echo ${VARS} > "vars.yml"

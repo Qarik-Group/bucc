@@ -10,8 +10,12 @@ inputs:
   - name: bucc-ci
   - name: bucc
 
+caches:
+  - path: bosh-cache
+    
 outputs:
   - name: bucc-state
+  - name: bosh-cache
 
 params:
   VARS:

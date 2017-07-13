@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
+export HOME=$(pwd)/bosh-cache
+
 mv bucc-state/{vars.yml,state} bucc/
 ./bucc/bin/bucc down
