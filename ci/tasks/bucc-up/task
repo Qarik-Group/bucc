@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export HOME=$(pwd)/bosh-cache
+cp -r bosh-cache/.bosh ${HOME} | true
 
 pushd bucc > /dev/null
 
@@ -11,3 +11,5 @@ echo ${VARS} > "vars.yml"
 popd > /dev/null
 
 mv bucc/{vars.yml,state} bucc-state/
+
+cp -r ${HOME}/.bosh bosh-cache
