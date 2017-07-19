@@ -80,6 +80,12 @@ jobs:
         - aggregate:
           - { get: bucc, trigger: true, passed: [sanity-check] }
           - { get: bucc-ci }
+        - task: cleanup-vsphere
+          file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+          params:
+            GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
+            GOVC_INSECURE: true
+            CLEANUP_VM_WITH_IP: 10.213.8.1
         - task: bucc-up-vsphere
           file: bucc-ci/ci/tasks/bucc-up/task.yml
           params:
