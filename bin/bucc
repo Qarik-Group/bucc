@@ -335,7 +335,12 @@ ssh_private_key() {
 
 _ssh() {
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
-    ssh -i $(ssh_private_key) $user@$(ip) -t 'command; sudo su -'
+    cmd="ssh -i $(ssh_private_key) $user@$(ip)"
+    if [ -z $@ ]; then
+	${cmd} -t 'command; sudo su -'
+    else
+	${cmd} $@
+    fi
 }
 
 header() {
@@ -425,6 +430,7 @@ case "$1" in
         ;;
 
     ssh)
+	shift
         _ssh "$@"
         ;;
 
