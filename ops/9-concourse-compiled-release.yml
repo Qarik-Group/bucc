@@ -2,6 +2,6 @@
   path: /releases/name=concourse?
   value:
     name: concourse
-    version: 3.3.2
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-3.3.2-ubuntu-trusty-3421.9-20170713-093153-615934528-20170713093214.tgz
-    sha1: 710437613b60fcbd826ff71cfb0293eda0fcb7c6
+    version: 3.3.3
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-3.3.3-ubuntu-trusty-3421.9-20170728-223954-827422165-20170728224014.tgz
+    sha1: 805b8bee21e7509f2dd53b3d93eee6cdf2fb2b97
