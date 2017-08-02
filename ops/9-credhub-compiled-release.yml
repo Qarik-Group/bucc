@@ -2,6 +2,6 @@
   path: /releases/name=credhub?
   value:
     name: credhub
-    version: 1.0.1
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/credhub-1.0.1-ubuntu-trusty-3421.9-20170621-192151-446917283-20170621192156.tgz
-    sha1: 31b46b2e6b88079c85627b745334c7cb5871c5b9
+    version: 1.2.0
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/credhub-1.2.0-ubuntu-trusty-3421.9-20170802-153554-975835046-20170802153600.tgz
+    sha1: 65cb26b0cec93e4ac09bcebd9f14541229352eb3
