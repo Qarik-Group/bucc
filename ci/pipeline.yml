@@ -197,7 +197,7 @@ jobs:
           params: { bump: final }
         - put: bucc-master
           params:
-            rebase: true
+            rebase: false
             repository: bucc-out
             tag: release/tag
         - name: github
