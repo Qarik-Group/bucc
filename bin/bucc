@@ -357,8 +357,8 @@ smoke_tests() {
 
     header "testing credhub"
     ${bucc} credhub
-    credhub set --no-overwrite --name secret/handshake:knock --value know --type value
-    credhub delete --name secret/handshake:knock
+    credhub set --no-overwrite --name secret/ping --value pong --type value
+    credhub delete --name secret/ping
 
     header "testing concourse"
     ${bucc} fly
