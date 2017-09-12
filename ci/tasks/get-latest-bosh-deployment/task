@@ -12,6 +12,9 @@ if [[ -z $(git config --global user.name) ]]; then
     git config --global user.name "CI Bot"
 fi
 
+# Ignore file permission changes
+git config core.fileMode false
+
 git status
 
 echo "MERGE bosh-deployment repo with git subtree"

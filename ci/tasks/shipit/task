@@ -13,6 +13,7 @@ EOF
 
 git config --global user.email "ci@starkandwayne.com"
 git config --global user.name "CI Bot"
+git config core.fileMode false
 
 pushd bucc > /dev/null
 

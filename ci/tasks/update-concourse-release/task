@@ -24,6 +24,7 @@ cat > ${OPS_FILE_PATH} <<YML
     sha1: ${sha1}
 YML
 
+
 # Commit changes
 if [[ -z $(git config --global user.email) ]]; then
     git config --global user.email "ci@starkandwayne.com"
@@ -31,6 +32,9 @@ fi
 if [[ -z $(git config --global user.name) ]]; then
     git config --global user.name "CI Bot"
 fi
+
+# Ignore file permission changes
+git config core.fileMode false
 
 git merge --no-edit develop
 if [[ -n $(git status -s) ]]; then
