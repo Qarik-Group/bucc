@@ -44,3 +44,7 @@ fi
 popd > /dev/null
 
 git clone bucc bucc-out
+
+pushd bucc-out > /dev/null
+
+git checkout -b tmp
