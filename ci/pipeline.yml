@@ -197,7 +197,7 @@ jobs:
           params: { bump: final }
         - put: bucc-master
           params:
-            rebase: false
+            merge: true
             repository: bucc-out
             tag: release/tag
         - name: github
@@ -260,7 +260,7 @@ jobs:
             OPS_FILE_PATH: ops/9-concourse-compiled-release.yml
         - put: bucc
           params:
-            rebase: true
+            merge: true
             repository: bucc-out
         on_failure:
           put: notify
@@ -287,7 +287,7 @@ jobs:
             OPS_FILE_PATH: ops/9-os-conf-compiled-release.yml
         - put: bucc
           params:
-            rebase: true
+            merge: true
             repository: bucc-out
         on_failure:
           put: notify
@@ -314,7 +314,7 @@ jobs:
             OPS_FILE_PATH: ops/9-credhub-compiled-release.yml
         - put: bucc
           params:
-            rebase: true
+            merge: true
             repository: bucc-out
         on_failure:
           put: notify
@@ -340,7 +340,7 @@ jobs:
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
         - put: bucc
           params:
-            rebase: true
+            merge: true
             repository: bucc-out
         on_failure:
           put: notify
@@ -369,7 +369,7 @@ jobs:
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
         - put: bucc
           params:
-            rebase: true
+            merge: true
             repository: bucc-out
         on_failure:
           put: notify
