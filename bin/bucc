@@ -142,7 +142,8 @@ ca_cert() {
 usage() {
     echo "BUCC (BOSH UAA Credhud Concourse) CLI v${version}"
     echo "  up -- creates the bucc VM with bosh create-env"
-    echo "  down -- deletes VM with bosh delete-env"
+    echo "  down -- deletes VM with bosh delete-env - can be used with --clean"
+    echo "  clean -- start with a clean enviorment - use this only after you've tear down your env"
     echo "  ssh -- ssh into the bucc VM"
     echo "  env -- sourceable envrionment variables for cli clients"
     echo "  int -- wrapper for '${boshexec} int' for the bosh manifest"
@@ -172,6 +173,10 @@ up_usage() {
 
 }
 
+down_usage() {
+    echo "  -c | --clean  cleans up your enviroment by removing state files"
+}
+
 platform() {
     if [ "$(uname)" == "Darwin" ]; then
         echo "darwin"
@@ -196,7 +201,18 @@ up() {
 }
 
 down() {
+    if [ ! -e ${repo_root}/vars.yml ]; then
+      echo "please create a enviroment first with 'bucc up'"
+      exit 1
+    fi
     ${boshexec} delete-env $(int_args) $state_arg
+    echo "you can use the clean command if your are planning to use a new cpi or ip"
+}
+
+clean() {
+  rm -rf ${state}
+  mv ${repo_root}/vars.yml ${repo_root}/vars.yml.bck
+  echo "renamed your vars.yml for restore purposes, you know have a clean enviorment"
 }
 
 vars() {
@@ -398,7 +414,26 @@ case "$1" in
         ;;
 
     down)
-        down "$@"
+        shift
+        while [[ $# -gt 0 ]]; do
+            case "$1" in
+                -h|--help|help)
+                    down_usage
+                    exit 0
+                    ;;
+                -c|--clean|clean)
+                    down
+                    clean
+                    exit 0
+                    ;;
+            esac
+            shift
+        done
+        down
+        ;;
+
+    clean)
+        clean "$@"
         ;;
 
     env)
