@@ -210,6 +210,10 @@ down() {
 }
 
 clean() {
+  if curl -k -s https://$(bosh int <(bucc vars) --path /bosh_target):25555/info | grep uaa &>/dev/null ; then
+    echo "your enviroment is still running please you can tear it down with 'bucc down --clean'"
+    exit 1
+  fi
   rm -rf ${state}
   mv ${repo_root}/vars.yml ${repo_root}/vars.yml.bck
   echo "renamed your vars.yml for restore purposes, you know have a clean enviorment"
