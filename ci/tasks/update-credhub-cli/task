@@ -6,7 +6,7 @@ set -o pipefail
 pushd credhub-cli
 
 tar zxvf crehub-linux*.tgz
-chmod +X credhub*
+chmod +x credhub*
 
 popd
 
@@ -27,8 +27,8 @@ git config core.fileMode false
 git status
 
 echo "commit the latest gredhub-cli binary"
-git commit bin/credhub  \
-    -m "updating to the latest credhub cli"
+git add bin/credhub
+git commit -m "updating to the latest credhub cli"
 
 popd > /dev/null
 
