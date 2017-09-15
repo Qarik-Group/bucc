@@ -22,7 +22,7 @@ if [[ -z $(git config --global user.name) ]]; then
 fi
 
 # Ignore file permission changes
-git config core.fileMode false
+git config core.fileMode true
 
 git status
 
