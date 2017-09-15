@@ -27,7 +27,7 @@ git config core.fileMode false
 git status
 
 echo "commit the latest gredhub-cli binary"
-git add bin/credhub
+git add -f bin/credhub
 git commit -m "updating to the latest credhub cli"
 
 popd > /dev/null
