@@ -6,7 +6,7 @@ set -o pipefail
 pushd credhub-cli
 
 tar zxvf crehub-linux*.tgz
-chmod +x credhub*
+chmod +X credhub*
 
 popd
 
