@@ -10,7 +10,7 @@ chmod +X credhub*
 
 popd
 
-mv crehub-cli/credhub bucc/bin
+mv crehub-cli/credhub bucc/bin/
 
 pushd bucc > /dev/null
 
@@ -26,7 +26,7 @@ git config core.fileMode false
 
 git status
 
-echo "MERGE bosh-deployment repo with git subtree"
+echo "commit the latest gredhub-cli binary"
 git commit bin/credhub  \
     -m "updating to the latest credhub cli"
 
