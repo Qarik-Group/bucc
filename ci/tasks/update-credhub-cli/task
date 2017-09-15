@@ -8,6 +8,8 @@ pushd credhub-cli
 tar zxvf credhub-linux*.tgz
 chmod +x credhub*
 
+export version=$(cat version)
+
 popd
 
 cp credhub-cli/credhub bucc/bin/
@@ -28,7 +30,7 @@ git status
 
 echo "commit the latest gredhub-cli binary"
 git add -f bin/credhub
-git commit -m "updating to the latest credhub cli"
+git commit -m "updating credhub cli to $version"
 
 popd > /dev/null
 
