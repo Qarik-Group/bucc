@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+pushd credhub-cli
+
+gunzip crehub-linux*.tgz
+chmod +X credhub*
+
+popd
+
+mv crehub-cli/credhub bucc/bin
+
+pushd bucc > /dev/null
+
+if [[ -z $(git config --global user.email) ]]; then
+    git config --global user.email "ci@starkandwayne.com"
+fi
+if [[ -z $(git config --global user.name) ]]; then
+    git config --global user.name "CI Bot"
+fi
+
+# Ignore file permission changes
+git config core.fileMode false
+
+git status
+
+echo "MERGE bosh-deployment repo with git subtree"
+git commit bin/credhub  \
+    -m "updating to the latest credhub cli"
+
+popd > /dev/null
+
+echo "CLONE repository"
+git clone bucc bucc-out
