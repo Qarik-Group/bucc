@@ -5,12 +5,12 @@ set -o pipefail
 
 pushd credhub-cli
 
-tar zxvf crehub-linux*.tgz
+tar zxvf credhub-linux*.tgz
 chmod +x credhub*
 
 popd
 
-mv crehub-cli/credhub bucc/bin/
+cp credhub-cli/credhub bucc/bin/
 
 pushd bucc > /dev/null
 
