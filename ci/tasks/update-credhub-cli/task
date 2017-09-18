@@ -23,9 +23,6 @@ if [[ -z $(git config --global user.name) ]]; then
     git config --global user.name "CI Bot"
 fi
 
-# Ignore file permission changes
-git config core.fileMode true
-
 git status
 
 echo "commit the latest gredhub-cli binary"
