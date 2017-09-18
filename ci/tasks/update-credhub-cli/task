@@ -5,16 +5,13 @@ set -o pipefail
 
 pushd credhub-cli
 
-tar zxvf credhub-linux*.tgz
-chmod +x credhub*
-
 export version=$(cat version)
 
 popd
 
-cp credhub-cli/credhub bucc/bin/
-
 pushd bucc > /dev/null
+
+sed "s/.*credhub.*/credhub=$version/" .versions
 
 if [[ -z $(git config --global user.email) ]]; then
     git config --global user.email "ci@starkandwayne.com"
