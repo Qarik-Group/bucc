@@ -196,15 +196,15 @@ jobs:
           file: bucc-ci/ci/tasks/shipit/task.yml
         - put: version
           params: { bump: final }
-        - put: bucc
-          params:
-            rebase: true
-            repository: bucc
         - put: bucc-master
           params:
             rebase: true
             repository: bucc-out
             tag: release/tag
+        - put: bucc
+          params:
+            rebase: true
+            repository: bucc
         - name: github
           put: github
           params:
