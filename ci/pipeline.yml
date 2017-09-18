@@ -402,10 +402,6 @@ jobs:
           privileged: true
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
-        - put: bucc
-          params:
-            merge: true
-            repository: bucc-out
         on_failure:
           put: notify
           params:
