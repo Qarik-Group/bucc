@@ -11,6 +11,8 @@ vars_store_arg="--vars-store ${vars_store}"
 
 PATH=${repo_root}/bin:${PATH}
 
+version=$(grep bucc ${repo_root}/.versions | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
+
 pushd () {
     command pushd "$@" > /dev/null
 }
@@ -312,7 +314,7 @@ _bosh() {
 _credhub() {
     # TODO: remove if fetching credhub works via ci
     local url="https://github.com/cloudfoundry-incubator/credhub-cli/releases/download"
-    local version=$(grep credhub .versions | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
+    local version=$(grep credhub ${repo_root}/.versions | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
 
     if [ ! -f ${repo_root}/bin/credhub ]; then
         echo "installing credhub cli into: ${repo_root}/bin/"
