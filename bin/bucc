@@ -212,13 +212,8 @@ down() {
 }
 
 clean() {
-<<<<<<< HEAD
-  if curl --connect-timeout 5 -k -s https://$(bosh int <(bucc vars) --path /bosh_target):25555/info | grep uaa &>/dev/null ; then
-    echo "your enviroment is still running please you can tear it down with 'bucc down --clean'"
-=======
   if curl -m 0.1 -k -s https://$(bosh int <(bucc vars) --path /bosh_target):25555/info | grep uaa &>/dev/null ; then
     echo "your enviroment is still running, please tear it down with 'bucc down --clean'"
->>>>>>> 606f18e9ff29060f6354f77ef57597c525c716da
     exit 1
   fi
   rm -rf ${state}
