@@ -1,7 +1,13 @@
 director_name:
-docker_host:
-docker_tls:
+docker_host: tcp://IP:2376
 internal_cidr:
 internal_gw:
 internal_ip:
 network:
+docker_tls:
+  ca: |
+    -----BEGIN CERTIFICATE-----
+  certificate: |
+    -----BEGIN CERTIFICATE-----
+  private_key: |
+    -----BEGIN RSA PRIVATE KEY-----
