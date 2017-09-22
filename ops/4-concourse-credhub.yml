@@ -1,0 +1,24 @@
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=atc/properties/credhub?
+  value:
+    url: "https://((internal_ip)):8844/api/"
+    tls: 
+      ca_cert: ((credhub_tls.ca))
+    client_id: concourse_to_credhub
+    client_secret: ((uaa_clients_concourse_to_credhub))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/concourse_to_credhub?
+  value:
+    override: true
+    authorized-grant-types: client_credentials
+    scope: ""
+    authorities: credhub.read,credhub.write
+    access-token-validity: 3600
+    secret: ((uaa_clients_concourse_to_credhub))
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_concourse_to_credhub
+    type: password
