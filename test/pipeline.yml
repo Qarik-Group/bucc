@@ -1,0 +1,152 @@
+jobs:
+- name: test
+  plan:
+  - aggregate:
+    - get: stemcell
+    - get: cloud-config-file
+    - get: deployment-file
+  - put: cloud-config
+    params: 
+      manifest: cloud-config-file/manifest.yml
+      releases: []
+  - put: test-deployment
+    params:
+      manifest: deployment-file/manifest.yml
+      stemcells: [ stemcell/stemcell.tgz ]
+  - put: test-errand
+    params:
+      name: errand
+
+resources:
+- name: cloud-config-file
+  type: file
+  source:
+    filename: manifest.yml
+    content: 
+      azs:
+      - name: z1
+      - name: z2
+      - name: z3
+
+      vm_types:
+      - name: default
+
+      disk_types:
+      - name: default
+        disk_size: 1024
+
+      networks:
+      - name: default
+        type: manual
+        subnets:
+        - azs: [z1, z2, z3]
+          dns: [8.8.8.8]
+          range: 10.244.0.0/24
+          gateway: 10.244.0.1
+          static: [10.244.0.34]
+          reserved: []
+
+      compilation:
+        workers: 5
+        az: z1
+        reuse_compilation_vms: true
+        vm_type: default
+        network: default
+
+- name: deployment-file
+  type: file
+  source:
+    filename: manifest.yml
+    content: 
+      name: test
+
+      releases:
+      - name: test
+        version: 1
+        url: https://bosh.io/d/github.com/cppforlife/test-release?v=1
+        sha1: d80730afc86bfaa6d26831657e468fc3304103ca
+
+      stemcells:
+      - alias: default
+        os: ubuntu-trusty
+        version: latest
+
+      update:
+        canaries: 1
+        max_in_flight: 1
+        canary_watch_time: 5000-120000
+        update_watch_time: 5000-120000
+
+      instance_groups:
+      - name: service
+        azs: [z1, z2, z3]
+        instances: 3
+        vm_type: default
+        stemcell: default
+        networks: [ name: default ]
+        jobs: [ { name: service, release: test } ]
+
+      - name: errand
+        azs: [z1]
+        instances: 1
+        lifecycle: errand
+        vm_type: default
+        stemcell: default
+        networks: [ name: default ]
+        jobs: [ { name: errand, release: test } ]
+
+      variables:
+      - name: test
+        type: password
+
+- name: stemcell
+  type: bosh-io-stemcell
+  source:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+
+- name: test-deployment
+  type: bosh-deployment
+  source: 
+    <<: *deployment
+    <<: *bosh_env
+
+- name: cloud-config
+  type: bosh-config
+  source:
+    type: cloud-config
+    <<: *bosh_env
+
+- name: test-errand
+  type: bosh-errand
+  source:
+    <<: *deployment
+    <<: *bosh_env
+
+params:
+  bosh_env: &bosh_env
+    target: ((bosh_target))
+    client: ((bosh_client))
+    client_id: ((bosh_client))
+    client_secret: ((bosh_client_secret))
+    ca_cert: ((bosh_ca_cert.certificate))
+  deployment: &deployment
+    deployment: test 
+
+resource_types:
+- name: file
+  type: docker-image
+  source: { repository: aequitas/concourse-file-resource }
+
+- name: bosh-config
+  type: docker-image
+  source: { repository: dellemcdojo/bosh-config-resource }
+
+- name: bosh-deployment
+  type: docker-image
+  source: { repository: cloudfoundry/bosh-deployment-resource }
+
+- name: bosh-errand
+  type: docker-image
+  source: { repository: starkandwayne/bosh2-errand-resource }
+
+
