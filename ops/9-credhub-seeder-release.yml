@@ -1,0 +1,8 @@
+# Use local bosh release -- useful for testing
+
+- type: replace
+  path: /releases/name=credhub-importer?
+  value:
+    name: credhub-importer
+    version: latest
+    url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/0.1.0/credhub-importer-0.1.0.tgz
