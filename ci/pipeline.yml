@@ -341,7 +341,7 @@ jobs:
         - aggregate:
           - get: bucc
           - get: bucc-ci
-          - { get: compiled-releases-credhub, trigger: true }
+          - { get: compiled-releases-credhub-importer, trigger: true }
         - task: update-credhub-importer-compiled-release-ops-file
           file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
           input_mapping:
