@@ -11,7 +11,7 @@ popd
 
 pushd bucc > /dev/null
 
-sed "s/.*credhub.*/credhub=$version/" .versions
+sed -i "s/.*credhub.*/credhub=$version/" .versions
 
 if [[ -z $(git config --global user.email) ]]; then
     git config --global user.email "ci@starkandwayne.com"
