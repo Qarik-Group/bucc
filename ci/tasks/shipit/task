@@ -20,7 +20,7 @@ git config core.fileMode false
 
 rm -f ci/release_notes.md
 
-sed "s/.*bucc.*/bucc=$version/" .versions
+sed "s/.*bucc.*/bucc=$VERSION/" .versions
 
 git add -A
 git commit -m "release: v${VERSION}"
