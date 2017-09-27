@@ -2,7 +2,7 @@
   path: /releases/name=credhub-importer?
   value:
     name: credhub-importer
-    version: latest
+    version: 1
     url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/1/credhub-importer-1.tgz
     sha1: a945710d1d7d3dfb8f8e117aa6f81e2fb5c70709
 
