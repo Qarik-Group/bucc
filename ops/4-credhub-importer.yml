@@ -1,4 +1,12 @@
 - type: replace
+  path: /releases/name=credhub-importer?
+  value:
+    name: credhub-importer
+    version: latest
+    url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/0.1.0/credhub-importer-0.1.0.tgz
+    sha1: 63e7d3c263067d43471f670328372ecce858074e
+
+- type: replace
   path: /instance_groups/name=bosh/jobs/-
   value:
     name: credhub-importer
@@ -10,7 +18,7 @@
         password: ((credhub_importer_password))
         ca_cert: ((credhub_tls.ca))((uaa_ssl.ca))
         import_credentials:
-	# BOSH
+          # BOSH
         - name: concourse/main/bosh_name
           type: value
           value: ((director_name))
@@ -26,7 +34,7 @@
         - name: concourse/main/bosh_client
           type: value
           value: admin
-	# Credhub
+          # Credhub
         - name: concourse/main/credhub_url
           type: value
           value: https://((internal_ip)):8844
@@ -39,7 +47,7 @@
         - name: concourse/main/credhub_ca_cert
           type: value
           value: ((uaa_ssl.ca))((credhub_tls.ca))
-	# Concourse
+          # Concourse
         - name: concourse/main/concourse_url
           type: value
           value: https://((internal_ip))
@@ -52,7 +60,7 @@
         - name: concourse/main/concourse_ca_cert
           type: value
           value: ((atc_ssl.ca))
-            
+
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
   value:
