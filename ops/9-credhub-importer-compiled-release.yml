@@ -2,6 +2,6 @@
   path: /releases/name=credhub-importer?
   value:
     name: credhub-importer
-    version: 1+dev.1
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/credhub-importer-1%2Bdev.1-ubuntu-trusty-3445.7-20170927-122723-812382699-20170927122724.tgz
-    sha1: 33d30f1f45a54107d899fec4c580471a1fd017dc
+    version: 1
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/credhub-importer-1-ubuntu-trusty-3445.7-20170927-124707-78818261-20170927124707.tgz
+    sha1: 941022bb9bab87d7eea314c03d34e6cf4b91b1a7
