@@ -187,7 +187,7 @@ jobs:
         - name: inputs
           aggregate:
             - { get: version, passed: [rc], params: {bump: final} }
-            - { get: bucc,    passed: [rc] }
+            - { get: bucc,    passed: [test] }
             - { get: bucc-ci }
             - { get: bucc-stable }
         - task: generate-release-notes
@@ -204,7 +204,7 @@ jobs:
         - put: bucc
           params:
             rebase: true
-            repository: bucc
+            repository: bucc-out
         - name: github
           put: github
           params:
@@ -405,7 +405,7 @@ jobs:
         - put: bucc
           params:
             merge: true
-            repository: bucc-out          
+            repository: bucc-out
         on_failure:
           put: notify
           params:
