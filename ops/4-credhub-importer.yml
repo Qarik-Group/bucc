@@ -1,0 +1,77 @@
+- type: replace
+  path: /releases/name=credhub-importer?
+  value:
+    name: credhub-importer
+    version: latest
+    url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/0.1.0/credhub-importer-0.1.0.tgz
+    sha1: 63e7d3c263067d43471f670328372ecce858074e
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: credhub-importer
+    release: credhub-importer
+    properties:
+      credhub:
+        server: "https://((internal_ip)):8844"
+        username: credhub-importer
+        password: ((credhub_importer_password))
+        ca_cert: ((credhub_tls.ca))((uaa_ssl.ca))
+        import_credentials:
+          # BOSH
+        - name: concourse/main/bosh_name
+          type: value
+          value: ((director_name))
+        - name: concourse/main/bosh_environment
+          type: value
+          value: ((internal_ip))
+        - name: concourse/main/bosh_ca_cert
+          type: value
+          value: ((director_ssl.ca))
+        - name: concourse/main/bosh_client_secret
+          type: value
+          value: ((admin_password))
+        - name: concourse/main/bosh_client
+          type: value
+          value: admin
+          # Credhub
+        - name: concourse/main/credhub_url
+          type: value
+          value: https://((internal_ip)):8844
+        - name: concourse/main/credhub_username
+          type: value
+          value: credhub-cli
+        - name: concourse/main/credhub_password
+          type: value
+          value: ((credhub_cli_password))
+        - name: concourse/main/credhub_ca_cert
+          type: value
+          value: ((uaa_ssl.ca))((credhub_tls.ca))
+          # Concourse
+        - name: concourse/main/concourse_url
+          type: value
+          value: https://((internal_ip))
+        - name: concourse/main/concourse_username
+          type: value
+          value: admin
+        - name: concourse/main/concourse_password
+          type: value
+          value: ((ui_password))
+        - name: concourse/main/concourse_ca_cert
+          type: value
+          value: ((atc_ssl.ca))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
+  value:
+    name: credhub-importer
+    password: ((credhub_importer_password))
+    groups:
+    - credhub.read
+    - credhub.write
+
+- type: replace
+  path: /variables/-
+  value:
+    name: credhub_importer_password
+    type: password
