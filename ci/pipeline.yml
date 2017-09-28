@@ -371,7 +371,6 @@ jobs:
           - { get: bucc-ci, trigger: false}
         - task: bosh-deployment
           file: bucc-ci/ci/tasks/get-latest-bosh-deployment/task.yml
-          # privileged: true
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
         - put: bucc
