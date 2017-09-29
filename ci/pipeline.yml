@@ -399,7 +399,6 @@ jobs:
               tarball: false
         - task: update-concourse-release
           file: bucc-ci/ci/tasks/update-concourse-release/task.yml
-          privileged: true
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
         - put: bucc
@@ -429,7 +428,6 @@ jobs:
                 - credhub-linux-*.tgz
         - task: update-credhub-cli
           file: bucc-ci/ci/tasks/update-credhub-cli/task.yml
-          privileged: true
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
         - put: bucc
