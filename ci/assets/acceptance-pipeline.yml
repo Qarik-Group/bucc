@@ -4,16 +4,15 @@ jobs:
   - aggregate:
     - get: stemcell
     - get: bosh-deployment
+    - get: docker-release
   - put: cloud-config
     params:
       manifest: bosh-deployment/warden/cloud-config.yml
       releases: []
   - put: deploy
     params:
-      manifest: bosh-deployment/bosh.yml
+      manifest: docker-release/manifests/swarm/docker-swarm.yml
       stemcells: [ stemcell/stemcell.tgz ]
-      ops_files: [ bosh-deployment/misc/bosh-dev.yml ]
-      vars: { internal_ip: 10.244.0.34 }
 
 resources:
 - name: bosh-deployment
@@ -22,6 +21,12 @@ resources:
     uri: https://github.com/cloudfoundry/bosh-deployment.git
     branch: master
 
+- name: docker-release
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-community/docker-boshrelease.git
+    branch: master
+    
 - name: stemcell
   type: bosh-io-stemcell
   source:
@@ -47,7 +52,7 @@ params:
     client_secret: ((bosh_client_secret))
     ca_cert: ((bosh_ca_cert))
   deployment: &deployment
-    deployment: bosh
+    deployment: docker-swarm
 
 resource_types:
 - name: bosh-config

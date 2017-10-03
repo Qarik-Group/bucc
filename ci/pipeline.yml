@@ -112,6 +112,11 @@ jobs:
           ensure:
             task: bucc-down-vsphere
             file: bucc-ci/ci/tasks/bucc-down/task.yml
+        - task: bucc-acceptance-test
+          file: bucc-ci/ci/tasks/bucc-acceptance-test/task.yml
+          ensure:
+            task: bucc-down-vsphere
+            file: bucc-ci/ci/tasks/bucc-down/task.yml
         on_failure:
           put: notify
           params:
@@ -119,7 +124,6 @@ jobs:
             username: (( grab meta.slack.username ))
             icon_url: (( grab meta.slack.icon ))
             text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
-
 
   - name: rc
     public: true
