@@ -3,7 +3,7 @@
 set -e
 
 mv bucc-state/{vars.yml,state} bucc/
-source ./bucc/.envrc
+source <(./bucc/bin/bucc env)
 
 bucc fly
 
