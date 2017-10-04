@@ -252,6 +252,7 @@ env() {
     if [[ ! -f ${vars_store} ]]; then
         exit 0
     fi
+    echo "export PATH=${PATH}"
     echo "export BOSH_ENVIRONMENT=$(get_var bosh_target)"
     echo "export BOSH_CA_CERT='$(cat $(ca_cert))'"
     echo "export BOSH_CLIENT=$(get_var bosh_client)"
