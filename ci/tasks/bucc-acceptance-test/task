@@ -3,7 +3,9 @@
 set -e
 
 mv bucc-state/{vars.yml,state} bucc/
-./bucc/bin/bucc fly
+source ./bucc/.envrc
+
+bucc fly
 
 fly -t bucc set-pipeline -n -c bucc-ci/ci/assets/acceptance-pipeline.yml -p test
 fly -t bucc unpause-pipeline -p test
