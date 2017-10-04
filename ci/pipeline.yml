@@ -109,14 +109,10 @@ jobs:
               vcenter_cluster: cluster1
         - task: bucc-test-vsphere
           file: bucc-ci/ci/tasks/bucc-test/task.yml
-          ensure:
-            task: bucc-down-vsphere
-            file: bucc-ci/ci/tasks/bucc-down/task.yml
         - task: bucc-acceptance-test
           file: bucc-ci/ci/tasks/bucc-acceptance-test/task.yml
-          ensure:
-            task: bucc-down-vsphere
-            file: bucc-ci/ci/tasks/bucc-down/task.yml
+        - task: bucc-down-vsphere
+          file: bucc-ci/ci/tasks/bucc-down/task.yml
         on_failure:
           put: notify
           params:
