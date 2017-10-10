@@ -57,9 +57,13 @@ params:
 resource_types:
 - name: bosh-config
   type: docker-image
-  source: { repository: rkoster/bosh-config-resource }
+  source:
+    repository: rkoster/bosh-config-resource
+    tag: latest
 
 - name: bosh-deployment
   type: docker-image
-  source: { repository: cloudfoundry/bosh-deployment-resource }
+  source:
+    repository: cloudfoundry/bosh-deployment-resource
+    tag: latest
 
