@@ -311,6 +311,26 @@ jobs:
         params:
           file: "compiled-release/*.tgz"
 
+  - name: compile-uaa-release-50-ubuntu-trusty-3468
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: uaa-release
+            version:
+              version: "50"
+          - get: ubuntu-trusty-stemcell
+            version:
+              version: "3468"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: uaa-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
   - name: compile-credhub-release-1-ubuntu-trusty-3445
     plan:
       - aggregate:
@@ -331,16 +351,76 @@ jobs:
         params:
           file: "compiled-release/*.tgz"
 
-  - name: compile-credhub-release-1.0.6-ubuntu-trusty-3445
+  - name: compile-credhub-release-1.0.8-ubuntu-trusty-3421
     plan:
       - aggregate:
         - get: bosh-deployment
         - get: credhub-release
           version:
-            version: "1.0.6"
+            version: "1.0.8"
         - get: ubuntu-trusty-stemcell
           version:
             version: "3421.26"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: credhub-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-credhub-release-1.3.4-ubuntu-trusty-3445
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: credhub-release
+          version:
+            version: "1.3.4"
+        - get: ubuntu-trusty-stemcell
+          version:
+            version: "3445.11"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: credhub-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-credhub-release-1.3.4-ubuntu-trusty-3468
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: credhub-release
+          version:
+            version: "1.3.4"
+        - get: ubuntu-trusty-stemcell
+          version:
+            version: "3468"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: credhub-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-credhub-release-1.5.0-ubuntu-trusty-3468
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: credhub-release
+          version:
+            version: "1.5.0"
+        - get: ubuntu-trusty-stemcell
+          version:
+            version: "3445.7"
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
         privileged: true
