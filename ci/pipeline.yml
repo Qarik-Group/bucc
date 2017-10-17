@@ -113,6 +113,7 @@ jobs:
           file: bucc-ci/ci/tasks/bucc-acceptance-test/task.yml
         - task: bucc-down-vsphere
           file: bucc-ci/ci/tasks/bucc-down/task.yml
+          attempts: 5
         on_failure:
           put: notify
           params:
