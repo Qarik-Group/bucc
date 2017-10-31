@@ -1,7 +1,6 @@
 #!/bin/bash
 version=$(grep bucc .versions | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
 
-repo_root=$(dirname $(realpath "$0") | rev | cut -c5- | rev)
 repo_root=$(git rev-parse --show-toplevel)
 state=${repo_root}/state
 mkdir -p $state/manifests
