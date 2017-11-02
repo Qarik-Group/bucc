@@ -1,6 +1,5 @@
 #!/bin/bash
-# repo_root based on https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within/246128#246128
-repo_root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd | rev | cut -c5- | rev)"
+repo_root=$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))
 state=${repo_root}/state
 mkdir -p $state/manifests
 manifest="${repo_root}/src/bosh-deployment/bosh.yml"
