@@ -22,8 +22,8 @@ fi
 
 git status
 
-echo "commit the latest gredhub-cli binary"
-git add -f bin/credhub
+echo "commit the latest credhub-cli to $version"
+git add .versions
 git commit -m "updating credhub cli to $version"
 
 popd > /dev/null

@@ -9,7 +9,6 @@ bucc fly
 
 fly -t bucc set-pipeline -n -c bucc-ci/ci/assets/acceptance-pipeline.yml -p test
 fly -t bucc unpause-pipeline -p test
-fly -t bucc check-resource -r test/deploy
 fly -t bucc trigger-job -j test/test -w
 
 if ! fly -t bucc builds | grep succeed; then
