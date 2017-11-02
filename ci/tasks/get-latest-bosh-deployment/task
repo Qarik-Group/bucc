@@ -16,9 +16,12 @@ echo "CHECKING git status"
 git status
 
 echo "MERGE bosh-deployment repo with git subtree"
-git subtree pull --prefix src/bosh-deployment \
-    ../bosh-deployment master --squash \
-    -m "merging the latest bosh-deployment repo"
+git remote add bosh-deployment ../bosh-deployment
+git fetch bosh-deployment
+git checkout -b bosh-deployment bosh-deployment/master
+git read-tree --prefix=srce/bosh-deployment -u bosh-deployment
+git checkout develop
+git merge --squash -s subtree bosh-deployment
 
 popd > /dev/null
 
