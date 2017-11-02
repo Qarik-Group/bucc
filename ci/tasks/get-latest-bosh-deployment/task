@@ -19,7 +19,7 @@ echo "MERGE bosh-deployment repo with git subtree"
 git remote add bosh-deployment ../bosh-deployment
 git fetch bosh-deployment
 git checkout -b bosh-deployment bosh-deployment/master
-git read-tree --prefix=srce/bosh-deployment -u bosh-deployment
+git read-tree --prefix=src/bosh-deployment -u bosh-deployment
 git checkout develop
 git merge --squash -s subtree bosh-deployment
 
