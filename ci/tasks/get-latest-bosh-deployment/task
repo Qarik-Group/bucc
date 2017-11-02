@@ -3,6 +3,8 @@
 set -e
 set -o pipefail
 
+ref=$(cat bosh-deployment/.git/ref | cut -c1-8)
+
 pushd bucc > /dev/null
 
 if [[ -z $(git config --global user.email) ]]; then
@@ -15,13 +17,12 @@ fi
 echo "CHECKING git status"
 git status
 
-echo "MERGE bosh-deployment repo with git subtree"
-git remote add bosh-deployment ../bosh-deployment
-git fetch bosh-deployment
-git checkout -b bosh-deployment bosh-deployment/master
-git read-tree --prefix=src/bosh-deployment -u bosh-deployment
-git checkout develop
-git merge --squash -s subtree bosh-deployment
+echo "MERGE bosh-deployment repo"
+rm -r src/bosh-deployment
+cp -r ../bosh-deployment src/
+rm -rf src/bosh-deployment/{ci,tests}
+git add src/bosh-deployment
+git commit -m "Update to cloudfoundry/bosh-deployment@$ref"
 
 popd > /dev/null
 
