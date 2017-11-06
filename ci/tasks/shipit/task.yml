@@ -9,11 +9,13 @@ image_resource:
 inputs:
 - name: version
 - name: bucc
+- name: bucc-master
 - name: bucc-ci
 
 outputs:
 - name: release
-- name: bucc-out
+- name: bucc-out-master
+- name: bucc-out-develop
 
 run:
   path: bucc-ci/ci/tasks/shipit/task
