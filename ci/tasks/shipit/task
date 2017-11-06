@@ -26,4 +26,8 @@ git commit -m "release: v${VERSION}"
 REF=$(git rev-parse HEAD)
 popd > /dev/null
 
-git clone bucc bucc-out
+pushd bucc-master > /dev/null
+
+git pull ../bucc develop
+git checkout master
+git merge develop
