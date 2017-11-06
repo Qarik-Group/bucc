@@ -28,9 +28,7 @@ popd > /dev/null
 
 pushd bucc-master > /dev/null
 
-git pull ../bucc develop
-git checkout master
-git merge develop
+git pull ../bucc develop -X theirs
 
 popd > /dev/null
 
