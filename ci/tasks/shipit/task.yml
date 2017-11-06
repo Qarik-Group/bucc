@@ -14,7 +14,8 @@ inputs:
 
 outputs:
 - name: release
-- name: bucc-out
+- name: bucc-out-master
+- name: bucc-out-develop
 
 run:
   path: bucc-ci/ci/tasks/shipit/task

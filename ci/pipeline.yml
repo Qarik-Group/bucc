@@ -201,12 +201,12 @@ jobs:
           params: { bump: final }
         - put: bucc-master
           params:
-            repository: bucc-out
+            repository: bucc-out-master
             tag: release/tag
             merge: true
         - put: bucc
           params:
-            repository: bucc-out
+            repository: bucc-out-develop
             merge: true
         - name: github
           put: github

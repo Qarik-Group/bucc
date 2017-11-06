@@ -23,13 +23,21 @@ sed -i "s/.*bucc.*/bucc=$VERSION/" .versions
 git add -A
 git commit -m "release: v${VERSION}"
 
-REF=$(git rev-parse HEAD)
 popd > /dev/null
 
 pushd bucc-master > /dev/null
 
+# merge develop into master
 git pull ../bucc -X theirs --no-edit
 
 popd > /dev/null
 
-git clone bucc-master bucc-out
+# clone master so we have an output
+git clone bucc-master bucc-out-master
+
+# clone develop for develop output
+git clone bucc bucc-out-develop
+
+pushd bucc-out-develop
+# merge upstream develop and keep our changes (we have bumped versions)
+git pull https://github.com/starkandwayne/bucc develop -X ours --no-edit
