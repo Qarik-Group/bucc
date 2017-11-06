@@ -16,11 +16,9 @@ git config --global user.name "CI Bot"
 
 pushd bucc > /dev/null
 
-git config core.fileMode false
-
 rm -f ci/release_notes.md
 
-sed "s/.*bucc.*/bucc=$version/" .versions
+sed -i "s/.*bucc.*/bucc=$VERSION/" .versions
 
 git add -A
 git commit -m "release: v${VERSION}"

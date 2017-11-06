@@ -33,7 +33,7 @@ gen_manifest() {
 
     manifest="../bucc-generated-manifest/${manifest_name}.yml"
 
-    ./bin/bucc int > ${manifest}
+    ./bin/bucc int --var-errs > ${manifest}
 
     if ! grep -q ${cpi} ${manifest}; then
         echo "Invalid manifest missing cpi: ${cpi}"

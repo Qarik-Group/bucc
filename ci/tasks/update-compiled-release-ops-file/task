@@ -32,9 +32,6 @@ if [[ -z $(git config --global user.name) ]]; then
     git config --global user.name "CI Bot"
 fi
 
-# Ignore file permission changes
-git config core.fileMode false
-
 git merge --no-edit develop
 if [[ -n $(git status -s) ]]; then
     git add ${OPS_FILE_PATH}

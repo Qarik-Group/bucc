@@ -11,7 +11,7 @@ popd
 
 pushd bucc > /dev/null
 
-sed "s/.*credhub.*/credhub=$version/" .versions
+sed -i "s/.*credhub.*/credhub=$version/" .versions
 
 if [[ -z $(git config --global user.email) ]]; then
     git config --global user.email "ci@starkandwayne.com"
@@ -22,8 +22,8 @@ fi
 
 git status
 
-echo "commit the latest gredhub-cli binary"
-git add -f bin/credhub
+echo "commit the latest credhub-cli to $version"
+git add .versions
 git commit -m "updating credhub cli to $version"
 
 popd > /dev/null

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e
+
+mv bucc-state/{vars.yml,state} bucc/
+source <(./bucc/bin/bucc env)
+
+bucc fly
+
+fly -t bucc set-pipeline -n -c bucc-ci/ci/assets/acceptance-pipeline.yml -p test
+fly -t bucc unpause-pipeline -p test
+fly -t bucc trigger-job -j test/test -w
+
+if ! fly -t bucc builds | grep succeed; then
+    >&2 echo "build did not succeed"; exit 1
+fi

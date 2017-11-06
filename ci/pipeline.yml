@@ -48,7 +48,8 @@ groups:
       - compile-releases
       - concourse-compiled-release-ops-file
       - os-conf-compiled-release-ops-file
-      - credhub-compiled-release-ops-file
+      # - credhub-compiled-release-ops-file
+      - credhub-importer-compiled-release-ops-file
   - name: upstream
     jobs:
       - bosh-deployment-repo
@@ -108,9 +109,11 @@ jobs:
               vcenter_cluster: cluster1
         - task: bucc-test-vsphere
           file: bucc-ci/ci/tasks/bucc-test/task.yml
-          ensure:
-            task: bucc-down-vsphere
-            file: bucc-ci/ci/tasks/bucc-down/task.yml
+        - task: bucc-acceptance-test
+          file: bucc-ci/ci/tasks/bucc-acceptance-test/task.yml
+          attempts: 5
+        - task: bucc-down-vsphere
+          file: bucc-ci/ci/tasks/bucc-down/task.yml
         on_failure:
           put: notify
           params:
@@ -118,7 +121,6 @@ jobs:
             username: (( grab meta.slack.username ))
             icon_url: (( grab meta.slack.icon ))
             text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
-
 
   - name: rc
     public: true
@@ -187,7 +189,7 @@ jobs:
         - name: inputs
           aggregate:
             - { get: version, passed: [rc], params: {bump: final} }
-            - { get: bucc,    passed: [rc] }
+            - { get: bucc,    passed: [test] }
             - { get: bucc-ci }
             - { get: bucc-stable }
         - task: generate-release-notes
@@ -204,7 +206,7 @@ jobs:
         - put: bucc
           params:
             rebase: true
-            repository: bucc
+            repository: bucc-out
         - name: github
           put: github
           params:
@@ -237,9 +239,12 @@ jobs:
           - try:
               put: compiled-releases-os-conf
               params: { file: "compiled-releases/os-conf*.tgz", acl: public-read }
+          # - try:
+          #     put: compiled-releases-credhub
+          #     params: { file: "compiled-releases/credhub-[0-9]*.tgz", acl: public-read }
           - try:
-              put: compiled-releases-credhub
-              params: { file: "compiled-releases/credhub*.tgz", acl: public-read }
+              put: compiled-releases-credhub-importer
+              params: { file: "compiled-releases/credhub-importer*.tgz", acl: public-read }
         on_failure:
           put: notify
           params:
@@ -302,7 +307,34 @@ jobs:
             icon_url: (( grab meta.slack.icon ))
             text:    '(( concat meta.slack.fail_url " " meta.pipeline ": os-conf-compiled-release-ops-file job failed" ))'
 
-  - name: credhub-compiled-release-ops-file
+  # - name: credhub-compiled-release-ops-file
+  #   public: true
+  #   serial: true
+  #   plan:
+  #     - do:
+  #       - aggregate:
+  #         - get: bucc
+  #         - get: bucc-ci
+  #         - { get: compiled-releases-credhub, trigger: true }
+  #       - task: update-credhub-compiled-release-ops-file
+  #         file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
+  #         input_mapping:
+  #           compiled-release: compiled-releases-credhub
+  #         params:
+  #           OPS_FILE_PATH: ops/9-credhub-compiled-release.yml
+  #       - put: bucc
+  #         params:
+  #           merge: true
+  #           repository: bucc-out
+  #       on_failure:
+  #         put: notify
+  #         params:
+  #           channel:  (( grab meta.slack.channel ))
+  #           username: (( grab meta.slack.username ))
+  #           icon_url: (( grab meta.slack.icon ))
+  #           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": credhub-compiled-release-ops-file job failed" ))'
+
+  - name: credhub-importer-compiled-release-ops-file
     public: true
     serial: true
     plan:
@@ -310,13 +342,13 @@ jobs:
         - aggregate:
           - get: bucc
           - get: bucc-ci
-          - { get: compiled-releases-credhub, trigger: true }
-        - task: update-credhub-compiled-release-ops-file
+          - { get: compiled-releases-credhub-importer, trigger: true }
+        - task: update-credhub-importer-compiled-release-ops-file
           file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
           input_mapping:
-            compiled-release: compiled-releases-credhub
+            compiled-release: compiled-releases-credhub-importer
           params:
-            OPS_FILE_PATH: ops/9-credhub-compiled-release.yml
+            OPS_FILE_PATH: ops/9-credhub-importer-compiled-release.yml
         - put: bucc
           params:
             merge: true
@@ -327,7 +359,7 @@ jobs:
             channel:  (( grab meta.slack.channel ))
             username: (( grab meta.slack.username ))
             icon_url: (( grab meta.slack.icon ))
-            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": concourse-compiled-release-ops-file job failed" ))'
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": credhub-importer-compiled-release-ops-file job failed" ))'
 
   - name: bosh-deployment-repo
     public: true
@@ -340,7 +372,6 @@ jobs:
           - { get: bucc-ci, trigger: false}
         - task: bosh-deployment
           file: bucc-ci/ci/tasks/get-latest-bosh-deployment/task.yml
-          privileged: true
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
         - put: bucc
@@ -369,7 +400,6 @@ jobs:
               tarball: false
         - task: update-concourse-release
           file: bucc-ci/ci/tasks/update-concourse-release/task.yml
-          privileged: true
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
         - put: bucc
@@ -399,13 +429,12 @@ jobs:
                 - credhub-linux-*.tgz
         - task: update-credhub-cli
           file: bucc-ci/ci/tasks/update-credhub-cli/task.yml
-          privileged: true
         - task: bucc-manifests
           file: bucc-ci/ci/tasks/bucc-manifests/task.yml
         - put: bucc
           params:
             merge: true
-            repository: bucc-out          
+            repository: bucc-out
         on_failure:
           put: notify
           params:
@@ -494,14 +523,23 @@ resources:
       region_name: eu-west-1
       regexp: "os-conf.*-(\\d+).tgz"
 
-  - name: compiled-releases-credhub
+  # - name: compiled-releases-credhub
+  #   type: s3
+  #   source:
+  #     bucket: "bucc-compiled-releases"
+  #     access_key_id: (( grab meta.aws.access_key_id ))
+  #     secret_access_key: (( grab meta.aws.secret_access_key ))
+  #     region_name: eu-west-1
+  #     regexp: "credhub-\\d+.*-(\\d+).tgz"
+
+  - name: compiled-releases-credhub-importer
     type: s3
     source:
       bucket: "bucc-compiled-releases"
       access_key_id: (( grab meta.aws.access_key_id ))
       secret_access_key: (( grab meta.aws.secret_access_key ))
       region_name: eu-west-1
-      regexp: "credhub.*-(\\d+).tgz"
+      regexp: "credhub-importer.*-(\\d+).tgz"
 
   - name: notify
     type: slack-notification

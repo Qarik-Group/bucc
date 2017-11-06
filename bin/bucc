@@ -1,7 +1,5 @@
 #!/bin/bash
-version=$(grep bucc .versions | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
-
-repo_root=$(dirname $(realpath "$0") | rev | cut -c5- | rev)
+repo_root=$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))
 state=${repo_root}/state
 mkdir -p $state/manifests
 manifest="${repo_root}/src/bosh-deployment/bosh.yml"
@@ -253,6 +251,7 @@ env() {
     if [[ ! -f ${vars_store} ]]; then
         exit 0
     fi
+    echo "export PATH=${PATH}"
     echo "export BOSH_ENVIRONMENT=$(get_var bosh_target)"
     echo "export BOSH_CA_CERT='$(cat $(ca_cert))'"
     echo "export BOSH_CLIENT=$(get_var bosh_client)"

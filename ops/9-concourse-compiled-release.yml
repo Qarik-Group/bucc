@@ -3,5 +3,5 @@
   value:
     name: concourse
     version: 3.5.0
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-3.5.0-ubuntu-trusty-3445.7-20170921-134141-718183846-20170921134203.tgz
-    sha1: 1cac6be021bde5e3428d41c16afb0fa5ff7aa2ba
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-3.5.0-ubuntu-trusty-3468.1-20171102-144749-329693849-20171102144811.tgz
+    sha1: a75c4c28f9b510170688e1e3efc5494d085e0845

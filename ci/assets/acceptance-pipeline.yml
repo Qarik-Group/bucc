@@ -1,0 +1,69 @@
+jobs:
+- name: test
+  plan:
+  - aggregate:
+    - get: stemcell
+    - get: bosh-deployment
+    - get: docker-release
+  - put: cloud-config
+    params:
+      manifest: bosh-deployment/warden/cloud-config.yml
+      releases: []
+  - put: deploy
+    params:
+      manifest: docker-release/manifests/swarm/docker-swarm.yml
+      stemcells: [ stemcell/stemcell.tgz ]
+
+resources:
+- name: bosh-deployment
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/bosh-deployment.git
+    branch: master
+
+- name: docker-release
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-community/docker-boshrelease.git
+    branch: master
+    
+- name: stemcell
+  type: bosh-io-stemcell
+  source:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+
+- name: deploy
+  type: bosh-deployment
+  source: 
+    <<: *deployment
+    <<: *bosh_env
+
+- name: cloud-config
+  type: bosh-config
+  source:
+    type: cloud-config
+    <<: *bosh_env
+
+params:
+  bosh_env: &bosh_env
+    target: ((bosh_environment))
+    client: ((bosh_client))
+    client_id: ((bosh_client))
+    client_secret: ((bosh_client_secret))
+    ca_cert: ((bosh_ca_cert))
+  deployment: &deployment
+    deployment: docker-swarm
+
+resource_types:
+- name: bosh-config
+  type: docker-image
+  source:
+    repository: rkoster/bosh-config-resource
+    tag: latest
+
+- name: bosh-deployment
+  type: docker-image
+  source:
+    repository: cloudfoundry/bosh-deployment-resource
+    tag: latest
+
