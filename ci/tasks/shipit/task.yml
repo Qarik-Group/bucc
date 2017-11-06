@@ -9,6 +9,7 @@ image_resource:
 inputs:
 - name: version
 - name: bucc
+- name: bucc-master
 - name: bucc-ci
 
 outputs:
