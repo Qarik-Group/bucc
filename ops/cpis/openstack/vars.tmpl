@@ -1,15 +1,22 @@
-director_name:
+director_name: # bosh
 auth_url:
 az:
-default_key_name:
+default_key_name: 
 default_security_groups:
-internal_cidr:
-internal_gw:
-internal_ip:
-net_id:
+internal_cidr: # 10.0.0.0/24
+internal_gw: # 10.0.0.1
+internal_ip: # 10.0.0.6
+net_id: 
 openstack_domain:
 openstack_password:
 openstack_project:
 openstack_username:
 private_key:
 region:
+
+# flag: --dns
+dns: # [ 8.8.4.4 ] 
+
+# flag: --ntp
+ntp: # [ 0.pool.ntp.org, 1.pool.ntp.org ] 
+
