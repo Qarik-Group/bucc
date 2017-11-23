@@ -1,0 +1,3 @@
+- type: replace
+  path: /disk_pools/name=disks/cloud_properties?/availability_zone?
+  value: ((openstack_disk_az))  
