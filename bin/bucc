@@ -80,15 +80,11 @@ validate_cpi() {
 validate_cpi_flags() {
     if [ -f ${state}/flags ]; then
         for option in $(cat ${state}/flags); do
-            local flags_dir=${repo_root}/ops/cpis/$(cpi)/flags
-            if [ ! -d ${flags_dir} ]; then
+            local flags_dirs="${repo_root}/ops/flags ${repo_root}/ops/cpis/$(cpi)/flags"
+            local supported_flags=$(ls ${flags_dirs} | grep yml | cut -d "." -f 1 | sed 's/^/--/' | xargs)
+            if [[ ! ${supported_flags} == *"${option}"* ]]; then
                 echo "unsupported flag: --${option}"
-                echo "no flags suppored for '--cpi $(cpi)'"
-                exit 1
-            fi
-            if [ ! -f ${flags_dir}/${option}.yml ]; then
-                echo "unsupported flag: --${option}"
-                echo "flags for '--cpi $(cpi)' are: $(ls ${flags_dir} | cut -d "." -f 1 | sed 's/^/--/' | xargs)"
+                echo "flags for '--cpi $(cpi)' are: ${supported_flags}"
                 exit 1
             fi
         done
@@ -125,7 +121,11 @@ int_args() (
 
     if [ -f ${state}/flags ]; then
         for flag in $(cat ${state}/flags); do
-            append_ops_args_for_file "ops/cpis/$(cpi)/flags/${flag}.yml"
+            if [ -e "${repo_root}/ops/flags/${flag}.yml" ]; then
+                append_ops_args_for_file "ops/flags/${flag}.yml"
+            else
+                append_ops_args_for_file "ops/cpis/$(cpi)/flags/${flag}.yml"
+            fi
         done
     fi
 
@@ -160,6 +160,7 @@ usage() {
 up_usage() {
     echo "  --cpi    Cloud provider: [$(cpis | xargs | sed 's/ /, /g')]"
     echo "  --lite   Created bosh will use the warden cpi with garden runc"
+    echo "$(ls ${repo_root}/ops/flags | cut -d "." -f 1 | sed 's/^/  --/')"
     echo ""
     echo "  Optional cpi specific flags:"
 
@@ -359,9 +360,9 @@ _ssh() {
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
     cmd="ssh -i $(ssh_private_key) $user@$(ip)"
     if [ -z $@ ]; then
-	${cmd} -t 'command; sudo su -'
+        ${cmd} -t 'command; sudo su -'
     else
-	${cmd} $@
+        ${cmd} $@
     fi
 }
 
@@ -386,7 +387,7 @@ smoke_tests() {
     ${bucc} fly
 
     if ! fly -t bucc workers | grep running; then
-	>&2 echo "no concourse workers"; exit 1
+        >&2 echo "no concourse workers"; exit 1
     fi
 }
 
@@ -471,7 +472,7 @@ case "$1" in
         ;;
 
     ssh)
-	shift
+        shift
         _ssh "$@"
         ;;
 
