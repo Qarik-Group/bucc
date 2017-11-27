@@ -3,7 +3,8 @@
   value: &env
     http_proxy: ((http_proxy))
     https_proxy: ((https_proxy))
-    no_proxy: ((no_proxy))
+    # Make sure we can talk to registry on localhost and agent on internal_ip
+    no_proxy: 127.0.0.1,((internal_ip)),((no_proxy)) 
 
 - type: replace
   path: /cloud_provider/properties/env?
@@ -17,6 +18,8 @@
   path: /instance_groups/name=bosh/jobs/name=groundcrew/properties/https_proxy_url?
   value: ((https_proxy))
 
+  # concourse expects an array on which it calls join(',')
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=groundcrew/properties/no_proxy?
-  value: ((no_proxy))
+  path: /instance_groups/name=bosh/jobs/name=groundcrew/properties/no_proxy?/-
+  value: ((internal_ip)),((no_proxy)) 
+
