@@ -5,6 +5,4 @@ google: [ lite, normal ]
 openstack: [ lite, normal ]
 virtualbox: [ lite ]
 vsphere: [ lite, normal ]
-
-
-
+softlayer: [ lite, normal ]
