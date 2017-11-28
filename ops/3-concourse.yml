@@ -12,7 +12,7 @@
         client_id: concourse
         client_secret: ((uaa_concourse_client_secret))
         auth_url: https://((internal_ip)):8443/oauth/authorize
-        token_url: https://((internal_ip)):8443/oauth/token
+        token_url: http://localhost:8989/oauth/token
         scope: concourse.main
       tls_cert: ((atc_ssl.certificate))
       tls_key: ((atc_ssl.private_key))
@@ -60,13 +60,20 @@
   value:
     id: concourse
     secret: ((uaa_concourse_client_secret))
-    authorities: concourse.main
+    scope: concourse.main
+    authorities: "" #concourse.main
     authorized-grant-types: "authorization_code,client_credentials,refresh_token"
     access-token-validity: 3600
     refresh-token-validity: 3600
     autoapprove: true
     override: true
-    redirect-uri: https://((internal_ip))/auth/uaa/callback    
+    redirect-uri: https://((internal_ip))/auth/oauth/callback
+
+# concourse does not support setting a custom ca cert for the oauth token endpoint.
+# so we disable the https redirect of the uaa and connect over localhost via the uaa health port
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/require_https?
+  value: false
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/name=admin/groups/-
