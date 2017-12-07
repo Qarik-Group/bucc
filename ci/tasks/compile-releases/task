@@ -9,7 +9,7 @@ curl -L >/usr/local/bin/spruce https://github.com/geofffranks/spruce/releases/do
 
 curl -L >/usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && chmod 755 /usr/local/bin/jq
 
-curl -L >/usr/local/bin/bosh https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.10-linux-amd64 && chmod 755 /usr/local/bin/bosh
+curl -L >/usr/local/bin/bosh2 https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.10-linux-amd64 && chmod 755 /usr/local/bin/bosh2
 
 generate_compile_manifest() {
     mkdir -p state
@@ -59,11 +59,11 @@ update:
 instance_groups: []
 EOF
 
-    bosh int <(echo -e ${releases_to_compile}) >> manifest.yml
+    bosh2 int <(echo -e ${releases_to_compile}) >> manifest.yml
 }
 
 export_releases() {
-    for release in $(bosh releases --json | jq -r '.Tables[0].Rows[] | (.[0] + "/" + .[1])' | sed 's/\*//g'); do
+    for release in $(bosh2 releases --json | jq -r '.Tables[0].Rows[] | (.[0] + "/" + .[1])' | sed 's/\*//g'); do
         name=$(echo ${release} | cut -d'/' -f1 )
         bosh export-release -d bucc-compiled-releases ${release} ubuntu-trusty/${1}
         mv ${name}*.tgz $( echo ${name}*.tgz | sed "s/\.tgz$/-$( date -u +%Y%m%d%H%M%S ).tgz/" )
