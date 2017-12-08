@@ -2,7 +2,7 @@
   path: /instance_groups/name=bosh/jobs/name=postgres-9.4
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=postgres?
+  path: /instance_groups/name=bosh/jobs/name=nats:after
   value:
     name: postgres
     release: postgres
