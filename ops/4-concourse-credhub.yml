@@ -2,9 +2,10 @@
   path: /instance_groups/name=bosh/jobs/name=atc/properties/credhub?
   value:
     url: "https://((internal_ip)):8844/api/"
-    tls: 
+    tls:
+      insecure_skip_verify: true
       ca_cert:
-        certificate: ((credhub_tls.ca))
+        certificate: ((credhub_tls.ca))((uaa_ssl.ca))
     client_id: concourse_to_credhub
     client_secret: ((uaa_clients_concourse_to_credhub))
 
