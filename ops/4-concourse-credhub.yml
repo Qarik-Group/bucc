@@ -3,7 +3,8 @@
   value:
     url: "https://((internal_ip)):8844/api/"
     tls: 
-      ca_cert: ((credhub_tls.ca))
+      ca_cert:
+        certificate: ((credhub_tls.ca))
     client_id: concourse_to_credhub
     client_secret: ((uaa_clients_concourse_to_credhub))
 
