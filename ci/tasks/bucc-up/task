@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+if [ -d bucc-state/state ]; then
+    mv bucc-state/{vars.yml,state} bucc/
+fi
+
 cp -r bosh-cache/.bosh ${HOME} | true
 
 pushd bucc > /dev/null
