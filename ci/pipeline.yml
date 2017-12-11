@@ -51,6 +51,7 @@ groups:
       - os-conf-compiled-release-ops-file
       # - credhub-compiled-release-ops-file
       - credhub-importer-compiled-release-ops-file
+      - postgres-compiled-release-ops-file
   - name: upstream
     jobs:
       - bosh-deployment-repo
