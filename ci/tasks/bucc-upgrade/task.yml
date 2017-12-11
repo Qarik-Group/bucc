@@ -1,0 +1,25 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: starkandwayne/concourse
+
+inputs:
+  - name: bucc-state  
+  - name: bucc-ci
+  - name: bucc
+
+caches:
+  - path: bosh-cache
+    
+outputs:
+  - name: bosh-cache
+
+params:
+  VARS:
+  ARGS: 
+
+run:
+  path: bucc-ci/ci/tasks/bucc-up/task
