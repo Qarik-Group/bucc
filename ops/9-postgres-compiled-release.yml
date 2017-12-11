@@ -1,1 +1,7 @@
-[]
+- type: replace
+  path: /releases/name=postgres?
+  value:
+    name: postgres
+    version: 22
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/postgres-22-ubuntu-trusty-3468.11-20171211-135428-228746304-20171211135432.tgz
+    sha1: 78b89c2ca3f4a161190b6674d77c46421f388af8
