@@ -144,7 +144,7 @@ jobs:
         - task: bucc-test-vsphere
           file: bucc-ci/ci/tasks/bucc-test/task.yml
         - task: bucc-upgrade-vsphere
-          file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
+          file: bucc-ci/ci/tasks/bucc-up/task.yml
           params: *up-params
         - task: bucc-test-vsphere
           file: bucc-ci/ci/tasks/bucc-test/task.yml
@@ -163,7 +163,7 @@ jobs:
     plan:
       - do:
         - aggregate:
-            - { get: bucc,    trigger: true,  passed: [test] }
+            - { get: bucc,    trigger: true,  passed: [upgrade-test] }
             - { get: version, trigger: true, params: {pre: rc} }
         - put: version
           params: {file: version/number}
@@ -225,7 +225,7 @@ jobs:
         - name: inputs
           aggregate:
             - { get: version, passed: [rc], params: {bump: final} }
-            - { get: bucc,    passed: [test] }
+            - { get: bucc,    passed: [upgrade-test] }
             - { get: bucc-ci }
             - { get: bucc-stable }
             - { get: bucc-master }
