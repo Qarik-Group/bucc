@@ -282,6 +282,9 @@ jobs:
           - try:
               put: compiled-releases-credhub-importer
               params: { file: "compiled-releases/credhub-importer*.tgz", acl: public-read }
+          - try:
+              put: compiled-releases-postgres
+              params: { file: "compiled-releases/postgres*.tgz", acl: public-read }
         on_failure:
           put: notify
           params:
@@ -397,6 +400,33 @@ jobs:
             username: (( grab meta.slack.username ))
             icon_url: (( grab meta.slack.icon ))
             text:    '(( concat meta.slack.fail_url " " meta.pipeline ": credhub-importer-compiled-release-ops-file job failed" ))'
+
+  - name: postgres-compiled-release-ops-file
+    public: true
+    serial: true
+    plan:
+      - do:
+        - aggregate:
+          - get: bucc
+          - get: bucc-ci
+          - { get: compiled-releases-postgres, trigger: true }
+        - task: update-postgres-compiled-release-ops-file
+          file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
+          input_mapping:
+            compiled-release: compiled-releases-postgres
+          params:
+            OPS_FILE_PATH: ops/9-postgres-compiled-release.yml
+        - put: bucc
+          params:
+            merge: true
+            repository: bucc-out
+        on_failure:
+          put: notify
+          params:
+            channel:  (( grab meta.slack.channel ))
+            username: (( grab meta.slack.username ))
+            icon_url: (( grab meta.slack.icon ))
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": postgres-compiled-release-ops-file job failed" ))'            
 
   - name: bosh-deployment-repo
     public: true
@@ -577,6 +607,15 @@ resources:
       region_name: eu-west-1
       regexp: "credhub-importer.*-(\\d+).tgz"
 
+  - name: compiled-releases-postgres
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      region_name: eu-west-1
+      regexp: "postgres.*-(\\d+).tgz"
+      
   - name: notify
     type: slack-notification
     source:
