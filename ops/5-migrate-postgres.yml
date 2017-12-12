@@ -1,0 +1,13 @@
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=nats:before
+  value:
+    name: migrate-postgres
+    release: migrate-postgres
+
+- type: replace
+  path: /releases/-
+  value:
+    name: migrate-postgres
+    version: 0.1.0
+    url: https://github.com/rkoster/migrate-postgres-boshrelease/releases/download/v0.1.0-rc1/migrate-postgres-0.1.0-release.tgz
+    sha1: 0853a18572ee380412d21200e37778955bf35e98
