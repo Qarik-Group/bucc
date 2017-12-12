@@ -8,7 +8,7 @@ source <(./bucc/bin/bucc env)
 bucc fly && bucc credhub
 
 if [ ! -f bucc/state/upgrade-test ]; then
-    bosh -n update-config runtime --name=test <(echo "foo: bar")
+    bosh2 -n update-config runtime --name=test <(echo "foo: bar")
 
     fly -t bucc set-pipeline -n -c bucc-ci/ci/assets/acceptance-pipeline.yml -p test
 
@@ -16,7 +16,7 @@ if [ ! -f bucc/state/upgrade-test ]; then
 
     touch bucc/state/upgrade-test
 else
-    bosh config runtime --name=test | grep foo
+    bosh2 config runtime --name=test | grep foo
 
     fly -t bucc get-pipeline -p test | grep test
 
