@@ -13,3 +13,6 @@ inputs:
 
 run:
   path: bucc-ci/ci/tasks/bucc-upgrade-test/task
+
+params:
+  TEST:
