@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 set -e
-set -x
 
 mv bucc-state/{vars.yml,state} bucc/
 source <(./bucc/bin/bucc env)
 bucc fly && bucc credhub
+
+set -x
 
 if [ ! -f bucc/state/upgrade-test ]; then
     bosh2 -n update-config runtime --name=test <(echo "foo: bar")
