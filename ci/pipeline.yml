@@ -151,8 +151,6 @@ jobs:
         - task: bucc-post-upgrade-test-vsphere
           file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
           params: { TEST: get }
-        - task: bucc-down-vsphere
-          file: bucc-ci/ci/tasks/bucc-down/task.yml
         on_failure:
           put: notify
           params:
