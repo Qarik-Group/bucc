@@ -148,6 +148,7 @@ jobs:
         - task: bucc-upgrade-vsphere
           file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
           params: *up-params
+          attempts: 2
         - task: bucc-post-upgrade-test-vsphere
           file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
           params: { TEST: get }

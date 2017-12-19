@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [ -d bucc-state/state ]; then
     mv bucc-state/{vars.yml,state} bucc/
 fi
