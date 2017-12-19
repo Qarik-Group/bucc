@@ -1,11 +1,16 @@
 #!/bin/bash
-repo_root=$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))
-state=${repo_root}/state
+repo_root=${bucc_repo_root:-$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))}
+state=${bucc_state_root:-${repo_root}/state}
 mkdir -p $state/manifests
-manifest="${repo_root}/src/bosh-deployment/bosh.yml"
-state_arg="--state ${state}/state.json"
-vars_store=${state}/creds.yml
+
+vars_file=${bucc_vars_file:-${repo_root}/vars.yml}
+
+state_json_path=${bucc_state_store:-${state}/state.json}
+vars_store=${bucc_vars_store:-${state}/creds.yml}
+state_arg="--state ${state_json_path}"
 vars_store_arg="--vars-store ${vars_store}"
+
+manifest="${repo_root}/src/bosh-deployment/bosh.yml"
 
 PATH=${repo_root}/bin:${PATH}
 
@@ -50,7 +55,6 @@ cpis() {
 validate_vars_file() {
     # Todo: prettify
     local cpi_vars=${repo_root}/ops/cpis/$(cpi)/vars.tmpl
-    local vars_file=${repo_root}/vars.yml
     if [ ! -e $vars_file ]; then
         cp $cpi_vars $vars_file
         if [ ! $(cpi) = "virtualbox" ]; then
@@ -63,7 +67,6 @@ validate_vars_file() {
 
 vars_file() {
     local state_vars=${state}/vars.yml
-    local vars_file=${repo_root}/vars.yml
     ${boshexec} int $vars_file > $state_vars
     echo $state_vars
 }
