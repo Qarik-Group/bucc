@@ -169,6 +169,7 @@ usage() {
 up_usage() {
     echo "  --cpi    Cloud provider: [$(cpis | xargs | sed 's/ /, /g')]"
     echo "  --lite   Created bosh will use the warden cpi with garden runc"
+    echo "  --debug  Show arguments passed to 'bosh create-env'"
     echo "$(ls ${repo_root}/ops/flags | cut -d "." -f 1 | sed 's/^/  --/')"
     echo ""
     echo "  Optional cpi specific flags:"
@@ -214,7 +215,10 @@ up() {
     flags+=" $(cat ${state}/flags | sed 's/^/--/' | xargs)"
     echo "Using flags: ${flags}"
     echo -e "Flag files: '${state}/{cpi,lite,flags}'\n"
-    echo -e "${boshexec} create-env $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
+
+    if [ ${DEBUG} = true ]; then
+        echo -e "${boshexec} create-env $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
+    fi
     ${boshexec} create-env $(int_args) ${state_arg}
 }
 
@@ -423,6 +427,9 @@ case "$1" in
                     ;;
                 --lite)
                     echo "true" > ${state}/lite
+                    ;;
+                --debug)
+                    DEBUG=true
                     ;;
                 *)
                     echo ${1#*--} >> ${state}/flags
