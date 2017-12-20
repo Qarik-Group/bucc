@@ -25,3 +25,5 @@ bucc up --proxy
 # Small improvements
 - Added OpenStack flags: custom-ca, ignore-server-availability-zone, disk-az  and trusted-certs
 - Concourse is now configured with UAA authentication enabled [#61](https://github.com/starkandwayne/bucc/pull/61)
+- Added `--debug` flag to `bucc up` which shows all arguments passed to `bosh create-env`
+- Improved flag caching, also used flags are shown when doing `bucc up`
