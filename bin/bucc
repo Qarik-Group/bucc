@@ -94,6 +94,12 @@ validate_cpi_flags() {
     fi
 }
 
+normalize_flags() (
+    if [ -f ${state}/flags ]; then
+        cat ${state}/flags | sort | uniq | tee ${state}/flags > /dev/null
+    fi
+)
+
 int_args() (
     local ops_file_args=""
     if [ -e ${state}/manifests/0-cpi.yml ]; then
@@ -423,7 +429,7 @@ case "$1" in
             esac
             shift
         done
-        cat ${state}/flags | sort | uniq | tee ${state}/flags > /dev/null
+        normalize_flags
         validate_cpi
         validate_vars_file
         validate_cpi_flags
