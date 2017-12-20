@@ -201,7 +201,14 @@ faketty() {
 }
 
 up() {
-    ${boshexec} create-env $(int_args) $state_arg
+    local flags="--cpi $(cpi)"
+    if [ $(lite) = true ]; then
+        flags+=" --lite"
+    fi
+    flags+=" $(cat ${state}/flags | sed 's/^/--/' | xargs)"
+    echo "Using flags: ${flags}"
+    echo "Flag files: '${state}/{cpi,lite,flags}'"
+    ${boshexec} create-env $(int_args) ${state_arg}
 }
 
 down() {
@@ -397,7 +404,6 @@ smoke_tests() {
 case "$1" in
     up)
         shift
-        rm -f ${state}/flags
         while [[ $# -gt 0 ]]; do
             case "$1" in
                 -h|--help|help)
@@ -416,6 +422,7 @@ case "$1" in
             esac
             shift
         done
+        cat ${state}/flags | sort | uniq | tee ${state}/flags > /dev/null
         validate_cpi
         validate_vars_file
         validate_cpi_flags
