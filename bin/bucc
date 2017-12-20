@@ -207,7 +207,8 @@ up() {
     fi
     flags+=" $(cat ${state}/flags | sed 's/^/--/' | xargs)"
     echo "Using flags: ${flags}"
-    echo "Flag files: '${state}/{cpi,lite,flags}'"
+    echo -e "Flag files: '${state}/{cpi,lite,flags}'\n"
+    echo -e "${boshexec} create-env $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
     ${boshexec} create-env $(int_args) ${state_arg}
 }
 
