@@ -212,7 +212,9 @@ up() {
     if [ $(lite) = true ]; then
         flags+=" --lite"
     fi
-    flags+=" $(cat ${state}/flags | sed 's/^/--/' | xargs)"
+    if [ -f ${state}/flags ]; then
+        flags+=" $(cat ${state}/flags | sed 's/^/--/' | xargs)"
+    fi
     echo "Using flags: ${flags}"
     echo -e "Flag files: '${state}/{cpi,lite,flags}'\n"
 
