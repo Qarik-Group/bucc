@@ -218,7 +218,7 @@ up() {
     echo "Using flags: ${flags}"
     echo -e "Flag files: '${state}/{cpi,lite,flags}'\n"
 
-    if [ ${DEBUG} = true ]; then
+    if [[ ${DEBUG} == true ]]; then
         echo -e "${boshexec} create-env $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
     fi
     ${boshexec} create-env $(int_args) ${state_arg}
