@@ -84,9 +84,9 @@ validate_cpi_flags() {
     if [ -f ${state}/flags ]; then
         for option in $(cat ${state}/flags); do
             local flags_dirs="${repo_root}/ops/flags"
-	    if [ -d "${repo_root}/ops/cpis/$(cpi)/flags" ]; then
-		flags_dir+=" ${repo_root}/ops/cpis/$(cpi)/flags"
-	    fi
+            if [ -d "${repo_root}/ops/cpis/$(cpi)/flags" ]; then
+                flags_dirs+=" ${repo_root}/ops/cpis/$(cpi)/flags"
+            fi
             local supported_flags=$(ls ${flags_dirs} | grep yml | cut -d "." -f 1 | sed 's/^/--/' | xargs)
             if [[ ! ${supported_flags} == *"${option}"* ]]; then
                 echo "unsupported flag: --${option}"
