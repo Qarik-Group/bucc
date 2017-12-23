@@ -4,7 +4,7 @@
     name: atc
     release: concourse
     properties:
-#      token_signing_key: ((token_signing_key))
+      token_signing_key: ((token_signing_key))
       external_url: &external_url https://((internal_ip))
       basic_auth_username: admin
       basic_auth_password: ((ui_password))
@@ -33,9 +33,9 @@
     name: tsa
     release: concourse
     properties:
-#      host_key: ((tsa_host_key))
-#      token_signing_key: ((token_signing_key))
-#      authorized_keys: [((worker_key.public_key))]
+      host_key: ((tsa_host_key))
+      token_signing_key: ((token_signing_key))
+      authorized_keys: [((worker_key.public_key))]
       atc:
         urls: [ "http://127.0.0.1" ]
 
@@ -47,8 +47,8 @@
     properties:
       tsa:
         host: 127.0.0.1
-#        host_public_key: ((tsa_host_key.public_key))
-#        worker_key: ((worker_key))
+        host_public_key: ((tsa_host_key.public_key))
+        worker_key: ((worker_key))
       baggageclaim:
         url: http://127.0.0.1:7788
       garden:
@@ -75,7 +75,7 @@
     override: true
     redirect-uri: https://((internal_ip))/auth/oauth/callback
 
-# concourse does not support setting a custom ca cert for the oauth token endpoint.
+#  concourse does not support setting a custom ca cert for the oauth token endpoint.
 # so we disable the https redirect of the uaa and connect over localhost via the uaa health port
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/require_https?
@@ -111,20 +111,20 @@
     name: uaa_concourse_client_secret
     type: password
 
-# - type: replace
-#   path: /variables/-
-#   value:
-#     name: token_signing_key
-#     type: rsa
+- type: replace
+  path: /variables/-
+  value:
+    name: token_signing_key
+    type: rsa
 
-# - type: replace
-#   path: /variables/-
-#   value:
-#     name: tsa_host_key
-#     type: ssh
+- type: replace
+  path: /variables/-
+  value:
+    name: tsa_host_key
+    type: ssh
 
-# - type: replace
-#   path: /variables/-
-#   value:
-#     name: worker_key
-#     type: ssh
+- type: replace
+  path: /variables/-
+  value:
+    name: worker_key
+    type: ssh
