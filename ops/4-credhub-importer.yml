@@ -60,6 +60,21 @@
         - name: concourse/main/concourse_ca_cert
           type: value
           value: ((atc_ssl.ca))
+        - name: concourse/main/concourse_tsa_host
+          type: value
+          value: ((internal_ip))
+          
+        - name: concourse/main/concourse_tsa_host_key
+          type: value
+          value: ((tsa_host_key.public_key))
+
+        - name: concourse/main/concourse_tsa_host_key_private
+          type: value
+          value: ((tsa_host_key.private_key))
+        - name: concourse/main/concourse_worker_key
+          type: value
+          value: ((worker_key.private_key))
+
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
