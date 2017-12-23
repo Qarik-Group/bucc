@@ -97,27 +97,10 @@
           type: json
           value: ((worker_key))
 
-        - name: concourse/main/concourse-url
+        - name: concourse/main/concourse_tsa_host_key_private
           type: value
-          value: https://((internal_ip))
-        - name: concourse/main/concourse-username
-          type: value
-          value: admin
-        - name: concourse/main/concourse-password
-          type: value
-          value: ((ui_password))
-        - name: concourse/main/concourse-ca-cert
-          type: value
-          value: ((atc_ssl.ca))
-        - name: concourse/main/concourse-tsa-host
-          type: value
-          value: ((internal_ip))
-        - name: concourse/main/concourse-tsa-host-key
-          type: json
-          value: ((tsa_host_key))
-        - name: concourse/main/concourse-worker-key
-          type: json
-          value: ((worker_key))
+          value: ((tsa_host_key.private_key))
+
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
