@@ -1,9 +1,10 @@
 #!/bin/bash
 repo_root=${bucc_repo_root:-$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))}
-state=${bucc_state_root:-${repo_root}/state}
+project_root=${bucc_project_root:-$repo_root}
+state=${bucc_state_root:-${project_root}/state}
 mkdir -p $state/manifests
 
-vars_file=${bucc_vars_file:-${repo_root}/vars.yml}
+vars_file=${bucc_vars_file:-${project_root}/vars.yml}
 
 state_json_path=${bucc_state_store:-${state}/state.json}
 vars_store=${bucc_vars_store:-${state}/creds.yml}
@@ -139,6 +140,11 @@ int_args() (
                 append_ops_args_for_file "ops/cpis/$(cpi)/flags/${flag}.yml"
             fi
         done
+    fi
+
+    if [[ -d ${project_root}/operators ]]; then
+        cp_files="${ops_file_args} $(cp ${project_root}/operators/*.yml ${state}/manifests/)"
+        ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
     fi
 
     echo "${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
