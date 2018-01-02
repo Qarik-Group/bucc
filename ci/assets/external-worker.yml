@@ -15,19 +15,18 @@ jobs:
       stemcells: [ stemcell/stemcell.tgz ]
       vars:
         deployment_name: concourse_workers
-        concourse_version: 3.6.0
-        concourse_sha1: 1257bdcd3181ab0a669bc9e34cd87aff584f007b
-        garden_runc_version: 1.10.0
-        garden_runc_sha1: 9c2ad4a961db49a5349a26d4240b8f8b9b54af88
+        concourse_version: 3.8.0
+        concourse_sha1: 99e134676df72e18c719ccfbd7977bd9449e6fd4
+        garden_runc_version: 1.9.4
+        garden_runc_sha1: 9cccd7685ac075ad6956cba3ab5881e3435cd7e3
         instances: 1
         azs: [z1, z2, z3]
         worker_vm_type: default
         network_name: default
         worker_tags:
         tsa_host: ((concourse_tsa_host))
-        tsa_host_key.public_key: ((concourse_tsa_host_key))
+        tsa_host_key.public_key: ((concourse_tsa_host_key.public_key))
         worker_key: ((concourse_worker_key))
-
 
 resources:
 - name: bosh-deployment
