@@ -243,7 +243,7 @@ down() {
 }
 
 clean() {
-  if curl -m 0.1 -k -s https://$(bosh int <(bucc vars) --path /bosh_target):25555/info | grep uaa &>/dev/null ; then
+  if curl -m 1 -k -s https://$(bosh int <(bucc vars) --path /bosh_target):25555/info | grep uaa &>/dev/null ; then
     echo "your enviroment is still running, please tear it down with 'bucc down --clean'"
     exit 1
   fi
