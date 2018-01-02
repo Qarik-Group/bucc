@@ -344,34 +344,21 @@ _bosh() {
 }
 
 _credhub() {
-    # TODO: remove if fetching credhub works via ci
     local url="https://github.com/cloudfoundry-incubator/credhub-cli/releases/download"
     local version=$(grep credhub ${repo_root}/.versions | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
+    local cli_path=${repo_root}/bin/credhub
 
-    if [ ! -f ${repo_root}/bin/credhub ]; then
-      echo "installing credhub cli into: ${repo_root}/bin/"
+    if ! ( [ -f ${cli_path} ] && ${cli_path} --version | head -n 1 | grep ${version} > /dev/null); then
+      echo "installing credhub cli '${version}' into: ${repo_root}/bin/"
       pushd $(mktemp -d)
       curl -s -L >credhub.tgz "${url}/${version}/credhub-$(platform)-${version}.tgz"
       tar -xzf credhub.tgz
       chmod +x credhub
       mv credhub ${repo_root}/bin/
       popd
-    else
-      local output=$(${repo_root}/bin/credhub --version | head -n 1)
-      echo $output
-      echo $version
-      if [[ ! $output =~ $version ]]; then
-        echo "Upgrading credhub cli into: ${repo_root}/bin/"
-        pushd $(mktemp -d)
-        curl -s -L >credhub.tgz "${url}/${version}/credhub-$(platform)-${version}.tgz"
-        tar -xzf credhub.tgz
-        chmod +x credhub
-        mv credhub ${repo_root}/bin/
-        popd
-      fi
     fi
 
-    credhub login --server $(get_var credhub_url) \
+    ${cli_path} login --server $(get_var credhub_url) \
             --ca-cert $(ca_cert) \
             --username credhub-cli \
             --password $(get_var credhub_password)
