@@ -91,10 +91,10 @@
           type: value
           value: ((internal_ip))
         - name: concourse/main/concourse_tsa_host_key
-          type: value
+          type: json
           value: ((tsa_host_key))
         - name: concourse/main/concourse_worker_key
-          type: value
+          type: json
           value: ((worker_key))
 
         - name: concourse/main/concourse-url
@@ -113,10 +113,10 @@
           type: value
           value: ((internal_ip))
         - name: concourse/main/concourse-tsa-host-key
-          type: value
+          type: json
           value: ((tsa_host_key))
         - name: concourse/main/concourse-worker-key
-          type: value
+          type: json
           value: ((worker_key))
 
 - type: replace
