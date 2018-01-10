@@ -100,7 +100,7 @@ validate_cpi_flags() {
 
 normalize_flags() (
     if [ -f ${state}/flags ]; then
-        cat ${state}/flags | sort | uniq | tee ${state}/flags > /dev/null
+        cat ${state}/flags | sort | uniq > ${state}/flags.tmp && mv ${state}/flags{.tmp,}
     fi
 )
 
