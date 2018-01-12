@@ -110,7 +110,11 @@ int_args() (
         rm ${state}/manifests/*
     fi
 
-    vars_file_arg="--vars-file $(vars_file)"
+    if [ $(lite) = true ]; then
+        vars_file_arg="--vars-file $(vars_file) --var=cpi=warden"
+    elif [ $(lite) = false ]; then
+        vars_file_arg="--vars-file $(vars_file) --var=cpi=$(cpi)"
+    fi
 
     append_ops_args_for_dir() {
         cp_files="${ops_file_args} $(cp ${repo_root}/$1/*.yml ${state}/manifests/)"

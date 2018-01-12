@@ -1,4 +1,5 @@
 director_name: # bosh
+stemcell: bosh-vsphere-esxi-ubuntu-trusty-go_agent
 internal_cidr: # 10.0.0.0/24
 internal_gw: # 10.0.0.1
 internal_ip: # 10.0.0.6
@@ -14,8 +15,7 @@ vcenter_user: # root
 vcenter_vms: # bosh-1-vms
 
 # flag: --dns
-vcenter_dns: # [ 8.8.4.4 ] 
+vcenter_dns: # [ 8.8.4.4 ]
 
 # flag: --resource-pool
 vcenter_rp: # my-bosh-rp
-

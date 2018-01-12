@@ -1,13 +1,14 @@
 director_name: # bosh
+stemcell: bosh-openstack-kvm-ubuntu-trusty-go_agent
 auth_url:
 az:
 instance_type: m1.xlarge
-default_key_name: 
+default_key_name:
 default_security_groups:
 internal_cidr: # 10.0.0.0/24
 internal_gw: # 10.0.0.1
 internal_ip: # 10.0.0.6
-net_id: 
+net_id:
 openstack_domain:
 openstack_password:
 openstack_project:
@@ -16,10 +17,10 @@ private_key:
 region:
 
 # flag: --dns
-dns: # [ 8.8.4.4 ] 
+dns: # [ 8.8.4.4 ]
 
 # flag: --ntp
-ntp: # [ 0.pool.ntp.org, 1.pool.ntp.org ] 
+ntp: # [ 0.pool.ntp.org, 1.pool.ntp.org ]
 
 # flag: --keystone-v2
 openstack_tenant:
@@ -31,4 +32,4 @@ openstack_ca_cert: # |
 openstack_ca_cert: # |
 
 # flag: --disk-az
-openstack_disk_az: 
+openstack_disk_az:
