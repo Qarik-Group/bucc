@@ -110,7 +110,8 @@ int_args() (
         rm ${state}/manifests/*
     fi
 
-    vars_file_arg="--vars-file $(vars_file)"
+   vars_file_arg="--vars-file $(vars_file)"
+
 
     append_ops_args_for_dir() {
         cp_files="${ops_file_args} $(cp ${repo_root}/$1/*.yml ${state}/manifests/)"

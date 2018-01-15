@@ -49,6 +49,14 @@
         - name: concourse/main/bosh-client
           type: value
           value: admin
+
+        - name: concourse/main/bosh-cpi
+          type: value
+          value: ((shouldbereplaced))
+        - name: concourse/main/bosh-stemcell
+          type: value
+          value: ((shouldbereplaced))
+
         # Credhub
         - name: concourse/main/credhub_url
           type: value
