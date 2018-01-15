@@ -2,6 +2,7 @@
 *~
 .#*
 state/
+tmp
 local.yml
 *.DS_Store
 .credhub/
