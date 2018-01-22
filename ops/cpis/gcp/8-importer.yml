@@ -1,7 +1,7 @@
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1bosh-cpi/value
+  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1bosh_cpi/value
   value: gcp
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1bosh-stemcell/value
+  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1bosh_stemcell/value
   value: bosh-google-kvm-ubuntu-trusty-go_agent
