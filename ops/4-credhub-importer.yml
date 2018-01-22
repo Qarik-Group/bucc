@@ -34,10 +34,10 @@
         - name: concourse/main/bosh_client
           type: value
           value: admin
-        - name: concourse/main/bosh_sshprivatekey
+        - name: concourse/main/bosh_ssh_private_key
           type: value
           value: ((jumpbox_ssh.private_key))
-        - name: concourse/main/bosh_sshusername
+        - name: concourse/main/bosh_ssh_username
           type: value
           value: jumpbox
         - name: concourse/main/bosh_cpi
