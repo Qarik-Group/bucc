@@ -1,6 +1,7 @@
 # IMPORTANT Upgrade notice
 Because of the following concourse upgrade restrictions:
 > If you are currently on a version older than v3.6.0, you must first upgrade to v3.6.0 before upgrading past it!
+
 This means upgrading to BUCC [v0.2.0](https://github.com/starkandwayne/bucc/releases/tag/v0.2.0) before upgrading past it!
 
 ## New variables in credhub
