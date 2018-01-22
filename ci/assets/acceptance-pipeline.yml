@@ -7,7 +7,7 @@ jobs:
     - get: docker-release
   - put: cloud-config
     params:
-      manifest: bosh-deployment/warden/cloud-config.yml
+      manifest: bosh-deployment/((bosh_cpi))/cloud-config.yml
       releases: []
   - put: deploy
     params:
@@ -26,15 +26,15 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-community/docker-boshrelease.git
     branch: master
-    
+
 - name: stemcell
   type: bosh-io-stemcell
   source:
-    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    name: ((bosh_stemcell))
 
 - name: deploy
   type: bosh-deployment
-  source: 
+  source:
     <<: *deployment
     <<: *bosh_env
 
@@ -66,4 +66,3 @@ resource_types:
   source:
     repository: cloudfoundry/bosh-deployment-resource
     tag: latest
-
