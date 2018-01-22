@@ -1,0 +1,8 @@
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/boot_from_volume?
+  value: true
+
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/root_disk?
+  value:
+    size: ((root_disk_size))
