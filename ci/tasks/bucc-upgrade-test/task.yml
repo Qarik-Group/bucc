@@ -9,7 +9,6 @@ image_resource:
 inputs:
   - name: bucc-ci
   - name: bucc
-  - name: bucc-state    
 
 run:
   path: bucc-ci/ci/tasks/bucc-upgrade-test/task
