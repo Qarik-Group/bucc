@@ -53,10 +53,10 @@
           value: https://((internal_ip)):8844
         - name: concourse/main/credhub_username
           type: value
-          value: credhub-cli
+          value: credhub-admin
         - name: concourse/main/credhub_password
           type: value
-          value: ((credhub_cli_password))
+          value: ((credhub_admin_client_secret))
         - name: concourse/main/credhub_ca_cert
           type: value
           value: ((uaa_ssl.ca))((credhub_tls.ca))

@@ -262,8 +262,8 @@ vars() {
     echo "bosh_client: admin"
     echo "bosh_client_secret: '$(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=admin/password)'"
     echo "credhub_url: $(int --path /instance_groups/0/properties/director/config_server/url | rev | cut -c6- | rev)"
-    echo "credhub_username: credhub-cli"
-    echo "credhub_password: $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/scim/users/name=credhub-cli/password)"
+    echo "credhub_username: credhub-admin"
+    echo "credhub_password: $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/credhub-admin/secret)"
     echo "concourse_url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
     echo "concourse_username: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_username)"
     echo "concourse_password: $(int --path /instance_groups/0/jobs/name=atc/properties/basic_auth_password)"
@@ -361,8 +361,8 @@ _credhub() {
 
     ${cli_path} login --server $(get_var credhub_url) \
             --ca-cert $(ca_cert) \
-            --username credhub-cli \
-            --password $(get_var credhub_password)
+            --client-name credhub-admin \
+            --client-secret $(get_var credhub_password)
 }
 
 _uaac() {
