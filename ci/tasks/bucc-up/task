@@ -10,6 +10,9 @@ cp -r bosh-cache/.bosh ${HOME} | true
 
 pushd bucc > /dev/null
 
+echo "Bucc version"
+./bin/bucc | head -n1
+
 echo ${VARS} > "vars.yml"
 
 ./bin/bucc up ${ARGS}
