@@ -146,14 +146,16 @@ jobs:
         - task: bucc-pre-upgrade-test-vsphere
           file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
           params: { TEST: set }
-          input_mapping: { bucc: bucc-stable }
+          input_mapping: { bucc: bucc-stable, bucc-state: bucc-state-out }
         - task: bucc-upgrade-vsphere
           file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
           params: *up-params
           attempts: 2
+          input_mapping: { bucc-state: bucc-state-out }
         - task: bucc-post-upgrade-test-vsphere
           file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
           params: { TEST: get }
+          input_mapping: { bucc-state: bucc-state-out }
         on_failure:
           put: notify
           params:

@@ -7,19 +7,21 @@ image_resource:
     repository: starkandwayne/concourse
 
 inputs:
-  - name: bucc-state  
+  - name: bucc-state
   - name: bucc-ci
   - name: bucc
 
 caches:
   - path: bosh-cache
-    
+
 outputs:
   - name: bosh-cache
+  # we should also
+  - name: bucc-state-out
 
 params:
   VARS:
-  ARGS: 
+  ARGS:
 
 run:
   path: bucc-ci/ci/tasks/bucc-up/task
