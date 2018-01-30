@@ -52,7 +52,7 @@ groups:
       # - credhub-compiled-release-ops-file
       - credhub-importer-compiled-release-ops-file
       - postgres-compiled-release-ops-file
-      - migrate-postgres-compiled-release-ops-file      
+      - migrate-postgres-compiled-release-ops-file
   - name: upstream
     jobs:
       - bosh-deployment-repo
@@ -135,7 +135,7 @@ jobs:
         - aggregate:
           - { get: bucc, trigger: true, passed: [test] }
           - { get: bucc-ci }
-          - { get: bucc-stable }          
+          - { get: bucc-stable }
         - task: cleanup-vsphere
           file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
           params: *cleanup-params
@@ -145,14 +145,17 @@ jobs:
           params: *up-params
         - task: bucc-pre-upgrade-test-vsphere
           file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
-          params: { TEST: set }          
+          params: { TEST: set }
+          input_mapping: { bucc: bucc-stable, bucc-state: bucc-state-out }
         - task: bucc-upgrade-vsphere
           file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
           params: *up-params
           attempts: 2
+          input_mapping: { bucc-state: bucc-state-out }
         - task: bucc-post-upgrade-test-vsphere
           file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
           params: { TEST: get }
+          input_mapping: { bucc-state: bucc-state-out }
         on_failure:
           put: notify
           params:
@@ -432,7 +435,7 @@ jobs:
             channel:  (( grab meta.slack.channel ))
             username: (( grab meta.slack.username ))
             icon_url: (( grab meta.slack.icon ))
-            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": postgres-compiled-release-ops-file job failed" ))'            
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": postgres-compiled-release-ops-file job failed" ))'
 
   - name: migrate-postgres-compiled-release-ops-file
     public: true
@@ -459,8 +462,8 @@ jobs:
             channel:  (( grab meta.slack.channel ))
             username: (( grab meta.slack.username ))
             icon_url: (( grab meta.slack.icon ))
-            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": migrate-postgres-compiled-release-ops-file job failed" ))'            
-            
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": migrate-postgres-compiled-release-ops-file job failed" ))'
+
   - name: bosh-deployment-repo
     public: true
     serial: true

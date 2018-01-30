@@ -12,14 +12,14 @@ inputs:
 
 caches:
   - path: bosh-cache
-    
+
 outputs:
-  - name: bucc-state
   - name: bosh-cache
+  - name: bucc-state-out
 
 params:
   VARS:
-  ARGS: 
+  ARGS:
 
 run:
   path: bucc-ci/ci/tasks/bucc-up/task
