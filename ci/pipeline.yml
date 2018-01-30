@@ -112,11 +112,14 @@ jobs:
               vcenter_vms: bucc-ci/vms
               vcenter_cluster: cluster1
         - task: bucc-test-vsphere
+          input_mapping: { bucc-state: bucc-state-out }
           file: bucc-ci/ci/tasks/bucc-test/task.yml
         - task: bucc-acceptance-test
+          input_mapping: { bucc-state: bucc-state-out }
           file: bucc-ci/ci/tasks/bucc-acceptance-test/task.yml
           attempts: 5
         - task: bucc-down-vsphere
+          input_mapping: { bucc-state: bucc-state-out }
           file: bucc-ci/ci/tasks/bucc-down/task.yml
         on_failure:
           put: notify
