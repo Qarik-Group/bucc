@@ -325,7 +325,7 @@ jobs:
       params:
         compiled_releases: *releases
     - task: remove-already-compiled-releases
-      input_mapping: { compiled-releases-in: compiled-releases }
+      input_mapping: { compiled-releases-in: compile }
       file: bucc-ci/ci/tasks/remove-already-compiled-releases/task.yml
     - aggregate:
       - try:

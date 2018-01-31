@@ -13,7 +13,7 @@ set -o pipefail
 pushd compiled-releases-in > /dev/null
 manifest=$(pwd)/manifest.yml
 
-stemcel_version=$(bosh2 ${manifest} --path /stemcells/0/version)
+stemcel_version=$(bosh2 int ${manifest} --path /stemcells/0/version)
 
 for name in $(spruce json ${manifest} | jq '.releases[].name'); do
     version=$(bosh2 ${manifest} --path /releases/name=${name}/version)
