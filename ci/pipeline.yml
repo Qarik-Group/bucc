@@ -647,6 +647,11 @@ resources:
       file: version
       initial_version:   (( grab meta.initial_version || "0.0.1" ))
 
+  - name: compile
+    type: bosh-deployment
+    source:
+      deployment: compile-releases
+
   - name: compiled-releases-concourse
     type: s3
     source:

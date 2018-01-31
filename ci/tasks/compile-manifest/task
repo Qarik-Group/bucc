@@ -14,7 +14,7 @@ pushd bucc > /dev/null
     find ops -name "*compiled-release*" -exec mv {} {}.tmp \;
 popd > /dev/null
 
-stemcell_version=$(bucc int --path/releases/name=bosh/url | cut -d- -f8)
+stemcell_version=$(bucc int --path /releases/name=bosh/url | cut -d- -f8)
 cat > ${compile_manifest} <<EOF
 ---
 name: compile-releases
