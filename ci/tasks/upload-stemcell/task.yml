@@ -8,14 +8,14 @@ image_resource:
 
 inputs:
   - name: bucc-ci
-  - name: bucc
-  - name: compile-manifest
-
-outputs:
-  - name: compile-manifest-out
+  - name: manifest
 
 params:
-  RELEASES:
+  BOSH_ENVIRONMENT:
+  BOSH_CLIENT:
+  BOSH_CLIENT_SECRET:
+  BOSH_CA_CERT:
+  CPI: warden-boshlite
 
 run:
-  path: bucc-ci/ci/tasks/compile-manifest/task
+  path: bucc-ci/ci/tasks/upload-stemcell/task
