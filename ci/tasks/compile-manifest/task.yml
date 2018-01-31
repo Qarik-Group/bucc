@@ -9,9 +9,10 @@ image_resource:
 inputs:
   - name: bucc-ci
   - name: bucc
+  - name: compile-manifest
 
 outputs:
-  - name: compile-manifest
+  - name: compile-manifest-out
 
 params:
   RELEASES:

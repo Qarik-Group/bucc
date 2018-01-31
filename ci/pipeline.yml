@@ -268,7 +268,6 @@ jobs:
             icon_url: (( grab meta.slack.icon ))
             text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'
 
-
   - name: compile-releases-manifest
     public: true
     serial: true
@@ -286,7 +285,7 @@ jobs:
         - name: postgres
         - name: migrate-postgres
     - put: compiled-releases-manifest
-      params: { file: "compile-manifest/manifest.yml" }
+      params: { repository: compile-manifest-out }
 
   - name: compile-releases
     public: true
@@ -707,13 +706,11 @@ resources:
       regexp: "migrate-postgres.*-(\\d+).tgz"
 
   - name: compiled-releases-manifest
-    type: s3
+    type: git
     source:
-      bucket: "bucc-compiled-releases"
-      access_key_id: (( grab meta.aws.access_key_id ))
-      secret_access_key: (( grab meta.aws.secret_access_key ))
-      region_name: eu-west-1
-      versioned_file: "manifest.yml"
+      uri:         (( grab meta.github.uri ))
+      branch:      compile_releases_manifest
+      private_key: (( grab meta.github.private_key ))
 
   - name: notify
     type: slack-notification

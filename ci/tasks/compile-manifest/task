@@ -39,3 +39,14 @@ done
 bosh2 int ${compile_manifest} > ${compile_manifest}.tmp
 mv ${compile_manifest}{.tmp,}
 cat ${compile_manifest}
+
+git config --global user.email "ci@starkandwayne.com"
+git config --global user.name "CI Bot"
+
+pushd compile-manifest > /dev/null
+
+git add -A
+git commit -m "Updated compile releases manifest.yml" || echo "No changes to commit"
+
+popd > /dev/null
+git clone compile-manifest compile-manifest-out
