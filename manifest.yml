@@ -1,0 +1,32 @@
+instance_groups: []
+name: compile-releases
+releases:
+- name: concourse
+  sha1: 99e134676df72e18c719ccfbd7977bd9449e6fd4
+  url: https://bosh.io/d/github.com/concourse/concourse?v=3.8.0
+  version: 3.8.0
+- name: os-conf
+  sha1: 78d79f08ff5001cc2a24f572837c7a9c59a0e796
+  url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=18
+  version: 18
+- name: credhub-importer
+  sha1: a945710d1d7d3dfb8f8e117aa6f81e2fb5c70709
+  url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/1/credhub-importer-1.tgz
+  version: 1
+- name: postgres
+  sha1: 86a1333122e9cdd051551c83ec26d36f6e325d6c
+  url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=22
+  version: 22
+- name: migrate-postgres
+  sha1: 641b8304a540cec6510db1e888689b7af04b253e
+  url: https://github.com/rkoster/migrate-postgres-boshrelease/releases/download/v0.1.0/migrate-postgres-0.1.0-release.tgz
+  version: 0.1.0
+stemcells:
+- alias: large
+  os: ubuntu-trusty
+  version: 3468.21
+update:
+  canaries: 1
+  canary_watch_time: 1000 - 90000
+  max_in_flight: 1
+  update_watch_time: 1000 - 90000
