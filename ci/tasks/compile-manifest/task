@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+compile_manifest=$(pwd)/compile-manifest/manifest.yml
+PATH=$(pwd)/bucc/bin:${PATH}
+
+# set cpi + remove ops files with already compiled releases
+pushd bucc > /dev/null
+    mkdir -p state
+    echo "virtualbox" > state/cpi
+    echo "foo: bar" > vars.yml
+    find ops -name "*compiled-release*" -exec mv {} {}.tmp \;
+popd > /dev/null
+
+stemcell_version=$(bucc int --path/releases/name=bosh/url | cut -d- -f8)
+cat > ${compile_manifest} <<EOF
+---
+name: compile-releases
+stemcells:
+- alias: large
+  os: ubuntu-trusty
+  version: ${stemcell_version}
+update:
+  canaries: 1
+  max_in_flight: 1
+  canary_watch_time: 1000 - 90000
+  update_watch_time: 1000 - 90000
+instance_groups: []
+releases:
+EOF
+
+for row in $(echo "${RELEASES}" | jq -r '.[] | @base64'); do
+    _jq() { echo ${row} | base64 --decode | jq -r ${1}; }
+    release=$(spruce json <(bucc int --path /releases/name=${release}))
+    echo "- ${release}" >> ${compile_manifest}
+done

@@ -46,6 +46,7 @@ groups:
       - bump-patch
   - name: compiled-releases
     jobs:
+      - compile-releases-manifest
       - compile-releases
       - concourse-compiled-release-ops-file
       - os-conf-compiled-release-ops-file
@@ -267,43 +268,79 @@ jobs:
             icon_url: (( grab meta.slack.icon ))
             text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'
 
-  - name: compile-releases
+
+  - name: compile-releases-manifest
     public: true
     serial: true
     plan:
-      - do:
-        - aggregate:
-          - { get: bucc, trigger: true, passed: [sanity-check] }
-          - { get: bucc-ci }
-        - task: compile-releases
-          file: bucc-ci/ci/tasks/compile-releases/task.yml
-          privileged: true
-        - aggregate:
-          - try:
-              put: compiled-releases-concourse
-              params: { file: "compiled-releases/concourse*.tgz", acl: public-read }
-          - try:
-              put: compiled-releases-os-conf
-              params: { file: "compiled-releases/os-conf*.tgz", acl: public-read }
-          # - try:
-          #     put: compiled-releases-credhub
-          #     params: { file: "compiled-releases/credhub-[0-9]*.tgz", acl: public-read }
-          - try:
-              put: compiled-releases-credhub-importer
-              params: { file: "compiled-releases/credhub-importer*.tgz", acl: public-read }
-          - try:
-              put: compiled-releases-postgres
-              params: { file: "compiled-releases/postgres*.tgz", acl: public-read }
-          - try:
-              put: compiled-releases-migrate-postgres
-              params: { file: "compiled-releases/migrate-postgres*.tgz", acl: public-read }
-        on_failure:
-          put: notify
-          params:
-            channel:  (( grab meta.slack.channel ))
-            username: (( grab meta.slack.username ))
-            icon_url: (( grab meta.slack.icon ))
-            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": compiled-releases job failed" ))'
+    - aggregate:
+      - { get: bucc, trigger: true, passed: [sanity-check] }
+      - { get: bucc-ci }
+    - task: compile-manifest
+      file: bucc-ci/ci/tasks/compile-manifest/task.yml
+      params:
+        RELEASES: &releases
+        - name: concourse
+        - name: os-conf
+        - name: credhub-importer
+        - name: postgres
+        - name: migrate-postgres
+    - put: compiled-releases-manifest
+      params: { file: "compile-manifest/manifest.yml" }
+
+  - name: compile-releases
+    public: true
+    serial: true
+    serial_groups: [ bucc-vsphere ]
+    plan:
+    - aggregate:
+      - { get: compiled-releases-manifest, trigger: true }
+      - { get: bucc-ci }
+      - { get: bucc-stable }
+    - task: cleanup-vsphere
+      file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+      params: *cleanup-params
+    - task: bucc-up-vsphere
+      input_mapping: { bucc: bucc-stable }
+      file: bucc-ci/ci/tasks/bucc-up/task.yml
+      params: *up-params
+    - task: bucc-source-file
+      input_mapping: { bucc: bucc-stable }
+      file: bucc-ci/ci/tasks/bucc-source-file/task.yml
+    - put: compile
+      params:
+        source_file: bucc-source-file/config.json
+        manifest: compiled-releases-manifest/manifest.yml
+    - get: compile
+      params: { compiled_releases: *releases }
+    - task: bucc-down-vsphere
+      input_mapping: { bucc-state: bucc-state-out }
+      file: bucc-ci/ci/tasks/bucc-down/task.yml
+    - task: remove-already-compiled-releases
+      file: bucc-ci/ci/tasks/remove-already-compiled-releases/task.yml
+    - aggregate:
+      - try:
+          put: compiled-releases-concourse
+          params: { file: "compiled-releases/concourse*.tgz", acl: public-read }
+      - try:
+          put: compiled-releases-os-conf
+          params: { file: "compiled-releases/os-conf*.tgz", acl: public-read }
+      - try:
+          put: compiled-releases-credhub-importer
+          params: { file: "compiled-releases/credhub-importer*.tgz", acl: public-read }
+      - try:
+          put: compiled-releases-postgres
+          params: { file: "compiled-releases/postgres*.tgz", acl: public-read }
+      - try:
+          put: compiled-releases-migrate-postgres
+          params: { file: "compiled-releases/migrate-postgres*.tgz", acl: public-read }
+    on_failure:
+      put: notify
+      params:
+        channel:  (( grab meta.slack.channel ))
+        username: (( grab meta.slack.username ))
+        icon_url: (( grab meta.slack.icon ))
+        text:    '(( concat meta.slack.fail_url " " meta.pipeline ": compiled-releases job failed" ))'
 
   - name: concourse-compiled-release-ops-file
     public: true
@@ -663,6 +700,15 @@ resources:
       secret_access_key: (( grab meta.aws.secret_access_key ))
       region_name: eu-west-1
       regexp: "migrate-postgres.*-(\\d+).tgz"
+
+  - name: compiled-releases-manifest
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      region_name: eu-west-1
+      versioned_file: "manifest.yml"
 
   - name: notify
     type: slack-notification

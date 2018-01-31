@@ -1,0 +1,16 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: starkandwayne/concourse
+
+inputs:
+  - name: bucc-state
+
+outputs:
+  - name: bucc-source-file
+
+run:
+  path: bucc-ci/ci/tasks/bucc-source-file/task
