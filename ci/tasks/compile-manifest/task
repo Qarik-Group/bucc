@@ -31,8 +31,7 @@ instance_groups: []
 releases:
 EOF
 
-for row in $(echo "${RELEASES}" | jq -r '.[] | @base64'); do
-    _jq() { echo ${row} | base64 --decode | jq -r ${1}; }
-    release=$(spruce json <(bucc int --path /releases/name=${release}))
+for name in $(echo "${RELEASES}" | jq -r '.[].name'); do
+    release=$(spruce json <(bucc int --path /releases/name=${name}))
     echo "- ${release}" >> ${compile_manifest}
 done
