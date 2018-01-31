@@ -9,7 +9,7 @@ name=bosh-${CPI}-ubuntu-trusty-go_agent
 stemcell=$(curl -s "https://bosh.io/api/v1/stemcells/${name}?all=1" | \
                jq -c --arg version "${version}" '.[] | select(.version == $version)')
 
-url=$(echo ${stemcell} | jq '.regular.url' )
-sha1=$(echo ${stemcell} | jq '.regular.sha1' )
+url=$(echo ${stemcell} | jq -r '.regular.url' )
+sha1=$(echo ${stemcell} | jq -r '.regular.sha1' )
 
 bosh2 upload-stemcell ${url} --version ${version} --name ${name} --sha1 ${sha1}
