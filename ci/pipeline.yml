@@ -3,6 +3,11 @@ meta:
   target:   (( param "Please identify the name of the target Concourse CI" ))
   pipeline: bucc
 
+  lite:
+    target: (( param "Bosh lite target" ))
+    client_secret: (( param "Bosh lite client secret" ))
+    ca_cert: (( param "Bosh lite ca cert" ))
+
   vcenter:
     username: (( param "Please specify the username used for vCenter" ))
     password: (( param "Please specify the password used for vCenter" ))
@@ -47,7 +52,8 @@ groups:
   - name: compiled-releases
     jobs:
       - compile-releases-manifest
-      - compile-releases
+      - deploy-compile-releases
+      - download-compile-releases
       - concourse-compiled-release-ops-file
       - os-conf-compiled-release-ops-file
       # - credhub-compiled-release-ops-file
@@ -273,6 +279,7 @@ jobs:
     serial: true
     plan:
     - aggregate:
+      - { get: compile-manifest, resource: compiled-releases-manifest }
       - { get: bucc, trigger: true, passed: [sanity-check] }
       - { get: bucc-ci }
     - task: compile-manifest
@@ -287,34 +294,37 @@ jobs:
     - put: compiled-releases-manifest
       params: { repository: compile-manifest-out }
 
-  - name: compile-releases
+  - name: deploy-compile-releases
     public: true
     serial: true
-    serial_groups: [ bucc-vsphere ]
+    serial_groups: [ bosh-lite ]
     plan:
     - aggregate:
       - { get: compiled-releases-manifest, trigger: true }
       - { get: bucc-ci }
-      - { get: bucc-stable }
-    - task: cleanup-vsphere
-      file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-      params: *cleanup-params
-    - task: bucc-up-vsphere
-      input_mapping: { bucc: bucc-stable }
-      file: bucc-ci/ci/tasks/bucc-up/task.yml
-      params: *up-params
-    - task: bucc-source-file
-      input_mapping: { bucc: bucc-stable }
-      file: bucc-ci/ci/tasks/bucc-source-file/task.yml
+    - task: upload-stemcell
+      input_mapping: { manifest: compiled-releases-manifest }
+      file: bucc-ci/ci/tasks/upload-stemcell/task
+      params:
+        BOSH_ENVIRONMENT: (( grab meta.lite.target ))
+        BOSH_CLIENT: admin
+        BOSH_CLIENT_SECRET: (( grab meta.lite.client_secret ))
+        BOSH_CA_CERT: (( grab meta.lite.ca_cert ))
+        CPI: warden-boshlite
     - put: compile
       params:
-        source_file: bucc-source-file/config.json
         manifest: compiled-releases-manifest/manifest.yml
+
+  - name: download-compile-releases
+    public: true
+    serial: true
+    serial_groups: [ bosh-lite ]
+    plan:
+    - get: bucc-ci
     - get: compile
-      params: { compiled_releases: *releases }
-    - task: bucc-down-vsphere
-      input_mapping: { bucc-state: bucc-state-out }
-      file: bucc-ci/ci/tasks/bucc-down/task.yml
+      trigger: true
+      params:
+        compiled_releases: *releases
     - task: remove-already-compiled-releases
       file: bucc-ci/ci/tasks/remove-already-compiled-releases/task.yml
     - aggregate:
@@ -650,6 +660,10 @@ resources:
     type: bosh-deployment
     source:
       deployment: compile-releases
+      target: (( grab meta.lite.target ))
+      client: admin
+      client_secret: (( grab meta.lite.client_secret ))
+      ca_cert: (( grab meta.lite.ca_cert ))
 
   - name: compiled-releases-concourse
     type: s3

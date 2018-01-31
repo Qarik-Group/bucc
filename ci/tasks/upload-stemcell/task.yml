@@ -1,0 +1,21 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: starkandwayne/concourse
+
+inputs:
+  - name: bucc-ci
+  - name: bucc
+  - name: compile-manifest
+
+outputs:
+  - name: compile-manifest-out
+
+params:
+  RELEASES:
+
+run:
+  path: bucc-ci/ci/tasks/compile-manifest/task

@@ -6,6 +6,10 @@ meta:
   aws:
     access_key: (( vault "secret/aws/cfcommunity:access" ))
     secret_key: (( vault "secret/aws/cfcommunity:secret" ))
+  lite:
+    target: 10.58.111.44
+    client_secret: (( vault "secret/bosh-lites/lite44/users/admin:password" ))
+    ca_cert: (( vault "secret/bosh-lites/lite44/certs:rootCA.pem" ))
   vcenter:
     username: (( vault "secret/pipelines/bucc/vcenter:username" ))
     password: (( vault "secret/pipelines/bucc/vcenter:password" ))
