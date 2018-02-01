@@ -291,6 +291,7 @@ jobs:
         - name: credhub-importer
         - name: postgres
         - name: migrate-postgres
+        - name: backup-and-restore-sdk
     - put: compiled-releases-manifest
       params: { repository: compile-manifest-out }
 
@@ -302,6 +303,16 @@ jobs:
     - aggregate:
       - { get: compiled-releases-manifest, trigger: true }
       - { get: bucc-ci }
+      - { get: backup-and-restore-sdk-release, trigger: true }
+    - task: remove-unused-sdk-packages
+      input_mapping: { release-in: backup-and-restore-sdk-release }
+      output_mapping: { release: backup-and-restore-sdk-release }
+      file: bucc-ci/ci/tasks/remove-unused-sdk-packages/task.yml
+      params:
+        PACKAGES:
+        - database-backup-restorer
+        - database-backup-restorer-postgres-9.6
+        JOB_NAME: database-backup-restorer
     - task: upload-stemcell
       input_mapping: { manifest: compiled-releases-manifest }
       file: bucc-ci/ci/tasks/upload-stemcell/task.yml
@@ -664,6 +675,13 @@ resources:
       client: admin
       client_secret: (( grab meta.lite.client_secret ))
       ca_cert: (( grab meta.lite.ca_cert ))
+
+  - name: backup-and-restore-sdk-release
+    type: git
+    source:
+      uri:    https://github.com/cloudfoundry-incubator/backup-and-restore-sdk-release
+      branch: master
+      tag_filter: v*
 
   - name: compiled-releases-concourse
     type: s3
