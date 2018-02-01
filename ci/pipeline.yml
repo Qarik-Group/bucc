@@ -325,6 +325,7 @@ jobs:
     - put: compile
       params:
         manifest: compiled-releases-manifest/manifest.yml
+        cleanup: true
 
   - name: download-compile-releases
     public: true
