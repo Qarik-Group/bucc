@@ -18,7 +18,7 @@ for job in $(ls jobs); do
 done
 
 job_spec=$(spruce json jobs/${JOB_NAME}/spec)
-bosh2 int <(echo ${job_spec} | jq --argjson pkgs "${PACKAGES}" '.packages = $pkgs') \
+bosh2 int <(echo ${job_spec} | jq --argjson pkgs "${PACKAGES}" '.packages |= map(. as $pkg | select(any($pkgs[]; . == $pkg)))') \
       > jobs/${JOB_NAME}/spec
 
 git config --global user.email "ci@starkandwayne.com"
