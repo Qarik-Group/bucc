@@ -1,0 +1,7 @@
+- type: replace
+  path: /releases/name=backup-and-restore-sdk?
+  value:
+    name: backup-and-restore-sdk
+    version: 1.4.2+dev.1517490017
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/backup-and-restore-sdk-1.4.2%2Bdev.1517490017-ubuntu-trusty-3468.21-20180201-130257-20967975.tgz
+    sha1: e5edbf281ebd4ea292e3f7c77de5c514ccffd32c
