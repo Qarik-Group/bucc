@@ -20,6 +20,6 @@ for name in $(spruce json ${manifest} | jq -r '.releases[].name'); do
     releases_in_s3=$(curl -s "https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/?prefix=${name}")
 
     if [[ ${releases_in_s3} != *"${version}-ubuntu-trusty-${stemcell_version}"* ]]; then
-        cp ${name}*.tgz ../compile-releases/
+        cp ${name}*.tgz ../compiled-releases/
     fi
 done
