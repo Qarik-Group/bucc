@@ -2,5 +2,5 @@
   path: /releases/-
   value:
     name: backup-and-restore-sdk
-    url: git+/tmp/build/put/backup-and-restore-sdk-release
+    url: git+file://tmp/build/put/backup-and-restore-sdk-release
     version: create
