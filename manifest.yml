@@ -22,7 +22,7 @@ releases:
   url: https://github.com/rkoster/migrate-postgres-boshrelease/releases/download/v0.1.0/migrate-postgres-0.1.0-release.tgz
   version: 0.1.0
 - name: backup-and-restore-sdk
-  url: git+/tmp/build/put/backup-and-restore-sdk-release
+  url: git+file://tmp/build/put/backup-and-restore-sdk-release
   version: create
 stemcells:
 - alias: large
