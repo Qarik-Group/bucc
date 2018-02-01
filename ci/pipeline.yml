@@ -313,6 +313,7 @@ jobs:
       params:
         PACKAGES:
         - database-backup-restorer
+        - database-backup-restorer-postgres-9.4
         - database-backup-restorer-postgres-9.6
         - backup-and-restore-release-golang
         JOB_NAME: database-backup-restorer
