@@ -3,5 +3,5 @@
   value:
     name: postgres
     version: 22
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/postgres-22-ubuntu-trusty-3468.21-20180201-144243-750600749.tgz
-    sha1: b9399be3ab4a0e8ba95ee79ef2ec2b664281c6d9
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/postgres-22-ubuntu-trusty-3468.21-20180202-150030-189145713.tgz
+    sha1: 37ff169982295d78ebe55cd0d39fa0c706979d4f
