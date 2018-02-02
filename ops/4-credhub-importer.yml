@@ -60,9 +60,6 @@
         - name: concourse/main/credhub_ca_cert
           type: value
           value: ((uaa_ssl.ca))((credhub_tls.ca))
-        - name: concourse/main/credhub-url
-          type: value
-          value: https://((internal_ip)):8844
         # Concourse
         - name: concourse/main/concourse_url
           type: value
