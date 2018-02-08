@@ -2,6 +2,6 @@
   path: /releases/name=backup-and-restore-sdk?
   value:
     name: backup-and-restore-sdk
-    version: 1.4.3+dev.1517583483
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/backup-and-restore-sdk-1.4.3%2Bdev.1517583483-ubuntu-trusty-3468.21-20180202-150204-894318936.tgz
-    sha1: f73acd022756f4a34abd145c28622aabbaa7dd38
+    version: 1.4.4+dev.1518102922
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/backup-and-restore-sdk-1.4.4%2Bdev.1518102922-ubuntu-trusty-3468.21-20180208-151926-770526369.tgz
+    sha1: d0ffa2f7946e8daaa4df62ca2a2590dcfd2eae60
