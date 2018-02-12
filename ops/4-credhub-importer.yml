@@ -34,21 +34,18 @@
         - name: concourse/main/bosh_client
           type: value
           value: admin
-        - name: concourse/main/bosh-name
+        - name: concourse/main/bosh_ssh_private_key
           type: value
-          value: ((director_name))
-        - name: concourse/main/bosh-environment
+          value: ((jumpbox_ssh.private_key))
+        - name: concourse/main/bosh_ssh_username
           type: value
-          value: ((internal_ip))
-        - name: concourse/main/bosh-ca-cert
+          value: jumpbox
+        - name: concourse/main/bosh_cpi
           type: value
-          value: ((director_ssl.ca))
-        - name: concourse/main/bosh-client-secret
+          value: ((shouldbereplaced))
+        - name: concourse/main/bosh_stemcell
           type: value
-          value: ((admin_password))
-        - name: concourse/main/bosh-client
-          type: value
-          value: admin
+          value: ((shouldbereplaced))
         # Credhub
         - name: concourse/main/credhub_url
           type: value
@@ -65,15 +62,6 @@
         - name: concourse/main/credhub-url
           type: value
           value: https://((internal_ip)):8844
-        - name: concourse/main/credhub-username
-          type: value
-          value: credhub-cli
-        - name: concourse/main/credhub-password
-          type: value
-          value: ((credhub_cli_password))
-        - name: concourse/main/credhub-ca-cert
-          type: value
-          value: ((uaa_ssl.ca))((credhub_tls.ca))
         # Concourse
         - name: concourse/main/concourse_url
           type: value
