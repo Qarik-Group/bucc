@@ -1,0 +1,82 @@
+jobs:
+- name: concourse_workers
+  plan:
+  - aggregate:
+    - get: stemcell
+    - get: bosh-deployment
+    - get: concourse-deployment
+  - put: cloud-config
+    params:
+      manifest: bosh-deployment/((bosh_cpi))/cloud-config.yml
+      releases: []
+  - put: deploy
+    params:
+      manifest: concourse-deployment/cluster/external-worker.yml
+      stemcells: [ stemcell/stemcell.tgz ]
+      vars:
+        deployment_name: concourse_workers
+        concourse_version: 3.8.0
+        concourse_sha1: 99e134676df72e18c719ccfbd7977bd9449e6fd4
+        garden_runc_version: 1.9.4
+        garden_runc_sha1: 9cccd7685ac075ad6956cba3ab5881e3435cd7e3
+        instances: 1
+        azs: [z1, z2, z3]
+        worker_vm_type: default
+        external_worker_network_name: default
+        worker_tags:
+        tsa_host: ((concourse_tsa_host))
+        tsa_host_key.public_key: ((concourse_tsa_host_key.public_key))
+        worker_key: ((concourse_worker_key))
+
+resources:
+- name: bosh-deployment
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/bosh-deployment.git
+    branch: master
+
+- name: concourse-deployment
+  type: git
+  source:
+    uri: https://github.com/concourse/concourse-deployment.git
+    branch: master
+
+- name: stemcell
+  type: bosh-io-stemcell
+  source:
+    name: ((bosh_stemcell))
+
+- name: deploy
+  type: bosh-deployment
+  source:
+    <<: *deployment
+    <<: *bosh_env
+
+- name: cloud-config
+  type: bosh-config
+  source:
+    type: cloud-config
+    <<: *bosh_env
+
+params:
+  bosh_env: &bosh_env
+    target: ((bosh_environment))
+    client: ((bosh_client))
+    client_id: ((bosh_client))
+    client_secret: ((bosh_client_secret))
+    ca_cert: ((bosh_ca_cert))
+  deployment: &deployment
+    deployment: concourse_workers
+
+resource_types:
+- name: bosh-config
+  type: docker-image
+  source:
+    repository: rkoster/bosh-config-resource
+    tag: latest
+
+- name: bosh-deployment
+  type: docker-image
+  source:
+    repository: cloudfoundry/bosh-deployment-resource
+    tag: latest
