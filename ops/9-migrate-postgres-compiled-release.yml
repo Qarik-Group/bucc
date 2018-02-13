@@ -3,5 +3,5 @@
   value:
     name: migrate-postgres
     version: 0.1.0
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/migrate-postgres-0.1.0-ubuntu-trusty-3468.21-20180208-151754-750751447.tgz
-    sha1: 34767ea9ecca67c9abc14f5386a27c4b068b454e
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/migrate-postgres-0.1.0-ubuntu-trusty-3468.21-20180213-190914-516463584.tgz
+    sha1: bb03b61d441f4482119bebe9972b56ae9eef5ea7
