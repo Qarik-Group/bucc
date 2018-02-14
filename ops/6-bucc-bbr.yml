@@ -1,0 +1,12 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: bucc-bbr
+    url: git+https://github.com/starkandwayne/bucc-bbr-boshrelease
+    version: 1
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: bucc-bbr
+    release: bucc-bbr
