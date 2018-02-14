@@ -3,13 +3,6 @@
 set -e
 set -o pipefail
 
-# if [[ ${compiled_release_url} != *"${version}"*"${stemcell_version}"* ]]; then
-#     releases_in_s3=$(curl -s "https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/?prefix=${name}")
-#
-#         releases_to_compile+="- $( echo ${release} | jq -c '.version = "latest"' )\n"
-#     fi
-# fi
-
 pushd compiled-releases-in > /dev/null
 manifest=$(pwd)/manifest.yml
 
@@ -19,7 +12,7 @@ for name in $(spruce json ${manifest} | jq -r '.releases[].name'); do
     version=$(bosh2 int ${manifest} --path /releases/name=${name}/version | cut -d+ -f1)
     releases_in_s3=$(curl -s "https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/?prefix=${name}")
 
-    if [[ ${releases_in_s3} != "*${version}*ubuntu-trusty-${stemcell_version}*" ]]; then
-        cp ${name}*.tgz ../compiled-releases/
+    if [[ "${releases_in_s3}" != *"${version}-ubuntu-trusty-${stemcell_version}"* ]]; then
+        cp ${name}*.tgz ../compiled-releases-clean/
     fi
 done

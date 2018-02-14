@@ -11,7 +11,7 @@ inputs:
   - name: compiled-releases-in
 
 outputs:
-  - name: compiled-releases
+  - name: compiled-releases-clean
 
 run:
   path: bucc-ci/ci/tasks/remove-already-compiled-releases/task
