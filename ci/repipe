@@ -9,6 +9,8 @@
 #          Dennis Bell <dennis.j.bell@gmail.com>
 # created: 2016-03-04
 
+export VAULT_SKIP_VERIFY=1
+
 need_command() {
 	local cmd=${1:?need_command() - no command name given}
 
