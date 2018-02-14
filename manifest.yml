@@ -21,9 +21,9 @@ releases:
   sha1: 641b8304a540cec6510db1e888689b7af04b253e
   url: https://github.com/rkoster/migrate-postgres-boshrelease/releases/download/v0.1.0/migrate-postgres-0.1.0-release.tgz
   version: 0.1.0
-- name: backup-and-restore-sdk
-  url: file:///tmp/build/put/backup-and-restore-sdk-release
-  version: create
+- name: bucc-bbr
+  url: git+https://github.com/starkandwayne/bucc-bbr-boshrelease
+  version: 1
 stemcells:
 - alias: large
   os: ubuntu-trusty
