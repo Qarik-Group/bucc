@@ -61,7 +61,7 @@ groups:
       - credhub-importer-compiled-release-ops-file
       - postgres-compiled-release-ops-file
       - migrate-postgres-compiled-release-ops-file
-      - backup-and-restore-sdk-compiled-release-ops-file
+      - bucc-bbr-compiled-release-ops-file
   - name: upstream
     jobs:
       - bosh-deployment-repo
@@ -293,7 +293,7 @@ jobs:
         - name: credhub-importer
         - name: postgres
         - name: migrate-postgres
-        - name: backup-and-restore-sdk
+        - name: bucc-bbr
     - put: compiled-releases-manifest
       params: { repository: compile-manifest-out }
 
@@ -305,18 +305,6 @@ jobs:
     - aggregate:
       - { get: compiled-releases-manifest, trigger: true }
       - { get: bucc-ci }
-      - { get: backup-and-restore-sdk-release, trigger: true }
-    - task: remove-unused-sdk-packages
-      input_mapping: { release-in: backup-and-restore-sdk-release }
-      output_mapping: { release: backup-and-restore-sdk-release }
-      file: bucc-ci/ci/tasks/remove-unused-sdk-packages/task.yml
-      params:
-        PACKAGES:
-        - database-backup-restorer
-        - database-backup-restorer-postgres-9.4
-        - database-backup-restorer-postgres-9.6
-        - backup-and-restore-release-golang
-        JOB_NAME: database-backup-restorer
     - task: upload-stemcell
       input_mapping: { manifest: compiled-releases-manifest }
       file: bucc-ci/ci/tasks/upload-stemcell/task.yml
@@ -360,8 +348,8 @@ jobs:
           put: compiled-releases-migrate-postgres
           params: { file: "compiled-releases-clean/migrate-postgres*.tgz", acl: public-read }
       - try:
-          put: compiled-releases-backup-and-restore-sdk
-          params: { file: "compiled-releases-clean/backup-and-restore-sdk*.tgz", acl: public-read }
+          put: compiled-releases-bucc-bbr
+          params: { file: "compiled-releases-clean/bucc-bbr*.tgz", acl: public-read }
     on_failure:
       put: notify
       params:
@@ -505,7 +493,7 @@ jobs:
             icon_url: (( grab meta.slack.icon ))
             text:    '(( concat meta.slack.fail_url " " meta.pipeline ": migrate-postgres-compiled-release-ops-file job failed" ))'
 
-  - name: backup-and-restore-sdk-compiled-release-ops-file
+  - name: bucc-bbr-compiled-release-ops-file
     public: true
     serial: true
     plan:
@@ -513,13 +501,13 @@ jobs:
         - aggregate:
           - get: bucc
           - get: bucc-ci
-          - { get: compiled-releases-backup-and-restore-sdk, trigger: true }
-        - task: update-backup-and-restore-sdk-compiled-release-ops-file
+          - { get: compiled-releases-bucc-bbr, trigger: true }
+        - task: update-bucc-bbr-compiled-release-ops-file
           file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
           input_mapping:
-            compiled-release: compiled-releases-backup-and-restore-sdk
+            compiled-release: compiled-releases-bucc-bbr
           params:
-            OPS_FILE_PATH: ops/9-backup-and-restore-sdk-compiled-release.yml
+            OPS_FILE_PATH: ops/9-bucc-bbr-compiled-release.yml
         - put: bucc
           params:
             merge: true
@@ -530,7 +518,7 @@ jobs:
             channel:  (( grab meta.slack.channel ))
             username: (( grab meta.slack.username ))
             icon_url: (( grab meta.slack.icon ))
-            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": backup-and-restore-sdk-compiled-release-ops-file job failed" ))'
+            text:    '(( concat meta.slack.fail_url " " meta.pipeline ": bucc-bbr-compiled-release-ops-file job failed" ))'
 
   - name: bosh-deployment-repo
     public: true
@@ -685,13 +673,6 @@ resources:
       client_secret: (( grab meta.lite.client_secret ))
       ca_cert: (( grab meta.lite.ca_cert ))
 
-  - name: backup-and-restore-sdk-release
-    type: git
-    source:
-      uri:    https://github.com/cloudfoundry-incubator/backup-and-restore-sdk-release
-      branch: master
-      tag_filter: v*
-
   - name: compiled-releases-concourse
     type: s3
     source:
@@ -746,14 +727,14 @@ resources:
       region_name: eu-west-1
       regexp: "migrate-postgres.*-(\\d+).tgz"
 
-  - name: compiled-releases-backup-and-restore-sdk
+  - name: compiled-releases-bucc-bbr
     type: s3
     source:
       bucket: "bucc-compiled-releases"
       access_key_id: (( grab meta.aws.access_key_id ))
       secret_access_key: (( grab meta.aws.secret_access_key ))
       region_name: eu-west-1
-      regexp: "backup-and-restore-sdk.*-(\\d+).tgz"
+      regexp: "bucc-bbr.*-(\\d+).tgz"
 
   - name: compiled-releases-manifest
     type: git
