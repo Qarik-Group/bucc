@@ -346,22 +346,22 @@ jobs:
     - aggregate:
       - try:
           put: compiled-releases-concourse
-          params: { file: "compiled-releases/concourse*.tgz", acl: public-read }
+          params: { file: "compiled-releases-clean/concourse*.tgz", acl: public-read }
       - try:
           put: compiled-releases-os-conf
-          params: { file: "compiled-releases/os-conf*.tgz", acl: public-read }
+          params: { file: "compiled-releases-clean/os-conf*.tgz", acl: public-read }
       - try:
           put: compiled-releases-credhub-importer
-          params: { file: "compiled-releases/credhub-importer*.tgz", acl: public-read }
+          params: { file: "compiled-releases-clean/credhub-importer*.tgz", acl: public-read }
       - try:
           put: compiled-releases-postgres
-          params: { file: "compiled-releases/postgres*.tgz", acl: public-read }
+          params: { file: "compiled-releases-clean/postgres*.tgz", acl: public-read }
       - try:
           put: compiled-releases-migrate-postgres
-          params: { file: "compiled-releases/migrate-postgres*.tgz", acl: public-read }
+          params: { file: "compiled-releases-clean/migrate-postgres*.tgz", acl: public-read }
       - try:
           put: compiled-releases-backup-and-restore-sdk
-          params: { file: "compiled-releases/backup-and-restore-sdk*.tgz", acl: public-read }
+          params: { file: "compiled-releases-clean/backup-and-restore-sdk*.tgz", acl: public-read }
     on_failure:
       put: notify
       params:
