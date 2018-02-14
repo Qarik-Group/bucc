@@ -15,7 +15,7 @@ manifest="${repo_root}/src/bosh-deployment/bosh.yml"
 
 PATH=${repo_root}/bin:${PATH}
 
-version=$(grep bucc ${repo_root}/.versions | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
+version=$(grep bucc ${repo_root}/.versions | cut -d= -f2)
 
 pushd () {
     command pushd "$@" > /dev/null
@@ -346,7 +346,7 @@ _bosh() {
 
 _credhub() {
     local url="https://github.com/cloudfoundry-incubator/credhub-cli/releases/download"
-    local version=$(grep credhub ${repo_root}/.versions | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
+    local version=$(grep credhub ${repo_root}/.versions | cut -d= -f2)
     local cli_path=${repo_root}/bin/credhub
 
     if ! ( [ -f ${cli_path} ] && ${cli_path} --version | head -n 1 | grep ${version} > /dev/null); then
@@ -363,6 +363,24 @@ _credhub() {
             --ca-cert $(ca_cert) \
             --client-name credhub-admin \
             --client-secret $(get_var credhub_password)
+}
+
+_bbr() {
+    local url="https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/download"
+    local version=$(grep bbr ${repo_root}/.versions | cut -d= -f2)
+    local cli_path=${repo_root}/bin/bbr
+
+    if ! ( [ -f ${cli_path} ] && ${cli_path} --version | head -n 1 | grep ${version} > /dev/null); then
+      echo "installing bbr cli '${version}' into: ${repo_root}/bin/"
+      pushd $(mktemp -d)
+      curl -s -L >bbr.tar "${url}/v${version}/bbr-${version}.tar"
+      tar -xf bbr.tar
+      mv releases/bbr ${repo_root}/bin/
+      popd
+    fi
+
+    local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
+    ${cli_path} director --host $(ip) --username ${user} --private-key-path $(ssh_private_key) "$@"
 }
 
 _uaac() {
@@ -506,6 +524,11 @@ case "$1" in
     fly)
         _fly "$@"
         ;;
+
+    bbr)
+	shift
+	_bbr "$@"
+	;;
 
     ssh)
         shift

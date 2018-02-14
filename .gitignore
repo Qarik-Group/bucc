@@ -10,5 +10,6 @@ local.yml
 .config/
 /bin/fly
 /bin/credhub
+/bin/bbr
 /vars.yml
 /vars.yml.bck
