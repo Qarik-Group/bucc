@@ -30,14 +30,14 @@
 
 - `bosh.yml`: Base manifest that is meant to be used with different CPI configurations
 - `[aws|azure|docker|gcp|openstack|softlayer|vcloud|vsphere|virtualbox]/cpi.yml`: CPI configuration
-- `<cloud>/cloud-config.yml`: Simple cloud configs
+- `[aws|azure|docker|gcp|openstack|softlayer|vcloud|vsphere|virtualbox]/cloud-config.yml`: Simple cloud configs
 - `jumpbox-user.yml`: Adds user `jumpbox` for SSH-ing into the Director (see [Jumpbox User](docs/jumpbox-user.md))
 - `uaa.yml`: Deploys UAA and enables UAA user management in the Director
 - `credhub.yml`: Deploys CredHub and enables CredHub integration in the Director
 - `bosh-lite.yml`: Configures Director to use Garden CPI within the Director VM (see [BOSH Lite](docs/bosh-lite-on-vbox.md))
-- `config-server.yml`: Deploys config-server (see `credhub.yml`)
 - `syslog.yml`: Configures syslog to forward logs to some destination
 - `local-dns.yml`: Enables Director DNS beta functionality
+- `misc/config-server.yml`: Deploys config-server (see `credhub.yml`)
 - `misc/proxy.yml`: Configure HTTP proxy for Director and CPI
 - `runtime-configs/syslog.yml`: Runtime config to enable syslog forwarding
 
