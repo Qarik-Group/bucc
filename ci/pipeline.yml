@@ -606,8 +606,13 @@ resource_types:
   - name: bosh-deployment
     type: docker-image
     source:
-      repository: cloudfoundry/bosh-deployment-resource
-      tag: v2.9.0
+      # repository: cloudfoundry/bosh-deployment-resource
+      # tag: v2.9.
+      # includes upstream PRs:
+      # - https://github.com/cloudfoundry/bosh-cli/pull/395
+      # - https://github.com/cloudfoundry/bosh-deployment-resource/pull/37
+      repository: rkoster/bosh-deployment-resource
+      tag: git-lfs6
   - name: slack-notification
     type: docker-image
     source:
