@@ -167,9 +167,9 @@ jobs:
   plan:
     - do:
       - aggregate:
-        - { get: bucc, passed: [sanity-check] }
-        - get: bucc-ci
-      - task: genereate-bucc-creds-bbr-ops-file
+        - { get: bucc, passed: [sanity-check], trigger: true }
+        - { get: bucc-ci }
+      - task: generate-bucc-creds-bbr-ops-file
         file: bucc-ci/ci/tasks/generate-bbr-creds-ops-file/task.yml
       - put: bucc
         params:
