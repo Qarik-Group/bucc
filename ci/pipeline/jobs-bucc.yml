@@ -20,7 +20,6 @@ jobs:
 - name: test
   public: true
   serial: true
-  serial_groups: [ vsphere-bucc ]
   plan:
     - do:
       - aggregate:
@@ -28,13 +27,13 @@ jobs:
         - { get: bucc-ci }
       - task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        params: &cleanup-params
+        params:
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
           GOVC_INSECURE: true
           CLEANUP_VM_WITH_IP: 10.213.8.1
       - task: bucc-up-vsphere
         file: bucc-ci/ci/tasks/bucc-up/task.yml
-        params: &up-params
+        params:
           ARGS: --cpi vsphere --lite
           VARS:
             director_name: snw-bosh
@@ -72,7 +71,6 @@ jobs:
 - name: upgrade-test
   public: true
   serial: true
-  serial_groups: [ vsphere-bucc ]
   plan:
     - do:
       - aggregate:
@@ -81,18 +79,37 @@ jobs:
         - { get: bucc-stable }
       - task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        params: *cleanup-params
+        params:
+          GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
+          GOVC_INSECURE: true
+          CLEANUP_VM_WITH_IP: 10.213.8.2
       - task: bucc-up-vsphere
         input_mapping: { bucc: bucc-stable }
         file: bucc-ci/ci/tasks/bucc-up/task.yml
-        params: *up-params
+        params: &up-upgrade-params
+          ARGS: --cpi vsphere
+          VARS:
+            director_name: snw-bosh
+            internal_cidr: 10.213.0.0/20
+            internal_gw: 10.213.0.1
+            internal_ip: 10.213.8.2
+            network_name: net-10-213-0-0
+            vcenter_ip: 10.58.111.2
+            vcenter_password: (( grab meta.vcenter.password ))
+            vcenter_user: (( grab meta.vcenter.username ))
+            vcenter_dc: Interxion MAD2
+            vcenter_ds: vol309|vol310
+            vcenter_disks: bucc-ci
+            vcenter_templates: bucc-ci/templates
+            vcenter_vms: bucc-ci/vms
+            vcenter_cluster: cluster1
       - task: bucc-pre-upgrade-test-vsphere
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
         params: { TEST: set }
         input_mapping: { bucc: bucc-stable, bucc-state: bucc-state-out }
       - task: bucc-upgrade-vsphere
         file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
-        params: *up-params
+        params: *up-upgrade-params
         attempts: 2
         input_mapping: { bucc-state: bucc-state-out }
       - task: bucc-post-upgrade-test-vsphere
@@ -110,7 +127,6 @@ jobs:
 - name: disaster-recovery-test
   public: true
   serial: true
-  serial_groups: [ vsphere-bucc ]
   plan:
     - do:
       - aggregate:
@@ -118,10 +134,29 @@ jobs:
         - { get: bucc-ci }
       - task: cleanup
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        params: *cleanup-params
+        params: &cleanup-dr-params
+          GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
+          GOVC_INSECURE: true
+          CLEANUP_VM_WITH_IP: 10.213.8.3
       - task: bucc-up
         file: bucc-ci/ci/tasks/bucc-up/task.yml
-        params: *up-params
+        params: &up-dr-params
+          ARGS: --cpi vsphere
+          VARS:
+            director_name: snw-bosh
+            internal_cidr: 10.213.0.0/20
+            internal_gw: 10.213.0.1
+            internal_ip: 10.213.8.3
+            network_name: net-10-213-0-0
+            vcenter_ip: 10.58.111.2
+            vcenter_password: (( grab meta.vcenter.password ))
+            vcenter_user: (( grab meta.vcenter.username ))
+            vcenter_dc: Interxion MAD2
+            vcenter_ds: vol309|vol310
+            vcenter_disks: bucc-ci
+            vcenter_templates: bucc-ci/templates
+            vcenter_vms: bucc-ci/vms
+            vcenter_cluster: cluster1
       - task: pre-disaster-test
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
         params: { TEST: set }
@@ -131,12 +166,12 @@ jobs:
         input_mapping: { bucc-state: bucc-state-out }
       - task: disaster
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        params: *cleanup-params
+        params: *cleanup-dr-params
       - task: bbr-restore-creds
         file: bucc-ci/ci/tasks/bucc-bbr-restore-creds/task.yml
       - task: bucc-up
         file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
-        params: *up-params
+        params: *up-dr-params
         input_mapping: { bucc-state: bucc-state-out }
       - task: bbr-restore
         file: bucc-ci/ci/tasks/bucc-bbr-restore/task.yml
