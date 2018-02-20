@@ -6,6 +6,12 @@ if [ -d bucc-state/state ]; then
     mv bucc-state/{vars.yml,state} bucc/
 fi
 
+# Never skip deploy, needed for DR tests
+if [ -f bucc/state/state.json ]; then
+    jq '.current_manifest_sha = ""' bucc/state/state.json > state.json
+    mv state.json bucc/state/state.json
+fi
+
 cp -r bosh-cache/.bosh ${HOME} | true
 
 pushd bucc > /dev/null
