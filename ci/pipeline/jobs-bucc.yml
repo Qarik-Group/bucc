@@ -119,27 +119,27 @@ jobs:
       - task: cleanup
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
         params: *cleanup-params
-      - task: up
+      - task: bucc-up
         file: bucc-ci/ci/tasks/bucc-up/task.yml
         params: *up-params
-      - task: pre-upgrade-test
+      - task: pre-disaster-test
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
         params: { TEST: set }
         input_mapping: { bucc-state: bucc-state-out }
       - task: bbr-backup
         file: bucc-ci/ci/tasks/bucc-bbr-backup/task.yml
         input_mapping: { bucc-state: bucc-state-out }
-      - task: cleanup
+      - task: disaster
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
         params: *cleanup-params
-      - task: bucc-upgrade-vsphere
+      - task: bucc-up-with-old-creds
         file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
         params: *up-params
         input_mapping: { bucc-state: bucc-state-out }
       - task: bbr-restore
         file: bucc-ci/ci/tasks/bucc-bbr-restore/task.yml
         input_mapping: { bucc-state: bucc-state-out }
-      - task: bucc-post-upgrade-test-vsphere
+      - task: post-disaster-test
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
         params: { TEST: get }
         input_mapping: { bucc-state: bucc-state-out }
