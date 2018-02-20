@@ -11,7 +11,7 @@ inputs:
   - name: bucc
   - name: bucc-state
 
-outpus:
+outputs:
   - name: bucc-backup
 
 run:
