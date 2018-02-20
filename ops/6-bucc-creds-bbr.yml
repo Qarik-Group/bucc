@@ -6,46 +6,6 @@
     properties:
       creds:
         admin_password: ((admin_password))
-        atc_ssl: ((atc_ssl))
-        blobstore_agent_password: ((blobstore_agent_password))
-        blobstore_director_password: ((blobstore_director_password))
-        credhub_admin_client_secret: ((credhub_admin_client_secret))
-        credhub_ca: ((credhub_ca))
-        credhub_encryption_password: ((credhub_encryption_password))
-        credhub_importer_password: ((credhub_importer_password))
-        credhub_tls: ((credhub_tls))
-        default_ca: ((default_ca))
-        director_ssl: ((director_ssl))
-        hm_password: ((hm_password))
-        jumpbox_ssh: ((jumpbox_ssh))
-        mbus_bootstrap_password: ((mbus_bootstrap_password))
-        mbus_bootstrap_ssl: ((mbus_bootstrap_ssl))
-        nats_ca: ((nats_ca))
-        nats_clients_director_tls: ((nats_clients_director_tls))
-        nats_clients_health_monitor_tls: ((nats_clients_health_monitor_tls))
-        nats_password: ((nats_password))
-        nats_server_tls: ((nats_server_tls))
-        postgres_password: ((postgres_password))
-        token_signing_key: ((token_signing_key))
-        tsa_host_key: ((tsa_host_key))
-        uaa_admin_client_secret: ((uaa_admin_client_secret))
-        uaa_clients_concourse_to_credhub: ((uaa_clients_concourse_to_credhub))
-        uaa_clients_director_to_credhub: ((uaa_clients_director_to_credhub))
-        uaa_concourse_client_secret: ((uaa_concourse_client_secret))
-        uaa_jwt_signing_key: ((uaa_jwt_signing_key))
-        uaa_login_client_secret: ((uaa_login_client_secret))
-        uaa_service_provider_ssl: ((uaa_service_provider_ssl))
-        uaa_ssl: ((uaa_ssl))
-        ui_password: ((ui_password))
-        worker_key: ((worker_key))
-- type: replace
-  path: /instance_groups/name=bosh/jobs/-
-  value:
-    name: bucc-creds
-    release: bucc-bbr
-    properties:
-      creds:
-        admin_password: ((admin_password))
         blobstore_agent_password: ((blobstore_agent_password))
         blobstore_director_password: ((blobstore_director_password))
         credhub_admin_client_secret: ((credhub_admin_client_secret))
