@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -e
+
+pushd bucc-state-out > /dev/null
+tar -xvf ../bucc-backup/*/bosh-0-bucc-creds.tar

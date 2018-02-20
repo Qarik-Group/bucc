@@ -132,7 +132,9 @@ jobs:
       - task: disaster
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
         params: *cleanup-params
-      - task: bucc-up-with-old-creds
+      - task: bbr-restore-creds
+        file: bucc-ci/ci/tasks/bucc-bbr-restore-creds/task.yml
+      - task: bucc-up
         file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
         params: *up-params
         input_mapping: { bucc-state: bucc-state-out }
