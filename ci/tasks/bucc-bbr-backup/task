@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+
+mv bucc-state/{vars.yml,state} bucc/
+source <(./bucc/bin/bucc env)
+
+pushd bucc-backup > /dev/null
+
+bucc bbr backup

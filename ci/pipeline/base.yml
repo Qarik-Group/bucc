@@ -44,6 +44,7 @@ groups:
       - sanity-check
       - test
       - upgrade-test
+      - disaster-recovery-test
       - rc
       - shipit
       - major

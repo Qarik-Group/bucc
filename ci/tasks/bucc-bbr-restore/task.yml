@@ -1,0 +1,16 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: starkandwayne/concourse
+
+inputs:
+  - name: bucc-ci
+  - name: bucc
+  - name: bucc-state
+  - name: bucc-backup
+
+run:
+  path: bucc-ci/ci/tasks/bucc-bbr-restore/task

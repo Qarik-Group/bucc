@@ -68,6 +68,7 @@ jobs:
           username: (( grab meta.slack.username ))
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
+
 - name: upgrade-test
   public: true
   serial: true
@@ -106,7 +107,49 @@ jobs:
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": upgrade-test job failed" ))'
 
-
+- name: disaster-recovery-test
+  public: true
+  serial: true
+  serial_groups: [ vsphere-bucc ]
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: true, passed: [test] }
+        - { get: bucc-ci }
+      - task: cleanup
+        file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        params: *cleanup-params
+      - task: up
+        file: bucc-ci/ci/tasks/bucc-up/task.yml
+        params: *up-params
+      - task: pre-upgrade-test
+        file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
+        params: { TEST: set }
+        input_mapping: { bucc-state: bucc-state-out }
+      - task: bbr-backup
+        file: bucc-ci/ci/tasks/bucc-bbr-backup/task.yml
+        input_mapping: { bucc-state: bucc-state-out }
+      - task: cleanup
+        file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        params: *cleanup-params
+      - task: bucc-upgrade-vsphere
+        file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
+        params: *up-params
+        input_mapping: { bucc-state: bucc-state-out }
+      - task: bbr-restore
+        file: bucc-ci/ci/tasks/bucc-bbr-restore/task.yml
+        input_mapping: { bucc-state: bucc-state-out }
+      - task: bucc-post-upgrade-test-vsphere
+        file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
+        params: { TEST: get }
+        input_mapping: { bucc-state: bucc-state-out }
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": upgrade-test job failed" ))'
 
 - name: rc
   public: true
