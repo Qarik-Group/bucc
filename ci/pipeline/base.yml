@@ -1,0 +1,85 @@
+meta:
+  name:     (( param "Please name your pipeline" ))
+  target:   (( param "Please identify the name of the target Concourse CI" ))
+  pipeline: bucc
+
+  lite:
+    target: (( param "Bosh lite target" ))
+    client_secret: (( param "Bosh lite client secret" ))
+    ca_cert: (( param "Bosh lite ca cert" ))
+
+  vcenter:
+    username: (( param "Please specify the username used for vCenter" ))
+    password: (( param "Please specify the password used for vCenter" ))
+
+  github:
+    uri:          (( concat "git@github.com:" meta.github.owner "/" meta.github.repo ))
+    owner:        (( param "Please specify the name of the user / organization that owns the Github repository" ))
+    repo:         (( param "Please specify the name of the Github repository" ))
+    branch:       develop
+    master-branch: master
+    private_key:  (( param "Please generate an SSH Deployment Key for this repo and specify it here" ))
+    access_token: (( param "Please generate a Personal Access Token and specify it here" ))
+
+  aws:
+    access_key_id: (( param "Please provide your aws access key to access the compiled releases s3 bucket"  ))
+    secret_access_key: (( param "Please provide your aws secret access key to access the compiled releases s3 bucket"  ))
+
+  slack:
+    webhook:       (( param "Please specify your Slack Incoming Webhook Integration URL" ))
+    notification: '(( concat ":sadpanda: " meta.pipeline " build failed!<br>URL-GOES-HERE" ))'
+    channel:       (( param "Please specify the channel (#name) or user (@user) to send messages to" ))
+    username:      concourse
+    icon:          http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+    fail_moji:     ":airplane_arriving:"
+    success_moji:  ":airplane_departure:"
+    upset_moji:    ":sad_panda:"
+    fail_url: '(( concat "<" meta.url "/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME| Concourse Failure! " meta.slack.upset_moji ">" ))'
+
+  url: (( param "What is the URL for the Concourse instance this pipeline is located on?" ))
+
+groups:
+  - name: bucc
+    jobs:
+      - sanity-check
+      - test
+      - upgrade-test
+      - rc
+      - shipit
+      - major
+      - minor
+      - bump-patch
+  - name: compiled-releases
+    jobs:
+      - compile-releases-manifest
+      - deploy-compile-releases
+      - download-compile-releases
+  - name: compiled-releases-ops-files
+    jobs:
+      - concourse-compiled-release-ops-file
+      - os-conf-compiled-release-ops-file
+      - credhub-importer-compiled-release-ops-file
+      - postgres-compiled-release-ops-file
+      - migrate-postgres-compiled-release-ops-file
+      - bucc-bbr-compiled-release-ops-file
+  - name: upstream
+    jobs:
+      - bosh-deployment-repo
+      - concourse-release
+      - update-credhub-cli
+
+resource_types:
+  - name: bosh-deployment
+    type: docker-image
+    source:
+      # repository: cloudfoundry/bosh-deployment-resource
+      # tag: v2.9.
+      # includes upstream PRs:
+      # - https://github.com/cloudfoundry/bosh-cli/pull/395
+      # - https://github.com/cloudfoundry/bosh-deployment-resource/pull/37
+      repository: rkoster/bosh-deployment-resource
+      tag: git-lfs6
+  - name: slack-notification
+    type: docker-image
+    source:
+      repository: cfcommunity/slack-notification-resource

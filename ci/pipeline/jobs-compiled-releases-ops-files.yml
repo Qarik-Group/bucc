@@ -1,0 +1,162 @@
+jobs:
+- name: concourse-compiled-release-ops-file
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - get: bucc
+        - get: bucc-ci
+        - { get: compiled-releases-concourse, trigger: true }
+      - task: update-concourse-compiled-release-ops-file
+        file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
+        input_mapping:
+          compiled-release: compiled-releases-concourse
+        params:
+          OPS_FILE_PATH: ops/9-concourse-compiled-release.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": concourse-compiled-release-ops-file job failed" ))'
+
+- name: os-conf-compiled-release-ops-file
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - get: bucc
+        - get: bucc-ci
+        - { get: compiled-releases-os-conf, trigger: true }
+      - task: update-os-conf-compiled-release-ops-file
+        file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
+        input_mapping:
+          compiled-release: compiled-releases-os-conf
+        params:
+          OPS_FILE_PATH: ops/9-os-conf-compiled-release.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": os-conf-compiled-release-ops-file job failed" ))'
+
+- name: credhub-importer-compiled-release-ops-file
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - get: bucc
+        - get: bucc-ci
+        - { get: compiled-releases-credhub-importer, trigger: true }
+      - task: update-credhub-importer-compiled-release-ops-file
+        file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
+        input_mapping:
+          compiled-release: compiled-releases-credhub-importer
+        params:
+          OPS_FILE_PATH: ops/9-credhub-importer-compiled-release.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": credhub-importer-compiled-release-ops-file job failed" ))'
+
+- name: postgres-compiled-release-ops-file
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - get: bucc
+        - get: bucc-ci
+        - { get: compiled-releases-postgres, trigger: true }
+      - task: update-postgres-compiled-release-ops-file
+        file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
+        input_mapping:
+          compiled-release: compiled-releases-postgres
+        params:
+          OPS_FILE_PATH: ops/9-postgres-compiled-release.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": postgres-compiled-release-ops-file job failed" ))'
+
+- name: migrate-postgres-compiled-release-ops-file
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - get: bucc
+        - get: bucc-ci
+        - { get: compiled-releases-migrate-postgres, trigger: true }
+      - task: update-migrate-postgres-compiled-release-ops-file
+        file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
+        input_mapping:
+          compiled-release: compiled-releases-migrate-postgres
+        params:
+          OPS_FILE_PATH: ops/9-migrate-postgres-compiled-release.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": migrate-postgres-compiled-release-ops-file job failed" ))'
+
+- name: bucc-bbr-compiled-release-ops-file
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - get: bucc
+        - get: bucc-ci
+        - { get: compiled-releases-bucc-bbr, trigger: true }
+      - task: update-bucc-bbr-compiled-release-ops-file
+        file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
+        input_mapping:
+          compiled-release: compiled-releases-bucc-bbr
+        params:
+          OPS_FILE_PATH: ops/9-bucc-bbr-compiled-release.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": bucc-bbr-compiled-release-ops-file job failed" ))'

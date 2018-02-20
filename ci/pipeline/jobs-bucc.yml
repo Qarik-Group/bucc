@@ -1,0 +1,208 @@
+jobs:
+- name: sanity-check
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: true }
+        - { get: bucc-ci }
+      - task: bucc-manifests
+        file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": sanity-check job failed" ))'
+
+- name: test
+  public: true
+  serial: true
+  serial_groups: [ vsphere-bucc ]
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: true, passed: [sanity-check] }
+        - { get: bucc-ci }
+      - task: cleanup-vsphere
+        file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        params: &cleanup-params
+          GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
+          GOVC_INSECURE: true
+          CLEANUP_VM_WITH_IP: 10.213.8.1
+      - task: bucc-up-vsphere
+        file: bucc-ci/ci/tasks/bucc-up/task.yml
+        params: &up-params
+          ARGS: --cpi vsphere --lite
+          VARS:
+            director_name: snw-bosh
+            internal_cidr: 10.213.0.0/20
+            internal_gw: 10.213.0.1
+            internal_ip: 10.213.8.1
+            network_name: net-10-213-0-0
+            vcenter_ip: 10.58.111.2
+            vcenter_password: (( grab meta.vcenter.password ))
+            vcenter_user: (( grab meta.vcenter.username ))
+            vcenter_dc: Interxion MAD2
+            vcenter_ds: vol309|vol310
+            vcenter_disks: bucc-ci
+            vcenter_templates: bucc-ci/templates
+            vcenter_vms: bucc-ci/vms
+            vcenter_cluster: cluster1
+      - task: bucc-test-vsphere
+        input_mapping: { bucc-state: bucc-state-out }
+        file: bucc-ci/ci/tasks/bucc-test/task.yml
+      - task: bucc-acceptance-test
+        input_mapping: { bucc-state: bucc-state-out }
+        file: bucc-ci/ci/tasks/bucc-acceptance-test/task.yml
+        attempts: 5
+      - task: bucc-down-vsphere
+        input_mapping: { bucc-state: bucc-state-out }
+        file: bucc-ci/ci/tasks/bucc-down/task.yml
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
+- name: upgrade-test
+  public: true
+  serial: true
+  serial_groups: [ vsphere-bucc ]
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: true, passed: [test] }
+        - { get: bucc-ci }
+        - { get: bucc-stable }
+      - task: cleanup-vsphere
+        file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        params: *cleanup-params
+      - task: bucc-up-vsphere
+        input_mapping: { bucc: bucc-stable }
+        file: bucc-ci/ci/tasks/bucc-up/task.yml
+        params: *up-params
+      - task: bucc-pre-upgrade-test-vsphere
+        file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
+        params: { TEST: set }
+        input_mapping: { bucc: bucc-stable, bucc-state: bucc-state-out }
+      - task: bucc-upgrade-vsphere
+        file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
+        params: *up-params
+        attempts: 2
+        input_mapping: { bucc-state: bucc-state-out }
+      - task: bucc-post-upgrade-test-vsphere
+        file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
+        params: { TEST: get }
+        input_mapping: { bucc-state: bucc-state-out }
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": upgrade-test job failed" ))'
+
+
+
+- name: rc
+  public: true
+  plan:
+    - do:
+      - aggregate:
+          - { get: bucc,    trigger: true,  passed: [upgrade-test] }
+          - { get: version, trigger: true, params: {pre: rc} }
+      - put: version
+        params: {file: version/number}
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": rc job failed" ))'
+
+- name: bump-patch
+  public: true
+  plan:
+    - do:
+      - { get: version, trigger: true, params: { bump: patch, pre: rc }, passed: [shipit] } # bump rc + patch, so that subesquent version bumps can trigger a new bump-patch
+      - { put: version,                params: { file: version/number} }
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": bump-patch job failed" ))'
+
+- name: minor
+  public: true
+  plan:
+    - do:
+      - { get: version, trigger: false, params: {bump: minor} }
+      - { put: version,                 params: {file: version/number} }
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": minor job failed" ))'
+
+- name: major
+  public: true
+  plan:
+    - do:
+      - { get: version, trigger: false, params: {bump: major} }
+      - { put: version,                 params: {file: version/number} }
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": major job failed" ))'
+- name: shipit
+  public: true
+  serial: true
+  plan:
+    - do:
+      - name: inputs
+        aggregate:
+          - { get: version, passed: [rc], params: {bump: final} }
+          - { get: bucc,    passed: [upgrade-test] }
+          - { get: bucc-ci }
+          - { get: bucc-stable }
+          - { get: bucc-master }
+      - task: generate-release-notes
+        file: bucc-ci/ci/tasks/generate-release-notes/task.yml
+      - task: release
+        file: bucc-ci/ci/tasks/shipit/task.yml
+      - put: version
+        params: { bump: final }
+      - put: bucc-master
+        params:
+          repository: bucc-out-master
+          tag: release/tag
+          merge: true
+      - put: bucc
+        params:
+          repository: bucc-out-develop
+          merge: true
+      - name: github
+        put: github
+        params:
+          name:       release/name
+          tag:        release/tag
+          body:       release-notes/notes.md
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": shipit job failed" ))'

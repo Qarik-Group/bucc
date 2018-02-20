@@ -1,0 +1,82 @@
+jobs:
+- name: bosh-deployment-repo
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: false, passed: [sanity-check] }
+        - { get: bosh-deployment, trigger: true }
+        - { get: bucc-ci, trigger: false}
+      - task: bosh-deployment
+        file: bucc-ci/ci/tasks/get-latest-bosh-deployment/task.yml
+      - task: bucc-manifests
+        file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": bosh-deployment-repo job failed" ))'
+
+- name: concourse-release
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: false, passed: [sanity-check] }
+        - { get: bucc-ci, trigger: false }
+        - get: bosh-release-concourse
+          trigger: true
+          params:
+            tarball: false
+      - task: update-concourse-release
+        file: bucc-ci/ci/tasks/update-concourse-release/task.yml
+      - task: bucc-manifests
+        file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": concourse-release job failed" ))'
+
+- name: update-credhub-cli
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: false, passed: [sanity-check] }
+        - { get: bucc-ci, trigger: false }
+        - get: credhub-cli
+          trigger: true
+          params:
+            globs:
+              - credhub-linux-*.tgz
+      - task: update-credhub-cli
+        file: bucc-ci/ci/tasks/update-credhub-cli/task.yml
+      - task: bucc-manifests
+        file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": update-credhub-cli job failed" ))'

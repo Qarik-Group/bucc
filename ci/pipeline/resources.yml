@@ -1,0 +1,144 @@
+resources:
+  - name: bucc
+    type: git
+    source:
+      uri:         (( grab meta.github.uri ))
+      branch:      (( grab meta.github.branch ))
+      private_key: (( grab meta.github.private_key ))
+      ignore_paths: [ci/*]
+      submodules: all
+
+  - name: bucc-master
+    type: git
+    source:
+      uri:         (( grab meta.github.uri ))
+      branch:      (( grab meta.github.master-branch ))
+      private_key: (( grab meta.github.private_key ))
+
+  - name: bucc-stable
+    type: git
+    source:
+      uri:         (( grab meta.github.uri ))
+      branch:      (( grab meta.github.master-branch ))
+      private_key: (( grab meta.github.private_key ))
+      tag_filter: "v*"
+
+  - name: bucc-ci
+    type: git
+    source:
+      uri:         (( grab meta.github.uri ))
+      branch:      (( grab meta.github.branch ))
+      private_key: (( grab meta.github.private_key ))
+      paths: [ci/*]
+      disable_ci_skip: true
+
+  - name: bosh-deployment
+    type: git
+    source:
+      uri:    https://github.com/cloudfoundry/bosh-deployment.git
+      branch: (( grab meta.github.master-branch ))
+      ignore_paths: [ci/*]
+
+  - name: version
+    type: semver
+    source :
+      driver: git
+      uri: (( grab meta.github.uri ))
+      private_key: (( grab meta.github.private_key ))
+      branch: version
+      file: version
+      initial_version:   (( grab meta.initial_version || "0.0.1" ))
+
+  - name: compile
+    type: bosh-deployment
+    source:
+      deployment: compile-releases
+      target: (( grab meta.lite.target ))
+      client: admin
+      client_secret: (( grab meta.lite.client_secret ))
+      ca_cert: (( grab meta.lite.ca_cert ))
+
+  - name: compiled-releases-concourse
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      region_name: eu-west-1
+      regexp: "concourse.*-(\\d+).tgz"
+
+  - name: compiled-releases-os-conf
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      region_name: eu-west-1
+      regexp: "os-conf.*-(\\d+).tgz"
+
+  - name: compiled-releases-credhub-importer
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      region_name: eu-west-1
+      regexp: "credhub-importer.*-(\\d+).tgz"
+
+  - name: compiled-releases-postgres
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      region_name: eu-west-1
+      regexp: "postgres.*-(\\d+).tgz"
+
+  - name: compiled-releases-migrate-postgres
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      region_name: eu-west-1
+      regexp: "migrate-postgres.*-(\\d+).tgz"
+
+  - name: compiled-releases-bucc-bbr
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      region_name: eu-west-1
+      regexp: "bucc-bbr.*-(\\d+).tgz"
+
+  - name: compiled-releases-manifest
+    type: git
+    source:
+      uri:         (( grab meta.github.uri ))
+      branch:      compile_releases_manifest
+      private_key: (( grab meta.github.private_key ))
+
+  - name: notify
+    type: slack-notification
+    source:
+      url: (( grab meta.slack.webhook ))
+
+  - name: github
+    type: github-release
+    source:
+      user:         (( grab meta.github.owner ))
+      repository:   (( grab meta.github.repo ))
+      access_token: (( grab meta.github.access_token ))
+
+  - name: bosh-release-concourse
+    type: bosh-io-release
+    source:
+      repository: concourse/concourse
+
+  - name: credhub-cli
+    type: github-release
+    source:
+      user: cloudfoundry-incubator
+      repository: credhub-cli
+      access_token: (( grab meta.github.access_token ))
