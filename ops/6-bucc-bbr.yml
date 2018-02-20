@@ -3,10 +3,52 @@
   value:
     name: bucc-bbr
     url: git+https://github.com/starkandwayne/bucc-bbr-boshrelease
-    version: 1
+    version: 2
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
   value:
     name: bucc-bbr
     release: bucc-bbr
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: database-backup-restorer
+    release: bucc-bbr
+
+# upstream issue:
+# https://github.com/cloudfoundry/uaa-release/issues/85
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: bbr-uaadb
+    release: bucc-bbr
+    properties:
+      uaadb:
+        address: 127.0.0.1
+        port: 5432
+        db_scheme: postgresql
+        databases:
+        - tag: uaa
+          name: uaa
+        roles:
+        - tag: admin
+          name: postgres
+          password: ((postgres_password))
+
+# upstream issue:
+# https://github.com/concourse/concourse/pull/1975
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: bbr-atcdb
+    release: bucc-bbr
+    properties:
+      postgresql:
+        host: 127.0.0.1
+        sslmode: disable
+        database: atc
+        role:
+          name: postgres
+          password: ((postgres_password))
