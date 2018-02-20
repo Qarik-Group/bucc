@@ -160,3 +160,25 @@ jobs:
           username: (( grab meta.slack.username ))
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": bucc-bbr-compiled-release-ops-file job failed" ))'
+
+- name: bucc-creds-bbr-ops-file
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, passed: [sanity-check] }
+        - get: bucc-ci
+      - task: genereate-bucc-creds-bbr-ops-file
+        file: bucc-ci/ci/tasks/generate-bbr-creds-ops-file/task.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": bucc-creds-bbr-ops-file-job failed" ))'
