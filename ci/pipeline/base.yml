@@ -55,7 +55,7 @@ groups:
       - compile-releases-manifest
       - deploy-compile-releases
       - download-compile-releases
-  - name: compiled-releases-ops-files
+  - name: ops-files
     jobs:
       - concourse-compiled-release-ops-file
       - os-conf-compiled-release-ops-file
@@ -63,6 +63,7 @@ groups:
       - postgres-compiled-release-ops-file
       - migrate-postgres-compiled-release-ops-file
       - bucc-bbr-compiled-release-ops-file
+      - bucc-creds-bbr-ops-file
   - name: upstream
     jobs:
       - bosh-deployment-repo

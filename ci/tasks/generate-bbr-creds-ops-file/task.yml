@@ -1,0 +1,17 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: starkandwayne/concourse
+
+inputs:
+  - name: bucc-ci
+  - name: bucc
+
+outputs:
+  - name: bucc-out
+
+run:
+  path: bucc-ci/ci/tasks/generate-bbr-creds-ops-file/task

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -e
+
+pushd bucc > /dev/null
+mkdir -p state
+echo "virtualbox" > state/cpi
+echo "foo: bar" > vars.yml
+./bin/bucc int > /dev/null
+
+cat <<EOT >> ops/6-bucc-creds-bbr.yml
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: bucc-creds
+    release: bucc-bbr
+    properties:
+      creds:
+EOT
+bosh2 int <(spruce json state/creds.yml | jq -r 'keys | map({"\(.)": "((\(.)))"}) | add') | \
+    sed 's/^/        /g' >> ops/6-bucc-creds-bbr.yml
+
+git config --global user.email "ci@starkandwayne.com"
+git config --global user.name "CI Bot"
+git add -A
+git commit -m "Updated ops/6-bucc-creds-bbr.yml" || echo "No changes to commit"
+
+popd > /dev/null
+git clone bucc bucc-out
