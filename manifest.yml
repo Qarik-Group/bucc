@@ -23,7 +23,7 @@ releases:
   version: 0.1.0
 - name: bucc-bbr
   url: git+https://github.com/starkandwayne/bucc-bbr-boshrelease
-  version: 2
+  version: 3
 stemcells:
 - alias: large
   os: ubuntu-trusty
