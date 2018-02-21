@@ -3,7 +3,7 @@
 set -e
 
 if [ -d bucc-state/state ]; then
-    mv bucc-state/{vars.yml,state} bucc/
+    mv bucc-state/{vars.yml,state} bucc/ || true
 fi
 
 # Never skip deploy, needed for DR tests
