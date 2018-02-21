@@ -2,5 +2,6 @@
 
 set -e
 
-pushd bucc-state-out > /dev/null
+mkdir bucc-state-out/state
+pushd bucc-state-out/state > /dev/null
 tar -xvf ../bucc-backup/*/bosh-0-bucc-creds.tar
