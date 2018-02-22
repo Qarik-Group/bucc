@@ -2,6 +2,6 @@
   path: /releases/name=bucc-bbr?
   value:
     name: bucc-bbr
-    version: 3
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bucc-bbr-3-ubuntu-trusty-3468.21-20180221-090415-014169683.tgz
-    sha1: 86c6b12c46a3e26a272ace6273e41b2678ae02a0
+    version: 4
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bucc-bbr-4-ubuntu-trusty-3468.21-20180222-105456-385508399.tgz
+    sha1: 0f5569802d402e2f5291bda48a75b8f99225fe98
