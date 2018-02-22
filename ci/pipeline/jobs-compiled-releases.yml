@@ -15,7 +15,6 @@ jobs:
       - name: os-conf
       - name: credhub-importer
       - name: postgres
-      - name: migrate-postgres
       - name: bucc-bbr
   - put: compiled-releases-manifest
     params: { repository: compile-manifest-out }
@@ -67,9 +66,6 @@ jobs:
     - try:
         put: compiled-releases-postgres
         params: { file: "compiled-releases-clean/postgres*.tgz", acl: public-read }
-    - try:
-        put: compiled-releases-migrate-postgres
-        params: { file: "compiled-releases-clean/migrate-postgres*.tgz", acl: public-read }
     - try:
         put: compiled-releases-bucc-bbr
         params: { file: "compiled-releases-clean/bucc-bbr*.tgz", acl: public-read }

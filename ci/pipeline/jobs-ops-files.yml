@@ -107,33 +107,6 @@ jobs:
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": postgres-compiled-release-ops-file job failed" ))'
 
-- name: migrate-postgres-compiled-release-ops-file
-  public: true
-  serial: true
-  plan:
-    - do:
-      - aggregate:
-        - get: bucc
-        - get: bucc-ci
-        - { get: compiled-releases-migrate-postgres, trigger: true }
-      - task: update-migrate-postgres-compiled-release-ops-file
-        file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
-        input_mapping:
-          compiled-release: compiled-releases-migrate-postgres
-        params:
-          OPS_FILE_PATH: ops/9-migrate-postgres-compiled-release.yml
-      - put: bucc
-        params:
-          merge: true
-          repository: bucc-out
-      on_failure:
-        put: notify
-        params:
-          channel:  (( grab meta.slack.channel ))
-          username: (( grab meta.slack.username ))
-          icon_url: (( grab meta.slack.icon ))
-          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": migrate-postgres-compiled-release-ops-file job failed" ))'
-
 - name: bucc-bbr-compiled-release-ops-file
   public: true
   serial: true

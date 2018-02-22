@@ -1,7 +1,0 @@
-- type: replace
-  path: /releases/name=migrate-postgres?
-  value:
-    name: migrate-postgres
-    version: 0.1.0
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/migrate-postgres-0.1.0-ubuntu-trusty-3468.21-20180214-120711-123137478.tgz
-    sha1: 0b1fc8b585fcbe576a7c17209924a7560e84edfa

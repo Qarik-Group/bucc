@@ -61,7 +61,6 @@ groups:
       - os-conf-compiled-release-ops-file
       - credhub-importer-compiled-release-ops-file
       - postgres-compiled-release-ops-file
-      - migrate-postgres-compiled-release-ops-file
       - bucc-bbr-compiled-release-ops-file
       - bucc-creds-bbr-ops-file
   - name: upstream
