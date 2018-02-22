@@ -22,12 +22,18 @@ cd bucc
 Choose your cpi:
 ```
 bucc up --help
-  --cpi    Cloud provider: [aws, azure, docker, gcp, openstack, virtualbox, vsphere]
+  --cpi    Cloud provider: [aws, gcp, virtualbox, azure, softlayer, openstack, vsphere, docker]
   --lite   Created bosh will use the warden cpi with garden runc
+  --debug  Show arguments passed to 'bosh create-env'
+  --oauth-providers
+  --proxy
 
   Optional cpi specific flags:
     gcp: --service-account
+    softlayer: --cpi-dynamic
+    openstack: --custom-ca --disk-az --dns --ignore-server-availability-zone --keystone-v2 --ntp --root-disk-size --trusted-certs
     vsphere: --dns --resource-pool
+    docker: --unix-sock
 ```
 
 From the repo root run:
