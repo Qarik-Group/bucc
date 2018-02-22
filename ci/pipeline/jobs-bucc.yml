@@ -180,6 +180,7 @@ jobs:
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
         params: { TEST: get }
         input_mapping: { bucc-state: bucc-state-out }
+        attempts: 3
       on_failure:
         put: notify
         params:
