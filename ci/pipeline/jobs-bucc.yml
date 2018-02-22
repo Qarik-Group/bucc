@@ -17,7 +17,7 @@ jobs:
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": sanity-check job failed" ))'
 
-- name: test
+- name: integration-test
   public: true
   serial: true
   plan:
@@ -66,7 +66,7 @@ jobs:
           channel:  (( grab meta.slack.channel ))
           username: (( grab meta.slack.username ))
           icon_url: (( grab meta.slack.icon ))
-          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": test job failed" ))'
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": integration-test job failed" ))'
 
 - name: upgrade-test
   public: true
@@ -74,7 +74,7 @@ jobs:
   plan:
     - do:
       - aggregate:
-        - { get: bucc, trigger: true, passed: [test] }
+        - { get: bucc, trigger: true, passed: [sanity-check] }
         - { get: bucc-ci }
         - { get: bucc-stable }
       - task: cleanup-vsphere
@@ -130,7 +130,7 @@ jobs:
   plan:
     - do:
       - aggregate:
-        - { get: bucc, trigger: true, passed: [test] }
+        - { get: bucc, trigger: true, passed: [sanity-check] }
         - { get: bucc-ci }
       - task: cleanup
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
@@ -193,7 +193,7 @@ jobs:
   plan:
     - do:
       - aggregate:
-          - { get: bucc,    trigger: true,  passed: [upgrade-test] }
+          - { get: bucc,    trigger: true,  passed: [integration-test, upgrade-test, disaster-recovery-test] }
           - { get: version, trigger: true, params: {pre: rc} }
       - put: version
         params: {file: version/number}

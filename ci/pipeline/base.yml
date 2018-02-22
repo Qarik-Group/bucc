@@ -42,7 +42,7 @@ groups:
   - name: bucc
     jobs:
       - sanity-check
-      - test
+      - integration-test
       - upgrade-test
       - disaster-recovery-test
       - rc
