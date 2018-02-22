@@ -460,6 +460,10 @@ case "$1" in
                     echo "$2" > ${state}/cpi
                     shift
                     ;;
+                --cpi=*)
+                    echo "${1#*=}" > ${state}/cpi
+                    shift
+                    ;;
                 --lite)
                     echo "true" > ${state}/lite
                     ;;
