@@ -187,7 +187,7 @@ jobs:
           channel:  (( grab meta.slack.channel ))
           username: (( grab meta.slack.username ))
           icon_url: (( grab meta.slack.icon ))
-          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": upgrade-test job failed" ))'
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": disaster-recovery-test job failed" ))'
 
 - name: rc
   public: true
