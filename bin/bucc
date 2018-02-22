@@ -171,6 +171,7 @@ usage() {
     echo "  credhub -- configures credhub cli"
     echo "  uaac -- configures uaac cli"
     echo "  fly -- configures fly cli"
+    echo "  bbr -- wrapper for bbr cli"
     echo "  routes -- add routes for virtualbox"
     echo "  test -- check if all systems are operational"
     exit 1
@@ -375,7 +376,11 @@ _bbr() {
       pushd $(mktemp -d)
       curl -s -L >bbr.tar "${url}/v${version}/bbr-${version}.tar"
       tar -xf bbr.tar
-      mv releases/bbr ${repo_root}/bin/
+      if [ "$(platform)" == "darwin" ]; then
+          mv releases/bbr-mac ${repo_root}/bin/bbr
+      else
+          mv releases/bbr ${repo_root}/bin/
+      fi
       popd
     fi
 
