@@ -1,14 +1,7 @@
 jobs:
 - name: concourse_workers
   plan:
-  - aggregate:
-    - get: stemcell
-    - get: bosh-deployment
-    - get: concourse-deployment
-  - put: cloud-config
-    params:
-      manifest: bosh-deployment/((bosh_cpi))/cloud-config.yml
-      releases: []
+  - aggregate: [ get: stemcell, get: concourse-deployment ]
   - put: deploy
     params:
       manifest: concourse-deployment/cluster/external-worker.yml
@@ -29,52 +22,27 @@ jobs:
         worker_key: ((concourse_worker_key))
 
 resources:
-- name: bosh-deployment
-  type: git
-  source:
-    uri: https://github.com/cloudfoundry/bosh-deployment.git
-    branch: master
-
 - name: concourse-deployment
   type: git
   source:
     uri: https://github.com/concourse/concourse-deployment.git
     branch: master
-
+    
 - name: stemcell
   type: bosh-io-stemcell
-  source:
-    name: ((bosh_stemcell))
-
+  source: { name: ((bosh_stemcell)) }
+    
 - name: deploy
   type: bosh-deployment
   source:
-    <<: *deployment
-    <<: *bosh_env
-
-- name: cloud-config
-  type: bosh-config
-  source:
-    type: cloud-config
-    <<: *bosh_env
-
-params:
-  bosh_env: &bosh_env
+    deployment: concourse_workers  
     target: ((bosh_environment))
     client: ((bosh_client))
     client_id: ((bosh_client))
     client_secret: ((bosh_client_secret))
     ca_cert: ((bosh_ca_cert))
-  deployment: &deployment
-    deployment: concourse_workers
 
 resource_types:
-- name: bosh-config
-  type: docker-image
-  source:
-    repository: rkoster/bosh-config-resource
-    tag: latest
-
 - name: bosh-deployment
   type: docker-image
   source:
