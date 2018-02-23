@@ -68,6 +68,7 @@ groups:
       - bosh-deployment-repo
       - concourse-release
       - update-credhub-cli
+      - update-bbr-cli
 
 resource_types:
   - name: bosh-deployment

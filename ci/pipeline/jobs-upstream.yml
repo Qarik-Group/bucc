@@ -63,10 +63,11 @@ jobs:
         - get: credhub-cli
           trigger: true
           params:
+            name credhub
             globs:
               - credhub-linux-*.tgz
       - task: update-credhub-cli
-        file: bucc-ci/ci/tasks/update-credhub-cli/task.yml
+        file: bucc-ci/ci/tasks/update-cli/task.yml
       - task: bucc-manifests
         file: bucc-ci/ci/tasks/bucc-manifests/task.yml
       - put: bucc
@@ -80,3 +81,33 @@ jobs:
           username: (( grab meta.slack.username ))
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": update-credhub-cli job failed" ))'
+
+- name: update-bbr-cli
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: false, passed: [sanity-check] }
+        - { get: bucc-ci, trigger: false }
+        - get: bbr-cli
+          trigger: true
+          params:
+            name: bbr
+            globs:
+              - bbr-*.tar
+      - task: update-bbr-cli
+        file: bucc-ci/ci/tasks/update-cli/task.yml
+      - task: bucc-manifests
+        file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": update-bbr-cli job failed" ))'
