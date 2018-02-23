@@ -17,4 +17,4 @@ outputs:
 params: []
 
 run:
-  path: bucc-ci/ci/tasks/update-credhub-cli/task
+  path: bucc-ci/ci/tasks/update-cli/task
