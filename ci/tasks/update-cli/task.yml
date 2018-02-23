@@ -9,12 +9,13 @@ image_resource:
 inputs:
   - name: bucc-ci
   - name: bucc
-  - name: credhub-cli
+  - name: update-cli
 
 outputs:
 - name: bucc-out
 
-params: []
+params:
+  NAME:
 
 run:
-  path: bucc-ci/ci/tasks/update-credhub-cli/task
+  path: bucc-ci/ci/tasks/update-cli/task

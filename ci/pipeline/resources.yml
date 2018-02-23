@@ -133,3 +133,10 @@ resources:
       user: cloudfoundry-incubator
       repository: credhub-cli
       access_token: (( grab meta.github.access_token ))
+
+  - name: bbr-cli
+    type: github-release
+    source:
+      user: cloudfoundry-incubator
+      repository: bosh-backup-and-restore
+      access_token: (( grab meta.github.access_token ))
