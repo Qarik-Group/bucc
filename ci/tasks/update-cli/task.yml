@@ -14,7 +14,8 @@ inputs:
 outputs:
 - name: bucc-out
 
-params: []
+params:
+  name:
 
 run:
   path: bucc-ci/ci/tasks/update-cli/task
