@@ -63,7 +63,7 @@ jobs:
         - get: credhub-cli
           trigger: true
           params:
-            name credhub
+            name: credhub
             globs:
               - credhub-linux-*.tgz
       - task: update-credhub-cli
