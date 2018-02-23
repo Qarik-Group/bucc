@@ -9,7 +9,7 @@ image_resource:
 inputs:
   - name: bucc-ci
   - name: bucc
-  - name: credhub-cli
+  - name: update-cli
 
 outputs:
 - name: bucc-out

@@ -68,6 +68,7 @@ jobs:
               - credhub-linux-*.tgz
       - task: update-credhub-cli
         file: bucc-ci/ci/tasks/update-cli/task.yml
+        input_mapping: {update-cli: credhub-cli}
       - task: bucc-manifests
         file: bucc-ci/ci/tasks/bucc-manifests/task.yml
       - put: bucc
@@ -98,6 +99,7 @@ jobs:
               - bbr-*.tar
       - task: update-bbr-cli
         file: bucc-ci/ci/tasks/update-cli/task.yml
+        input_mapping: {update-cli: bbr-cli}
       - task: bucc-manifests
         file: bucc-ci/ci/tasks/bucc-manifests/task.yml
       - put: bucc
