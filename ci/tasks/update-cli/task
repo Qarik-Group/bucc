@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-pushd ${NAME}-cli
+pushd update-cli
 
 export version=$(cat version)
 
