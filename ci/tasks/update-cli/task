@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-pushd credhub-cli
+pushd ${name}-cli
 
 export version=$(cat version)
 
@@ -11,7 +11,7 @@ popd
 
 pushd bucc > /dev/null
 
-sed -i "s/.*credhub.*/credhub=$version/" .versions
+sed -i "s/.*${name}.*/${name}=$version/" .versions
 
 if [[ -z $(git config --global user.email) ]]; then
     git config --global user.email "ci@starkandwayne.com"
@@ -22,9 +22,9 @@ fi
 
 git status
 
-echo "commit the latest credhub-cli to $version"
+echo "commit the latest ${name}-cli to $version"
 git add .versions
-git commit -m "updating credhub cli to $version"
+git commit -m "updating ${name} cli to $version"
 
 popd > /dev/null
 
