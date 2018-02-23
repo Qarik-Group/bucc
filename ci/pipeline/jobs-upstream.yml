@@ -63,12 +63,13 @@ jobs:
         - get: credhub-cli
           trigger: true
           params:
-            name: credhub
             globs:
               - credhub-linux-*.tgz
       - task: update-credhub-cli
         file: bucc-ci/ci/tasks/update-cli/task.yml
         input_mapping: {update-cli: credhub-cli}
+        params:
+          NAME: credhub
       - task: bucc-manifests
         file: bucc-ci/ci/tasks/bucc-manifests/task.yml
       - put: bucc
@@ -94,12 +95,13 @@ jobs:
         - get: bbr-cli
           trigger: true
           params:
-            name: bbr
             globs:
               - bbr-*.tar
       - task: update-bbr-cli
         file: bucc-ci/ci/tasks/update-cli/task.yml
         input_mapping: {update-cli: bbr-cli}
+        params:
+          NAME: bbr
       - task: bucc-manifests
         file: bucc-ci/ci/tasks/bucc-manifests/task.yml
       - put: bucc

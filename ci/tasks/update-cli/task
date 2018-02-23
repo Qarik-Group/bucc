@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-pushd ${name}-cli
+pushd ${NAME}-cli
 
 export version=$(cat version)
 
@@ -11,7 +11,7 @@ popd
 
 pushd bucc > /dev/null
 
-sed -i "s/.*${name}.*/${name}=$version/" .versions
+sed -i "s/.*${NAME}.*/${NAME}=$version/" .versions
 
 if [[ -z $(git config --global user.email) ]]; then
     git config --global user.email "ci@starkandwayne.com"
@@ -22,9 +22,9 @@ fi
 
 git status
 
-echo "commit the latest ${name}-cli to $version"
+echo "commit the latest ${NAME}-cli to $version"
 git add .versions
-git commit -m "updating ${name} cli to $version"
+git commit -m "updating ${NAME} cli to $version"
 
 popd > /dev/null
 
