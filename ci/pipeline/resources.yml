@@ -140,3 +140,10 @@ resources:
       user: cloudfoundry-incubator
       repository: bosh-backup-and-restore
       access_token: (( grab meta.github.access_token ))
+
+  - name: bosh-cli
+    type: github-release
+    source:
+      user: cloudfoundry
+      repository: bosh-cli
+      access_token: (( grab meta.github.access_token ))

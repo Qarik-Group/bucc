@@ -25,12 +25,6 @@ popd () {
     command popd "$@" > /dev/null
 }
 
-if [[ -x "$(command -v bosh2)" && $(bosh2 --version | awk '{print $2}') > 2.0 ]]; then
-    boshexec=bosh2
-else
-    boshexec=bosh
-fi
-
 cpi() {
     local cpi_file=${state}/cpi
     local lite_file=${state}/lite
@@ -388,6 +382,27 @@ _bbr() {
     ${cli_path} director --host $(ip) --username ${user} --private-key-path $(ssh_private_key) "$@"
 }
 
+_bosh() {
+    local url="https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli"
+    local version=$(grep bosh ${repo_root}/.versions | cut -d= -f2)
+    local cli_path=${repo_root}/bin/bosh
+
+    if ! ( [ -f ${cli_path} ] && ${cli_path} --version | head -n 1 | grep ${version} > /dev/null); then
+      echo "installing bosh cli '${version}' into: ${repo_root}/bin/"
+      pushd $(mktemp -d)
+      if [ "$(platform)" == "darwin" ]; then
+          curl -s -L >bosh "${url}-${version}-darwin-amd64"
+          chmod +x bosh
+          mv bosh ${repo_root}/bin/
+      else
+          curl -s -L >bosh "${url}-${version}-linux-amd64"
+          chmod +x bosh
+          mv bosh ${repo_root}/bin/
+      fi
+      popd
+    fi
+}
+
 _uaac() {
     faketty uaac target $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/url) --ca-cert $(ca_cert)
     faketty uaac token client get uaa_admin --secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)
@@ -449,6 +464,7 @@ smoke_tests() {
 
 case "$1" in
     up)
+        _bosh
         shift
         while [[ $# -gt 0 ]]; do
             case "$1" in
@@ -506,6 +522,10 @@ case "$1" in
         clean "$@"
         ;;
 
+    bosh)
+        _bosh "$@"
+        ;;
+
     env)
         env "$@"
         ;;
@@ -516,10 +536,6 @@ case "$1" in
 
     vars)
         vars "$@"
-        ;;
-
-    bosh)
-        _bosh "$@"
         ;;
 
     credhub)

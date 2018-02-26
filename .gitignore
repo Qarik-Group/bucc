@@ -11,5 +11,6 @@ local.yml
 /bin/fly
 /bin/credhub
 /bin/bbr
+/bin/bosh
 /vars.yml
 /vars.yml.bck

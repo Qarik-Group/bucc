@@ -69,6 +69,7 @@ groups:
       - concourse-release
       - update-credhub-cli
       - update-bbr-cli
+      - update-bosh-cli
 
 resource_types:
   - name: bosh-deployment
