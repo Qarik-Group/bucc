@@ -25,8 +25,6 @@ popd () {
     command popd "$@" > /dev/null
 }
 
-boshexec=bosh
-
 cpi() {
     local cpi_file=${state}/cpi
     local lite_file=${state}/lite
@@ -64,7 +62,7 @@ validate_vars_file() {
 
 vars_file() {
     local state_vars=${state}/vars.yml
-    ${boshexec} int $vars_file > $state_vars
+    bosh int $vars_file > $state_vars
     echo $state_vars
 }
 
@@ -161,7 +159,7 @@ usage() {
     echo "  clean -- start with a clean enviorment - use this only after you've tear down your env"
     echo "  ssh -- ssh into the bucc VM"
     echo "  env -- sourceable envrionment variables for cli clients"
-    echo "  int -- wrapper for '${boshexec} int' for the bosh manifest"
+    echo "  int -- wrapper for 'bosh int' for the bosh manifest"
     echo "  info -- displays info about bucc deployed endpoints"
     echo "  bosh -- configures bosh cli"
     echo "  credhub -- configures credhub cli"
@@ -226,7 +224,7 @@ up() {
     echo -e "Flag files: '${state}/{cpi,lite,flags}'\n"
 
     if [[ ${DEBUG} == true ]]; then
-        echo -e "${boshexec} create-env $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
+        echo -e "bosh create-env $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
     fi
     bosh create-env $(int_args) ${state_arg}
 }
@@ -275,7 +273,7 @@ get_var() {
     if [[ ! -f ${var_cache} ]]; then
         vars > ${var_cache}
     fi
-    ${boshexec} int ${var_cache} --path /$1
+    bosh int ${var_cache} --path /$1
 }
 
 env() {
@@ -332,12 +330,12 @@ _fly() {
 }
 
 _bosh() {
-    ${boshexec} alias-env bucc \
+    bosh alias-env bucc \
                 --environment $(get_var bosh_target) \
                 --ca-cert "$(cat $(ca_cert))"
 
     printf '%s\n%s\n' $(get_var bosh_client) $(get_var bosh_client_secret) | \
-        ${boshexec} log-in -e bucc
+        bosh log-in -e bucc
 
 }
 
@@ -384,7 +382,7 @@ _bbr() {
     ${cli_path} director --host $(ip) --username ${user} --private-key-path $(ssh_private_key) "$@"
 }
 
-_boshcli() {
+_ensure_bosh_cli_installed() {
     local url="https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli"
     local version=$(grep bosh ${repo_root}/.versions | cut -d= -f2)
     local cli_path=${repo_root}/bin/bosh
@@ -411,11 +409,11 @@ _uaac() {
 }
 
 store_int() {
-    ${boshexec} int $vars_store $@
+    bosh int $vars_store $@
 }
 
 int() {
-    ${boshexec} int $(int_args) $@
+    bosh int $(int_args) $@
 }
 
 ip() {
@@ -449,7 +447,7 @@ smoke_tests() {
 
     header "testing bosh uaa auth"
     ${bucc} bosh
-    ${boshexec} -e bucc vms
+    bosh -e bucc vms
 
     header "testing credhub"
     ${bucc} credhub
@@ -464,9 +462,9 @@ smoke_tests() {
     fi
 }
 
+_ensure_bosh_cli_installed
 case "$1" in
     up)
-        _boshcli
         shift
         while [[ $# -gt 0 ]]; do
             case "$1" in
