@@ -388,7 +388,8 @@ _ensure_bosh_cli_installed() {
     local cli_path=${repo_root}/bin/bosh
 
     if ! ( [ -f ${cli_path} ] && ${cli_path} --version | head -n 1 | grep ${version} > /dev/null); then
-      echo "installing bosh cli '${version}' into: ${repo_root}/bin/"
+
+      (>&2 echo "installing bosh cli '${version}' into: ${repo_root}/bin/")
       pushd $(mktemp -d)
       if [ "$(platform)" == "darwin" ]; then
           curl -s -L >bosh "${url}-${version}-darwin-amd64"
