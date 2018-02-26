@@ -1,18 +1,31 @@
-# IMPORTANT Upgrade notice
-Because of the following concourse upgrade restrictions:
-> If you are currently on a version older than v3.6.0, you must first upgrade to v3.6.0 before upgrading past it!
+## BBR (BOSH Backup and Restore) support for Disaster Recovery
+BUCC is now fully compatible with [BBR](https://github.com/cloudfoundry-incubator/bosh-backup-and-restore).
+As part of this feature full [Disaster Recovery testing](https://ci.starkandwayne.com/teams/main/pipelines/bucc/jobs/disaster-recovery-test) has been added to the BUCC ci pipeline.
 
-This means upgrading to BUCC [v0.2.0](https://github.com/starkandwayne/bucc/releases/tag/v0.2.0) before upgrading past it!
+To make a backup of you deployed BUCC vm, run:
+
+```
+bucc bbr backup
+```
+
+To recreate your environment from a backup run:
+
+```
+cd bucc
+last_backup=$(find . -type d -regex ".+_.+Z" | sort -r | head -n1)
+tar -xf ${last_backup}/bosh-0-bucc-creds.tar -C state
+bucc up # clean BUCC with credentials (creds.yml) from backup
+bucc bbr restore --artifact-path=${last_backup}
+```
 
 ## New variables in credhub
-- /concourse/main/bosh_cpi
-- /concourse/main/bosh_stemcell
-- /concourse/main/bosh_ssh_private_key
-- /concourse/main/bosh_ssh_username
+- concourse/main/concourse_tsa_host
+- concourse/main/concourse_tsa_host_key
+- concourse/main/concourse_worker_key
 
 ## Bug fixes
-- Fixed issue [where flags where not used](https://github.com/starkandwayne/bucc/commit/c151076c8442a629160bcec4a6bae19167bf024d) in some cases
+- OpenStack `--ntp` flag now correctly sets bosh director ntp (thanks @nouseforaname)
+- Using `--cpi=` now correctly sets cpi #76
 
 ### Small improvments
-- Added `--root-disk-size` flag for OpenStack (for when flavor has no ephemeral disk).
-- Crehub cli will be upgraded if version is out of date
+- bucc will now install and manage bosh cli

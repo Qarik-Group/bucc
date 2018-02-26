@@ -5,8 +5,8 @@ set -e
 pushd bucc > /dev/null
 mkdir -p state
 echo "virtualbox" > state/cpi
-echo "foo: bar" > vars.yml
-./bin/bucc int > /dev/null
+cp ops/cpis/virtualbox/vars.tmpl vars.yml
+./bin/bucc int --var-errs > /dev/null
 
 cat <<EOT > ops/6-bucc-creds-bbr.yml
 - type: replace
