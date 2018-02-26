@@ -382,7 +382,7 @@ _bbr() {
     ${cli_path} director --host $(ip) --username ${user} --private-key-path $(ssh_private_key) "$@"
 }
 
-_bosh() {
+_boshcli() {
     local url="https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli"
     local version=$(grep bosh ${repo_root}/.versions | cut -d= -f2)
     local cli_path=${repo_root}/bin/bosh
@@ -464,7 +464,7 @@ smoke_tests() {
 
 case "$1" in
     up)
-        _bosh
+        _boshcli
         shift
         while [[ $# -gt 0 ]]; do
             case "$1" in
