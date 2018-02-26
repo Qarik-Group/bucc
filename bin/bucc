@@ -25,6 +25,8 @@ popd () {
     command popd "$@" > /dev/null
 }
 
+boshexec=bosh
+
 cpi() {
     local cpi_file=${state}/cpi
     local lite_file=${state}/lite
@@ -226,7 +228,7 @@ up() {
     if [[ ${DEBUG} == true ]]; then
         echo -e "${boshexec} create-env $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
     fi
-    ${boshexec} create-env $(int_args) ${state_arg}
+    bosh create-env $(int_args) ${state_arg}
 }
 
 down() {
@@ -234,7 +236,7 @@ down() {
       echo "please create a enviroment first with 'bucc up'"
       exit 1
     fi
-    ${boshexec} delete-env $(int_args) $state_arg
+    bosh delete-env $(int_args) $state_arg
     echo "you can use the clean command if your are planning to use a new cpi or ip"
 }
 
