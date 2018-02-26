@@ -24,7 +24,7 @@ git status
 
 echo "commit the latest ${NAME}-cli to $version"
 git add .versions
-git commit -m "updating ${NAME} cli to $version"
+git commit -m "updating ${NAME} cli to $version" || echo "No changes to commit"
 
 popd > /dev/null
 
