@@ -140,3 +140,22 @@ $ bucc fly
 $ fly -t bucc pipelines
   name  paused  public
 ```
+
+## Backup & Restore
+BUCC works with [BBR](https://github.com/cloudfoundry-incubator/bosh-backup-and-restore).
+
+To make a backup of you deployed BUCC vm, run:
+
+```
+bucc bbr backup
+```
+
+To recreate your environment from a backup run:
+
+```
+cd bucc
+last_backup=$(find . -type d -regex ".+_.+Z" | sort -r | head -n1)
+tar -xf ${last_backup}/bosh-0-bucc-creds.tar -C state
+bucc up # clean BUCC with credentials (creds.yml) from backup
+bucc bbr restore --artifact-path=${last_backup}
+```
