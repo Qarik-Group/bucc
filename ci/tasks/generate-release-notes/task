@@ -10,7 +10,7 @@ touch ${custom_notes}
 cp ${custom_notes} ${notes}
 
 get_releases() {
-    non_unique_releases=$(bosh2 int <(echo "releases: []") -o <(spruce json <(echo -e "ops:\n$(find ops -name '*.yml' -exec bosh2 int {} \; | grep -v -E '^null')") | jq '.ops | map(select(.path | contains("/releases/-")))'))
+    non_unique_releases=$(bosh2 int src/bosh-deployment/bosh.yml --path /releases -o <(spruce json <(echo -e "ops:\n$(find ops -name '*.yml' -exec bosh2 int {} \; | grep -v -E '^null')") | jq '.ops | map(select(.path | contains("/releases/-")))'))
     spruce json <(echo -e "${non_unique_releases}") | jq -c -r -M '.releases | sort_by(.name) | unique_by(.name) | .[]'
 }
 
