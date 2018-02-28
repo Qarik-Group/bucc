@@ -1,4 +1,4 @@
-# BUCC ([BOSH](http://bosh.io/), [UAA](https://github.com/cloudfoundry/uaa), [Credhub](https://github.com/cloudfoundry-incubator/credhub) and [Concourse](http://concourse.ci/)) [![BUCC CI](https://ci.starkandwayne.com/api/v1/pipelines/bucc/jobs/test/badge)](https://ci.starkandwayne.com/teams/main/pipelines/bucc)
+# BUCC ([BOSH](http://bosh.io/), [UAA](https://github.com/cloudfoundry/uaa), [Credhub](https://github.com/cloudfoundry-incubator/credhub) and [Concourse](http://concourse.ci/)) [![BUCC CI](https://ci.starkandwayne.com/api/v1/pipelines/bucc/jobs/integration-test/badge)](https://ci.starkandwayne.com/teams/main/pipelines/bucc)
 
 The bucc command line utility allows for easy bootstrapping of the BUCC stack (Bosh Uaa Credhub and Concourse). Which is the starting point for many deployments.
 
