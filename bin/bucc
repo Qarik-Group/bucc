@@ -230,7 +230,7 @@ up() {
 }
 
 down() {
-    if [ ! -e ${repo_root}/vars.yml ]; then
+    if [ ! -e ${project_root}/vars.yml ]; then
       echo "please create a enviroment first with 'bucc up'"
       exit 1
     fi
