@@ -321,12 +321,21 @@ _fly() {
         popd
     fi
 
-    faketty fly --target bucc login \
+    fly_target=bucc
+    if [[ -n $(cat ${state}/vars.yml | grep "fly_target:") ]]; then
+        fly_target=$(bosh int ${state}/vars.yml --path /fly_target)
+    fi
+
+    faketty fly --target "${fly_target}" login \
             --concourse-url ${url} \
             --username $(get_var concourse_username) \
             --password $(get_var concourse_password) \
             --team-name main \
             --ca-cert $(ca_cert)
+
+    echo "Example fly commands:"
+    echo "  fly -t ${fly_target} pipelines"
+    echo "  fly -t ${fly_target} builds"
 }
 
 _bosh() {
