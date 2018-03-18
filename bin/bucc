@@ -277,7 +277,7 @@ get_var() {
 }
 
 env() {
-    echo "export PATH=${PATH}"
+    echo "export PATH=\"${PATH}\""
     if [[ ! -f ${vars_store} ]]; then
         exit 0
     fi
