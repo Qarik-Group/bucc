@@ -295,7 +295,7 @@ get_var_with_default() {
 }
 
 env() {
-    echo "export PATH=${PATH}"
+    echo "export PATH=\"${PATH}\""
     if [[ ! -f ${vars_store} ]]; then
         exit 0
     fi
