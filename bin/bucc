@@ -270,10 +270,24 @@ var_cache=${state}/vars_cache.yml
 rm -f ${var_cache}
 
 get_var() {
+    path=$1
     if [[ ! -f ${var_cache} ]]; then
         vars > ${var_cache}
     fi
-    bosh int ${var_cache} --path /$1
+    bosh int ${var_cache} --path "/$path"
+}
+
+get_var_with_default() {
+    path=$1
+    default_value=$2
+    if [[ ! -f ${var_cache} ]]; then
+        vars > ${var_cache}
+    fi
+    if [[ -n $(cat ${var_cache} | grep "$path:") ]]; then
+        bosh int ${var_cache} --path "/$path"
+    else
+        echo "${default_value}"
+    fi
 }
 
 env() {
@@ -321,12 +335,18 @@ _fly() {
         popd
     fi
 
-    faketty fly --target bucc login \
+    fly_target=$(get_var_with_default "fly_target" "bucc")
+
+    faketty fly --target "${fly_target}" login \
             --concourse-url ${url} \
             --username $(get_var concourse_username) \
             --password $(get_var concourse_password) \
             --team-name main \
             --ca-cert $(ca_cert)
+
+    echo "Example fly commands:"
+    echo "  fly -t ${fly_target} pipelines"
+    echo "  fly -t ${fly_target} builds"
 }
 
 _bosh() {
@@ -334,13 +354,15 @@ _bosh() {
     unset BOSH_CA_CERT
     unset BOSH_CLIENT
     unset BOSH_CLIENT_SECRET
-    bosh alias-env bucc \
+
+    bosh_alias=$(get_var_with_default "bosh_alias" "bucc")
+
+    bosh alias-env "$bosh_alias" \
                 --environment $(get_var bosh_target) \
                 --ca-cert "$(cat $(ca_cert))"
 
     printf '%s\n%s\n' $(get_var bosh_client) $(get_var bosh_client_secret) | \
-        bosh log-in -e bucc
-
+        bosh log-in -e "$bosh_alias"
 }
 
 _credhub() {
