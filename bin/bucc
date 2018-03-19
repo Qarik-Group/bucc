@@ -330,6 +330,10 @@ _fly() {
 }
 
 _bosh() {
+    unset BOSH_ENVIRONMENT
+    unset BOSH_CA_CERT
+    unset BOSH_CLIENT
+    unset BOSH_CLIENT_SECRET
     bosh alias-env bucc \
                 --environment $(get_var bosh_target) \
                 --ca-cert "$(cat $(ca_cert))"
