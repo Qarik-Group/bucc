@@ -448,7 +448,7 @@ ip() {
 }
 
 ssh_private_key() {
-    local ssh_private_key="${state}/ssh.key"
+    local ssh_private_key="${state}/ssh-$USER.key"
     store_int --path /jumpbox_ssh/private_key > $ssh_private_key
     chmod 600 $ssh_private_key
     echo $ssh_private_key
