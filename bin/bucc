@@ -1,8 +1,12 @@
 #!/bin/bash
 repo_root=${bucc_repo_root:-$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))}
-project_root=${bucc_project_root:-$repo_root}
-state=${bucc_state_root:-${project_root}/state}
+project_root=${BUCC_PROJECT_ROOT:-${bucc_project_root:-$repo_root}}
+state=${BUCC_STATE_ROOT:-${bucc_state_root:-${project_root}/state}}
 mkdir -p $state/manifests
+
+if [[ "${bucc_project_root:-X}" != "X" ]]; then
+    >&2 echo "DEPRECATED \$bucc_project_root: Please change to \$BUCC_PROJECT_ROOT"
+fi
 
 vars_file=${bucc_vars_file:-${project_root}/vars.yml}
 
