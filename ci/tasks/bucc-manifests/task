@@ -16,7 +16,7 @@ gen_manifest() {
     header "Manifest CPI: ${cpi} LITE: ${lite}"
     bosh2 int <(
         cat ops/cpis/${cpi}/vars.tmpl && \
-            echo "director_name: bucc-ci" && \
+            echo "\ndirector_name: bucc-ci" && \
             echo "internal_ip: 127.0.0.1" && \
             if [ ! -z ${VARS} ]; then bosh2 int <(echo ${VARS}); fi
     ) > vars.yml
