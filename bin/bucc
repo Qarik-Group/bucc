@@ -294,6 +294,10 @@ get_var_with_default() {
     fi
 }
 
+_alias() {
+    get_var_with_default "alias" "bucc"
+}
+
 env() {
     echo "export PATH=\"${PATH}\""
     if [[ ! -f ${vars_store} ]]; then
@@ -339,9 +343,7 @@ _fly() {
         popd
     fi
 
-    fly_target=$(get_var_with_default "fly_target" "bucc")
-
-    faketty fly --target "${fly_target}" login \
+    faketty fly --target "$(_alias)" login \
             --concourse-url ${url} \
             --username $(get_var concourse_username) \
             --password $(get_var concourse_password) \
@@ -349,8 +351,8 @@ _fly() {
             --ca-cert $(ca_cert)
 
     echo "Example fly commands:"
-    echo "  fly -t ${fly_target} pipelines"
-    echo "  fly -t ${fly_target} builds"
+    echo "  fly -t $(_alias) pipelines"
+    echo "  fly -t $(_alias) builds"
 }
 
 _bosh() {
@@ -359,14 +361,12 @@ _bosh() {
     unset BOSH_CLIENT
     unset BOSH_CLIENT_SECRET
 
-    bosh_alias=$(get_var_with_default "bosh_alias" "bucc")
-
-    bosh alias-env "$bosh_alias" \
+    bosh alias-env "$(_alias)" \
                 --environment $(get_var bosh_target) \
                 --ca-cert "$(cat $(ca_cert))"
 
     printf '%s\n%s\n' $(get_var bosh_client) $(get_var bosh_client_secret) | \
-        bosh log-in -e "$bosh_alias"
+        bosh log-in -e "$(_alias)"
 }
 
 _credhub() {
@@ -478,7 +478,7 @@ smoke_tests() {
 
     header "testing bosh uaa auth"
     ${bucc} bosh
-    bosh -e bucc vms
+    bosh -e "$(_alias)" vms
 
     header "testing credhub"
     ${bucc} credhub
@@ -488,7 +488,7 @@ smoke_tests() {
     header "testing concourse"
     ${bucc} fly
 
-    if ! fly -t bucc workers | grep running; then
+    if ! fly -t "$(_alias)" workers | grep running; then
         >&2 echo "no concourse workers"; exit 1
     fi
 }
