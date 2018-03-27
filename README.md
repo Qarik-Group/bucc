@@ -29,7 +29,6 @@ bucc up --help
   --proxy
 
   Optional cpi specific flags:
-    azure: --managed-disks
     gcp: --service-account
     softlayer: --cpi-dynamic
     openstack: --custom-ca --disk-az --dns --ignore-server-availability-zone --keystone-v2 --ntp --root-disk-size --trusted-certs
