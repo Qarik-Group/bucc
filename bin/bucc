@@ -157,7 +157,7 @@ ca_cert() {
 }
 
 usage() {
-    echo "BUCC (BOSH UAA Credhud Concourse) CLI v${version}"
+    echo "BUCC (BOSH UAA Credhub Concourse) CLI v${version}"
     echo "  up -- creates the bucc VM with bosh create-env"
     echo "  down -- deletes VM with bosh delete-env - can be used with --clean"
     echo "  clean -- start with a clean enviorment - use this only after you've tear down your env"
@@ -461,7 +461,7 @@ ssh_private_key() {
 _ssh() {
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
     cmd="ssh -i $(ssh_private_key) $user@$(ip)"
-    if [ -z $@ ]; then
+    if [ -z "$@" ]; then
         ${cmd} -t 'command; sudo su -'
     else
         ${cmd} $@
