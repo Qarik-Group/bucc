@@ -157,7 +157,7 @@ ca_cert() {
 }
 
 usage() {
-    echo "BUCC (BOSH UAA Credhud Concourse) CLI v${version}"
+    echo "BUCC (BOSH UAA Credhub Concourse) CLI v${version}"
     echo "  up -- creates the bucc VM with bosh create-env"
     echo "  down -- deletes VM with bosh delete-env - can be used with --clean"
     echo "  clean -- start with a clean enviorment - use this only after you've tear down your env"
