@@ -45,7 +45,7 @@
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
   value:
-    name: groundcrew
+    name: worker
     release: concourse
     properties:
       tsa:
