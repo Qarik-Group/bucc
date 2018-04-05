@@ -1,6 +1,17 @@
-director_name: # bucc
-# alias: bucc
-gcp_credentials_json: # inline gcp credentail json/yaml {}
+director_name: # bosh
+gcp_credentials_json: |
+  {
+    "type": "service_account",
+    "project_id": "myprojectid",
+    "private_key_id": "xxxxxxxxxxxxxxxxxxxx",
+    "private_key": "-----BEGIN PRIVATE KEY-----xxxxxxxxxx-----END PRIVATE KEY-----\n",
+    "client_email": "xxxxxxxxxxxxxxx.iam.gserviceaccount.com",
+    "client_id": "xxxxxxxxxxxxxx",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://accounts.google.com/o/oauth2/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/xxxxxxxxxxxxxxxx.iam.gserviceaccount.com"
+  }
 internal_cidr: # 10.0.0.0/24
 internal_gw: # 10.0.0.1
 internal_ip: # 10.0.0.6
