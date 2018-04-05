@@ -11,16 +11,16 @@
   value: *env
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=groundcrew/properties/http_proxy_url?
+  path: /instance_groups/name=bosh/jobs/name=worker/properties/http_proxy_url?
   value: ((http_proxy))
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=groundcrew/properties/https_proxy_url?
+  path: /instance_groups/name=bosh/jobs/name=worker/properties/https_proxy_url?
   value: ((https_proxy))
 
   # concourse expects an array on which it calls join(',')
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=groundcrew/properties/no_proxy?/-
+  path: /instance_groups/name=bosh/jobs/name=worker/properties/no_proxy?/-
   value: ((internal_ip)),((no_proxy)) 
 
 - type: replace
