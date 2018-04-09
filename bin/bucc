@@ -459,13 +459,21 @@ ssh_private_key() {
 }
 
 _ssh() {
+    local jump=""
+    if [ ! -z "$BOSH_ALL_PROXY" ]; then
+        jump_key="$(echo $BOSH_ALL_PROXY | sed -e 's$.*=\(.*\.key\)$\1$g')"
+        eval "$(ssh-agent)" &> /dev/null
+        ssh-add "$jump_key" &> /dev/null
+        jump="$(echo $BOSH_ALL_PROXY | sed -e 's$ssh+socks5://\(.*\)\?.*$-J \1$g')"
+    fi
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
-    cmd="ssh -i $(ssh_private_key) $user@$(ip)"
+    cmd="ssh -i $(ssh_private_key) $jump $user@$(ip)"
     if [ -z "$@" ]; then
         ${cmd} -t 'command; sudo su -'
     else
         ${cmd} $@
     fi
+    ssh-agent -k &> /dev/null
 }
 
 header() {
