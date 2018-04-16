@@ -21,7 +21,7 @@ name: compile-releases
 stemcells:
 - alias: large
   os: ubuntu-trusty
-  version: ${stemcell_version}
+  version: "${stemcell_version}"
 update:
   canaries: 1
   max_in_flight: 1
