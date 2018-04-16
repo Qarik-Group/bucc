@@ -36,3 +36,17 @@
         - tag: admin
           name: postgres
           password: ((postgres_password))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: bbr-atcdb
+    release: concourse
+    properties:
+      postgresql:
+        host: 127.0.0.1
+        sslmode: disable
+        database: atc
+        role:
+          name: postgres
+          password: ((postgres_password))
