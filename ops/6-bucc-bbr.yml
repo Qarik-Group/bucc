@@ -3,7 +3,7 @@
   value:
     name: bucc-bbr
     url: git+https://github.com/starkandwayne/bucc-bbr-boshrelease
-    version: 5
+    version: 6
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -34,21 +34,5 @@
           name: uaa
         roles:
         - tag: admin
-          name: postgres
-          password: ((postgres_password))
-
-# upstream issue:
-# https://github.com/concourse/concourse/pull/1975
-- type: replace
-  path: /instance_groups/name=bosh/jobs/-
-  value:
-    name: bbr-atcdb
-    release: bucc-bbr
-    properties:
-      postgresql:
-        host: 127.0.0.1
-        sslmode: disable
-        database: atc
-        role:
           name: postgres
           password: ((postgres_password))
