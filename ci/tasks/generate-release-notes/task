@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-custom_notes=$(pwd)/bucc/ci/release_notes.md
+custom_notes=$(pwd)/bucc-ci/ci/release_notes.md
 notes=$(pwd)/release-notes/notes.md
 
 touch ${custom_notes}
