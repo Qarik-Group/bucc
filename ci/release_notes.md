@@ -12,3 +12,4 @@ This makes bucc compatible with the `bbl print-env` output.
 
 ### Small improvments
 - Added AWS `--spot-instance` flag
+- Added Azuere `--managed-disks` flag (thanks @bgandon)
