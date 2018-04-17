@@ -458,22 +458,23 @@ ssh_private_key() {
     echo $ssh_private_key
 }
 
+jump() {
+    echo $BOSH_ALL_PROXY | sed -e 's$ssh+socks5://\(.*\):.*=\(.*\)$-o "ProxyCommand=ssh \1 -i \2 nc %h %p"$g'
+}
+
 _ssh() {
-    local jump=""
-    if [ ! -z "$BOSH_ALL_PROXY" ]; then
-        jump_key="$(echo $BOSH_ALL_PROXY | sed -e 's$.*=\(.*\.key\)$\1$g')"
-        eval "$(ssh-agent)" &> /dev/null
-        ssh-add "$jump_key" &> /dev/null
-        jump="$(echo $BOSH_ALL_PROXY | sed -e 's$ssh+socks5://\(.*\)\?.*$-J \1$g')"
+    tmp_config=$(mktemp)
+    if [[ "$BOSH_ALL_PROXY" == "ssh+socks5"* ]]; then
+        echo $BOSH_ALL_PROXY | sed -e 's$ssh+socks5://\(.*\):\(.*\)?.*=\(.*\)$ProxyCommand ssh -W %h:%p \1 -p \2 -i \3$g' > ${tmp_config}
     fi
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
-    cmd="ssh -i $(ssh_private_key) $jump $user@$(ip)"
+    cmd="ssh -i $(ssh_private_key) -F ${tmp_config} $user@$(ip)"
     if [ -z "$@" ]; then
         ${cmd} -t 'command; sudo su -'
     else
         ${cmd} $@
     fi
-    ssh-agent -k &> /dev/null
+    rm ${tmp_config}
 }
 
 header() {
