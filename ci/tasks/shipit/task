@@ -16,8 +16,6 @@ git config --global user.name "CI Bot"
 
 pushd bucc > /dev/null
 
-rm -f ci/release_notes.md
-
 sed -i "s/.*bucc.*/bucc=$VERSION/" .versions
 
 cat <<EOF > ops/5-bucc-version.yml
@@ -46,8 +44,13 @@ popd > /dev/null
 git clone bucc-master bucc-out-master
 
 # clone develop for develop output
-git clone bucc bucc-out-develop
+git clone bucc-ci bucc-out-develop
 
 pushd bucc-out-develop
 # merge upstream develop and keep our changes (we have bumped versions)
-git pull https://github.com/starkandwayne/bucc develop -X ours --no-edit
+git pull ../bucc -X ours --no-edit
+
+echo -e "### Bug fixes:\n\n### Small improvments" > ci/release_notes.md
+
+git add -A
+git commit -m "Clean release_notes.md"
