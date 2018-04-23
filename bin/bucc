@@ -10,9 +10,22 @@ fi
 vars_file=${bucc_vars_file:-${project_root}/vars.yml}
 state_json_path=${bucc_state_store:-${state}/state.json}
 vars_store=${bucc_vars_store:-${state}/creds.yml}
+
+if [ -e "bbl-state.json" ]; then
+    BBL_STATE_DIR="$(pwd)/vars"
+fi
+
+if [[ "${BBL_STATE_DIR:-X}" != "X" ]]; then
+    project_root="$(cd ${BBL_STATE_DIR}/.. && pwd)"
+    state="${BBL_STATE_DIR}"
+    vars_file="${BBL_STATE_DIR}/director-vars-file.yml"
+    state_json_path="${BBL_STATE_DIR}/bosh-state.json"
+    vars_store="${BBL_STATE_DIR}/director-vars-store.yml"
+fi
+
+manifest="${repo_root}/src/bosh-deployment/bosh.yml"
 state_arg="--state ${state_json_path}"
 vars_store_arg="--vars-store ${vars_store}"
-manifest="${repo_root}/src/bosh-deployment/bosh.yml"
 
 var_cache=$(mktemp)
 int_cache=$(mktemp)
