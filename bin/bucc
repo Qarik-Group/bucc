@@ -2,7 +2,6 @@
 repo_root=${bucc_repo_root:-$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))}
 project_root=${BUCC_PROJECT_ROOT:-${bucc_project_root:-$repo_root}}
 state=${BUCC_STATE_ROOT:-${bucc_state_root:-${project_root}/state}}
-mkdir -p $state/manifests
 
 if [[ "${bucc_project_root:-X}" != "X" ]]; then
     >&2 echo "DEPRECATED \$bucc_project_root: Please change to \$BUCC_PROJECT_ROOT"
@@ -103,49 +102,34 @@ normalize_flags() (
 )
 
 int_args() (
-    local ops_file_args=""
-    if [ -e ${state}/manifests/0-cpi.yml ]; then
-        rm ${state}/manifests/*
-    fi
+    local ops_files=()
 
-   vars_file_arg="--vars-file $(vars_file)"
-
-
-    append_ops_args_for_dir() {
-        cp_files="${ops_file_args} $(cp ${repo_root}/$1/*.yml ${state}/manifests/)"
-        ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
-    }
-
-    append_ops_args_for_file() {
-        cp_files="${ops_file_args} $(cp ${repo_root}/$1 ${state}/manifests/)"
-        ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
-    }
+    vars_file_arg="--vars-file $(vars_file)"
 
     if [ $(lite) = true ]; then
-        append_ops_args_for_dir "ops/lite"
+        ops_files+=(${repo_root}/ops/lite/*.yml)
     elif [ $(lite) = false ]; then
-        append_ops_args_for_dir "ops/runc"
+        ops_files+=(${repo_root}/ops/runc/*.yml)
     fi
 
-    append_ops_args_for_dir "ops"
-
-    append_ops_args_for_dir "ops/cpis/$(cpi)"
+    ops_files+=(${repo_root}/ops/*.yml)
+    ops_files+=(${repo_root}/ops/cpis/$(cpi)/*.yml)
 
     if [ -f ${state}/flags ]; then
         for flag in $(cat ${state}/flags); do
             if [ -e "${repo_root}/ops/flags/${flag}.yml" ]; then
-                append_ops_args_for_file "ops/flags/${flag}.yml"
+                ops_files+=(${repo_root}/ops/flags/${flag}.yml)
             else
-                append_ops_args_for_file "ops/cpis/$(cpi)/flags/${flag}.yml"
+                ops_files+=(${repo_root}/ops/cpis/$(cpi)/flags/${flag}.yml)
             fi
         done
     fi
 
     if [[ -d ${project_root}/operators ]]; then
-        cp_files="${ops_file_args} $(cp ${project_root}/operators/*.yml ${state}/manifests/)"
-        ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
+        ops_files+=(${project_root}/operators/*.yml)
     fi
 
+    ops_file_args=$(printf '%s\n' "${ops_files[@]}" | sed 's|\(.*\)/|\1@|' | sort -t@ -k2 | sed 's|@|/|' | sed 's/^/-o /' | xargs)
     echo "${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
 )
 
