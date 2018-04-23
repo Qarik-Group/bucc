@@ -8,13 +8,15 @@ if [[ "${bucc_project_root:-X}" != "X" ]]; then
 fi
 
 vars_file=${bucc_vars_file:-${project_root}/vars.yml}
-
 state_json_path=${bucc_state_store:-${state}/state.json}
 vars_store=${bucc_vars_store:-${state}/creds.yml}
 state_arg="--state ${state_json_path}"
 vars_store_arg="--vars-store ${vars_store}"
-
 manifest="${repo_root}/src/bosh-deployment/bosh.yml"
+
+var_cache=$(mktemp)
+int_cache=$(mktemp)
+trap "rm -f ${var_cache} ${int_cache}" EXIT
 
 PATH=${repo_root}/bin:${PATH}
 
@@ -254,12 +256,10 @@ vars() {
     echo "$(cat $(ca_cert) | sed 's/^/  /')"
 }
 
-var_cache=${state}/vars_cache.yml
-rm -f ${var_cache}
 
 get_var() {
     path=$1
-    if [[ ! -f ${var_cache} ]]; then
+    if [[ ! -s ${var_cache} ]]; then
         vars > ${var_cache}
     fi
     bosh int ${var_cache} --path "/$path"
@@ -428,7 +428,10 @@ store_int() {
 }
 
 int() {
-    bosh int $(int_args) $@
+    if [[ ! -s ${int_cache} ]]; then
+        bosh int $(int_args) > ${int_cache}
+    fi
+    bosh int ${int_cache} $@
 }
 
 ip() {
@@ -561,7 +564,6 @@ case "$1" in
     vars)
         vars "$@"
         ;;
-
     credhub)
         _credhub "$@"
         ;;
