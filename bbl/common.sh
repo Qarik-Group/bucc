@@ -38,6 +38,11 @@ set_default_cpi_flags() {
     fi
 }
 
+apply_default_vars() {
+    bosh int <(cat ${BBL_STATE_DIR}/bucc/ops/cpis/$(cpi)/vars.tmpl ${vars_file}) > ${vars_file}.tmp
+    mv ${vars_file}.tmp ${vars_file}
+}
+
 prepare_vars_file_for_cpi() {
     case $(cpi) in
         aws)
@@ -64,4 +69,5 @@ prepare_vars_file_for_cpi() {
             add_var "openstack_password" "${BBL_OPENSTACK_PASSWORD}"
             ;;
     esac
+    apply_default_vars
 }
