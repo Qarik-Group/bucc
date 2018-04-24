@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 vars_file="${BBL_STATE_DIR}/vars/director-vars-file.yml"
 flags_file="${BBL_STATE_DIR}/vars/flags"
 
