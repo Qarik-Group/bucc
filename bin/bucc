@@ -1,21 +1,32 @@
 #!/bin/bash
-repo_root=${bucc_repo_root:-$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))}
-project_root=${BUCC_PROJECT_ROOT:-${bucc_project_root:-$repo_root}}
-state=${BUCC_STATE_ROOT:-${bucc_state_root:-${project_root}/state}}
-mkdir -p $state/manifests
+repo_root=$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))
 
-if [[ "${bucc_project_root:-X}" != "X" ]]; then
-    >&2 echo "DEPRECATED \$bucc_project_root: Please change to \$BUCC_PROJECT_ROOT"
+if [ -e "bbl-state.json" ]; then
+    BBL_STATE_DIR="$(pwd)/vars"
 fi
 
-vars_file=${bucc_vars_file:-${project_root}/vars.yml}
+if [[ "${BBL_STATE_DIR:-X}" != "X" ]]; then
+    BUCC_PROJECT_ROOT="$(cd ${BBL_STATE_DIR}/.. && pwd)"
+    BUCC_STATE_ROOT="${BBL_STATE_DIR}"
+    BUCC_VARS_FILE="${BBL_STATE_DIR}/director-vars-file.yml"
+    BUCC_STATE_STORE="${BBL_STATE_DIR}/bosh-state.json"
+    BUCC_VARS_STORE="${BBL_STATE_DIR}/director-vars-store.yml"
+fi
 
-state_json_path=${bucc_state_store:-${state}/state.json}
-vars_store=${bucc_vars_store:-${state}/creds.yml}
+project_root=${BUCC_PROJECT_ROOT:-${repo_root}}
+state=${BUCC_STATE_ROOT:-${project_root}/state}
+vars_file=${BUCC_VARS_FILE:-${project_root}/vars.yml}
+state_json_path=${BUCC_STATE_STORE:-${state}/state.json}
+vars_store=${BUCC_VARS_STORE:-${state}/creds.yml}
+
+manifest="${repo_root}/src/bosh-deployment/bosh.yml"
 state_arg="--state ${state_json_path}"
 vars_store_arg="--vars-store ${vars_store}"
 
-manifest="${repo_root}/src/bosh-deployment/bosh.yml"
+tmp=$(mktemp -d)
+trap "rm -fr ${tmp}" EXIT
+var_cache="${tmp}/vars_cache.yml"
+int_cache="${tmp}/int_cache.yml"
 
 PATH=${repo_root}/bin:${PATH}
 
@@ -103,54 +114,39 @@ normalize_flags() (
 )
 
 int_args() (
-    local ops_file_args=""
-    if [ -e ${state}/manifests/0-cpi.yml ]; then
-        rm ${state}/manifests/*
-    fi
+    local ops_files=()
 
-   vars_file_arg="--vars-file $(vars_file)"
-
-
-    append_ops_args_for_dir() {
-        cp_files="${ops_file_args} $(cp ${repo_root}/$1/*.yml ${state}/manifests/)"
-        ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
-    }
-
-    append_ops_args_for_file() {
-        cp_files="${ops_file_args} $(cp ${repo_root}/$1 ${state}/manifests/)"
-        ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
-    }
+    vars_file_arg="--vars-file $(vars_file)"
 
     if [ $(lite) = true ]; then
-        append_ops_args_for_dir "ops/lite"
+        ops_files+=(${repo_root}/ops/lite/*.yml)
     elif [ $(lite) = false ]; then
-        append_ops_args_for_dir "ops/runc"
+        ops_files+=(${repo_root}/ops/runc/*.yml)
     fi
 
-    append_ops_args_for_dir "ops"
-
-    append_ops_args_for_dir "ops/cpis/$(cpi)"
+    ops_files+=(${repo_root}/ops/*.yml)
+    ops_files+=(${repo_root}/ops/cpis/$(cpi)/*.yml)
 
     if [ -f ${state}/flags ]; then
         for flag in $(cat ${state}/flags); do
             if [ -e "${repo_root}/ops/flags/${flag}.yml" ]; then
-                append_ops_args_for_file "ops/flags/${flag}.yml"
+                ops_files+=(${repo_root}/ops/flags/${flag}.yml)
             else
-                append_ops_args_for_file "ops/cpis/$(cpi)/flags/${flag}.yml"
+                ops_files+=(${repo_root}/ops/cpis/$(cpi)/flags/${flag}.yml)
             fi
         done
     fi
 
     if [[ -d ${project_root}/operators ]]; then
-        cp_files="${ops_file_args} $(cp ${project_root}/operators/*.yml ${state}/manifests/)"
-        ops_file_args="$(find ${state}/manifests/*.yml | sort | sed 's/^/-o /' | xargs)"
+        ops_files+=(${project_root}/operators/*.yml)
     fi
 
+    ops_file_args=$(printf '%s\n' "${ops_files[@]}" | sed 's|\(.*\)/|\1@|' | sort -t@ -k2 | sed 's|@|/|' | sed 's/^/-o /' | xargs)
     echo "${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
 )
 
 ca_cert() {
-    local ca_cert_file="${state}/ca.pem"
+    local ca_cert_file="${tmp}/ca.pem"
     store_int --path /default_ca/ca > $ca_cert_file
     store_int --path /credhub_ca/ca >> $ca_cert_file
     echo $ca_cert_file
@@ -270,12 +266,10 @@ vars() {
     echo "$(cat $(ca_cert) | sed 's/^/  /')"
 }
 
-var_cache=${state}/vars_cache.yml
-rm -f ${var_cache}
 
 get_var() {
     path=$1
-    if [[ ! -f ${var_cache} ]]; then
+    if [[ ! -s ${var_cache} ]]; then
         vars > ${var_cache}
     fi
     bosh int ${var_cache} --path "/$path"
@@ -444,7 +438,10 @@ store_int() {
 }
 
 int() {
-    bosh int $(int_args) $@
+    if [[ ! -s ${int_cache} ]]; then
+        bosh int $(int_args) > ${int_cache}
+    fi
+    bosh int ${int_cache} $@
 }
 
 ip() {
@@ -452,7 +449,7 @@ ip() {
 }
 
 ssh_private_key() {
-    local ssh_private_key="${state}/ssh-$USER.key"
+    local ssh_private_key="${tmp}/ssh.key"
     store_int --path /jumpbox_ssh/private_key > $ssh_private_key
     chmod 600 $ssh_private_key
     echo $ssh_private_key
@@ -577,7 +574,6 @@ case "$1" in
     vars)
         vars "$@"
         ;;
-
     credhub)
         _credhub "$@"
         ;;
