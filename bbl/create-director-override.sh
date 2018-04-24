@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $(dirname $0)/common.sh
+source ./bucc/bbl/common.sh
 
 prepare_vars_file_for_cpi
 set_default_cpi_flags
