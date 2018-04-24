@@ -23,4 +23,4 @@ bbl up
 
 ## Usage
 
-Just use bucc [as normal](https://github.com/starkandwayne/bucc#using-bucc), only `bucc {up,down,clean}` commands will not work and instead `bbl {up,down}` should be used.
+Just use bucc [as normal](https://github.com/starkandwayne/bucc#using-bucc).
