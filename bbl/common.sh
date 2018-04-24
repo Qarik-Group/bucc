@@ -17,7 +17,7 @@ add_flag() {
 }
 
 cpi() {
-    env | grep BBL_ | cut -d'_' -f2 | grep -v '=' | uniq | head -n1 | tr '[:upper:]' '[:lower:]'
+    env | sed -E -n 's/BBL_(AWS|AZURE|GCP|VSPHERE|OPENSTACK).*/\1/p' | head -n 1 | tr '[:upper:]' '[:lower:]'
 }
 
 set_default_cpi_flags() {
