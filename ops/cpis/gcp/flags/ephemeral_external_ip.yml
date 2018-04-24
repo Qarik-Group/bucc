@@ -1,0 +1,4 @@
+# Allows bosh/concourse to download resources/releases from the internet
+- type: replace
+  path: /networks/name=default/subnets/0/cloud_properties/ephemeral_external_ip
+  value: true
