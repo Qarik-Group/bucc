@@ -14,7 +14,7 @@ if [[ "${BBL_STATE_DIR:-X}" != "X" ]]; then
 fi
 
 project_root=${BUCC_PROJECT_ROOT:-${repo_root}}
-state=${BUCC_STATE_ROOT:-${project_root}/state}}
+state=${BUCC_STATE_ROOT:-${project_root}/state}
 vars_file=${BUCC_VARS_FILE:-${project_root}/vars.yml}
 state_json_path=${BUCC_STATE_STORE:-${state}/state.json}
 vars_store=${BUCC_VARS_STORE:-${state}/creds.yml}
@@ -23,9 +23,10 @@ manifest="${repo_root}/src/bosh-deployment/bosh.yml"
 state_arg="--state ${state_json_path}"
 vars_store_arg="--vars-store ${vars_store}"
 
-var_cache=$(mktemp)
-int_cache=$(mktemp)
-trap "rm -f ${var_cache} ${int_cache}" EXIT
+tmp=$(mktemp -d)
+trap "rm -fr ${tmp}" EXIT
+var_cache="${tmp}/vars_cache.yml"
+int_cache="${tmp}/int_cache.yml"
 
 PATH=${repo_root}/bin:${PATH}
 
@@ -145,7 +146,7 @@ int_args() (
 )
 
 ca_cert() {
-    local ca_cert_file="${state}/ca.pem"
+    local ca_cert_file="${tmp}/ca.pem"
     store_int --path /default_ca/ca > $ca_cert_file
     store_int --path /credhub_ca/ca >> $ca_cert_file
     echo $ca_cert_file
@@ -448,7 +449,7 @@ ip() {
 }
 
 ssh_private_key() {
-    local ssh_private_key="${state}/ssh-$USER.key"
+    local ssh_private_key="${tmp}/ssh.key"
     store_int --path /jumpbox_ssh/private_key > $ssh_private_key
     chmod 600 $ssh_private_key
     echo $ssh_private_key
