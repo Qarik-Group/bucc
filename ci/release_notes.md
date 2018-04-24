@@ -13,3 +13,4 @@ BUCC_VARS_STORE: defaults to BUCC_STATE_ROOT/creds.yml
 ### Bug fixes:
 
 ### Small improvments
+- The BBL related refactoring also resulted in some performance improvements to the bucc-cli
