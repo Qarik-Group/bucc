@@ -231,7 +231,7 @@ up() {
 }
 
 down() {
-    if [ ! -e ${project_root}/vars.yml ]; then
+    if [ ! -e $vars_file ]; then
       echo "please create a enviroment first with 'bucc up'"
       exit 1
     fi
