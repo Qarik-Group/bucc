@@ -23,6 +23,7 @@ manifest="${repo_root}/src/bosh-deployment/bosh.yml"
 state_arg="--state ${state_json_path}"
 vars_store_arg="--vars-store ${vars_store}"
 
+mkdir -p ${state}
 tmp=$(mktemp -d)
 trap "rm -fr ${tmp}" EXIT
 var_cache="${tmp}/vars_cache.yml"
