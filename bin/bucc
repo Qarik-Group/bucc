@@ -6,7 +6,7 @@ if [ -e "bbl-state.json" ]; then
 fi
 
 if [[ "${BBL_STATE_DIR:-X}" != "X" ]]; then
-    BUCC_PROJECT_ROOT="${BBL_STATE_DIR}/bucc"
+    BUCC_PROJECT_ROOT="${BBL_STATE_DIR}"
     BUCC_STATE_ROOT="${BBL_STATE_DIR}/vars"
     BUCC_VARS_FILE="${BUCC_STATE_ROOT}/director-vars-file.yml"
     BUCC_STATE_STORE="${BUCC_STATE_ROOT}/bosh-state.json"
