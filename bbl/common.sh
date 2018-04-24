@@ -1,7 +1,7 @@
 #!/bin/bash
-
-vars_file="${BBL_STATE_DIR}/director-vars-file.yml"
-flags_file="${BBL_STATE_DIR}/flags"
+set -x
+vars_file="${BBL_STATE_DIR}/vars/director-vars-file.yml"
+flags_file="${BBL_STATE_DIR}/vars/flags"
 
 add_var() {
     echo "${1}: '${2}'" >> "${vars_file}"
@@ -23,7 +23,7 @@ cpi() {
 set_default_cpi_flags() {
     if [ ! -e "${flags_file}" ]; then
        touch "${flags_file}"
-       case cpi in
+       case $(cpi) in
            aws)
            ;;
            azure)
@@ -40,7 +40,7 @@ set_default_cpi_flags() {
 }
 
 prepare_vars_file_for_cpi() {
-    case cpi in
+    case $(cpi) in
         aws)
             add_var "access_key_id" "${BBL_AWS_ACCESS_KEY_ID}"
             add_var "secret_access_key" "${BBL_AWS_SECRET_ACCESS_KEY}"

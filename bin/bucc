@@ -2,15 +2,15 @@
 repo_root=$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))
 
 if [ -e "bbl-state.json" ]; then
-    BBL_STATE_DIR="$(pwd)/vars"
+    BBL_STATE_DIR="$(pwd)"
 fi
 
 if [[ "${BBL_STATE_DIR:-X}" != "X" ]]; then
-    BUCC_PROJECT_ROOT="$(cd ${BBL_STATE_DIR}/.. && pwd)"
-    BUCC_STATE_ROOT="${BBL_STATE_DIR}"
-    BUCC_VARS_FILE="${BBL_STATE_DIR}/director-vars-file.yml"
-    BUCC_STATE_STORE="${BBL_STATE_DIR}/bosh-state.json"
-    BUCC_VARS_STORE="${BBL_STATE_DIR}/director-vars-store.yml"
+    BUCC_PROJECT_ROOT="${BBL_STATE_DIR}/bucc"
+    BUCC_STATE_ROOT="${BBL_STATE_DIR}/vars"
+    BUCC_VARS_FILE="${BUCC_STATE_ROOT}/director-vars-file.yml"
+    BUCC_STATE_STORE="${BUCC_STATE_ROOT}/bosh-state.json"
+    BUCC_VARS_STORE="${BUCC_STATE_ROOT}/director-vars-store.yml"
 fi
 
 project_root=${BUCC_PROJECT_ROOT:-${repo_root}}
