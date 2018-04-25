@@ -5,7 +5,7 @@
     release: concourse
     properties:
       token_signing_key: ((token_signing_key))
-      external_url: &external_url https://((internal_ip))
+      external_url: https://((internal_ip))
       basic_auth_username: admin
       basic_auth_password: ((ui_password))
       generic_oauth:
