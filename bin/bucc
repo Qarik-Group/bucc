@@ -467,7 +467,7 @@ _ssh() {
     fi
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
     cmd="ssh -i $(ssh_private_key) -F ${tmp_config} $user@$(ip)"
-    if [ -z "$@" ]; then
+    if [ $# -eq 0 ]; then
         ${cmd} -t 'command; sudo su -'
     else
         ${cmd} $@
