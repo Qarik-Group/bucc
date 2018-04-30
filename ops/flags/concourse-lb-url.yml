@@ -5,7 +5,7 @@
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=atc/properties/generic_oauth/auth_url
-  value: "https://((bucc_concourse_lb_url)):8443/oauth/authorize"
+  value: "https://((concourse_lb_url)):8443/oauth/authorize"
 
 - type: replace
   path: /variables/name=atc_ssl/options/alternative_names/-
