@@ -24,11 +24,16 @@ set_default_cpi_flags() {
        touch "${flags_file}"
        case $(cpi) in
            aws)
+              add_flag "ephemeral_external_ip"
+              add_flag "lb_target_pool"
+              add_flag "concourse_lb"
            ;;
            azure)
            ;;
            gcp)
-               add_flag "ephemeral_external_ip"
+              add_flag "ephemeral_external_ip"
+              add_flag "target_pool"
+              add_flag "concourse_lb"
            ;;
            vsphere)
            ;;

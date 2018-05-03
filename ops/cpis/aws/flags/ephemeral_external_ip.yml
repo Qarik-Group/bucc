@@ -1,0 +1,4 @@
+# Allows bosh/concourse to download resources/releases from the internet
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/auto_assign_public_ip?
+  value: true
