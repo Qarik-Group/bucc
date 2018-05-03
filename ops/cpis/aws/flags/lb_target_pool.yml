@@ -1,0 +1,10 @@
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/lb_target_groups?
+  value: ((concourse_lb_target_groups))
+
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/security_groups?
+  value:
+  - ((bosh_security_group))
+  - ((concourse_lb_internal_security_group))
+  - ((internal_security_group))
