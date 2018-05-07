@@ -6,10 +6,11 @@ Steps to deploy BUCC with bbl:
 
 ```
 mkdir banana-env && cd banana-env && git init
+export BBL_IAAS=aws|gcp
 bbl plan --name banana-env
 git submodule add https://github.com/starkandwayne/bucc.git bucc
 ln -s bucc/bbl/*-director-override.sh .
-ln -s $PWD/bucc/bbl/gcp/terraform/* terraform
+ln -s $PWD/bucc/bbl/$BBL_IAAS/terraform/* terraform
 bbl up
 eval "$(bbl print-env)"
 eval "$(bucc/bin/bucc env)"
