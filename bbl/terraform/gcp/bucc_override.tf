@@ -1,3 +1,4 @@
+# open port 8443 for uaa authentication
 output "director__tags" {
   value = [
     "${google_compute_firewall.bosh-director.name}",
@@ -26,6 +27,11 @@ resource "google_compute_forwarding_rule" "uaa-forwarding-rule" {
   ip_address  = "${google_compute_address.concourse-address.address}"
 }
 
-output "concourse_domain" {
+# vars needed for bucc flags (which are included via common.sh)
+output "director__concourse_domain" {
   value = "${google_compute_address.concourse-address.address}"
+}
+
+output "director__target_pool" {
+  value = "${google_compute_target_pool.target-pool.name}"
 }

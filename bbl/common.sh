@@ -24,9 +24,10 @@ set_default_cpi_flags() {
        touch "${flags_file}"
        case $(cpi) in
            aws)
-              add_flag "ephemeral-external-ip"
-              add_flag "lb-target-pool"
-              add_flag "concourse_lb"
+              add_flag "auto-assign-public-ip"
+              add_flag "security-groups"
+              add_flag "lb-target-groups"
+              add_flag "concourse-lb"
            ;;
            azure)
            ;;
