@@ -246,7 +246,7 @@ clean() {
     exit 1
   fi
   rm -rf ${state}
-  mv ${repo_root}/vars.yml ${repo_root}/vars.yml.bck
+  mv ${vars_file} ${vars_file}.bck
   echo "'state' dir has been cleaned and 'vars.yml' has been moved to 'vars.yml.bck'"
 }
 
