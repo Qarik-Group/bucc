@@ -1,0 +1,29 @@
+# Concourse
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=atc/properties/external_url
+  value: https://((concourse_lb_url))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=atc/properties/generic_oauth/auth_url
+  value: "https://((concourse_lb_url)):8443/oauth/authorize"
+
+- type: replace
+  path: /variables/name=atc_ssl/options/alternative_names/-
+  value: ((concourse_lb_url))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/concourse/redirect-uri
+  value: https://((concourse_lb_url))/auth/oauth/callback
+
+# UAA
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/zones/internal/hostnames/-
+  value: ((concourse_lb_url))
+
+- type: replace
+  path: /variables/name=uaa_ssl/options/alternative_names/-
+  value: ((concourse_lb_url))
+
+- type: replace
+  path: /variables/name=uaa_service_provider_ssl/options/alternative_names/-
+  value: ((concourse_lb_url))
