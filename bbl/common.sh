@@ -30,6 +30,8 @@ set_default_cpi_flags() {
               add_flag "concourse-lb"
            ;;
            azure)
+              add_flag "load-balancer"
+              add_flag "concourse-lb"
            ;;
            gcp)
               add_flag "ephemeral-external-ip"
