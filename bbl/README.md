@@ -5,7 +5,7 @@ Steps to deploy BUCC with bbl:
 ## Initialize a new bbl environment repo
 
 ```
-export BBL_IAAS=aws|gcp
+export BBL_IAAS=aws|gcp|azure
 export BBL_ENV_NAME=banana-env
 mkdir $BBL_ENV_NAME && cd $BBL_ENV_NAME && git init
 bbl plan -lb-type concourse
