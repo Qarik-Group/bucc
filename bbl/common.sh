@@ -49,6 +49,8 @@ set_default_cpi_flags() {
 apply_default_vars() {
     bosh int <(cat ${BBL_STATE_DIR}/bucc/ops/cpis/$(cpi)/vars.tmpl ${vars_file}) > ${vars_file}.tmp
     mv ${vars_file}.tmp ${vars_file}
+    cat ${vars_file} | grep -vI '.*: null$' > ${vars_file}.tmp
+    mv ${vars_file}.tmp ${vars_file}
 }
 
 prepare_vars_file_for_cpi() {
