@@ -20,30 +20,27 @@ cpi() {
 }
 
 set_default_cpi_flags() {
-    if [ ! -e "${flags_file}" ]; then
-       touch "${flags_file}"
-       case $(cpi) in
-           aws)
-              add_flag "auto-assign-public-ip"
-              add_flag "security-groups"
-              add_flag "lb-target-groups"
-              add_flag "concourse-lb"
-           ;;
-           azure)
-              add_flag "load-balancer"
-              add_flag "concourse-lb"
-           ;;
-           gcp)
-              add_flag "ephemeral-external-ip"
-              add_flag "target-pool"
-              add_flag "concourse-lb"
-           ;;
-           vsphere)
-           ;;
-           openstack)
-           ;;
-       esac
-    fi
+    case $(cpi) in
+        aws)
+            add_flag "auto-assign-public-ip"
+            add_flag "security-groups"
+            add_flag "lb-target-groups"
+            add_flag "concourse-lb"
+            ;;
+        azure)
+            add_flag "load-balancer"
+            add_flag "concourse-lb"
+            ;;
+        gcp)
+            add_flag "ephemeral-external-ip"
+            add_flag "target-pool"
+            add_flag "concourse-lb"
+            ;;
+        vsphere)
+            ;;
+        openstack)
+            ;;
+    esac
 }
 
 apply_default_vars() {
