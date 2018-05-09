@@ -1,18 +1,18 @@
 #!/bin/bash
 vars_file="${BBL_STATE_DIR}/vars/director-vars-file.yml"
 flags_file="${BBL_STATE_DIR}/vars/flags"
+bucc_args=""
 
 add_var() {
-    echo "${1}: '${2}'" >> "${vars_file}"
+    bucc_args="${bucc_args} --var=${1}=${2}"
 }
 
-add_var_from_file() {
-    echo "${1}: |" >> "${vars_file}"
-    cat "${2}" | sed 's/^/  /g' >> "${vars_file}"
+add_var_file() {
+    bucc_args="${bucc_args} --var-file=${1}=${2}"
 }
 
 add_flag() {
-    echo "${1}" >> "${flags_file}"
+    bucc_args="${bucc_args} --${1}"
 }
 
 cpi() {
@@ -20,34 +20,33 @@ cpi() {
 }
 
 set_default_cpi_flags() {
-    if [ ! -e "${flags_file}" ]; then
-       touch "${flags_file}"
-       case $(cpi) in
-           aws)
-              add_flag "auto-assign-public-ip"
-              add_flag "security-groups"
-              add_flag "lb-target-groups"
-              add_flag "concourse-lb"
-           ;;
-           azure)
-              add_flag "load-balancer"
-              add_flag "concourse-lb"
-           ;;
-           gcp)
-              add_flag "ephemeral-external-ip"
-              add_flag "target-pool"
-              add_flag "concourse-lb"
-           ;;
-           vsphere)
-           ;;
-           openstack)
-           ;;
-       esac
-    fi
+    case $(cpi) in
+        aws)
+            add_flag "auto-assign-public-ip"
+            add_flag "security-groups"
+            add_flag "lb-target-groups"
+            add_flag "concourse-lb"
+            ;;
+        azure)
+            add_flag "load-balancer"
+            add_flag "concourse-lb"
+            ;;
+        gcp)
+            add_flag "ephemeral-external-ip"
+            add_flag "target-pool"
+            add_flag "concourse-lb"
+            ;;
+        vsphere)
+            ;;
+        openstack)
+            ;;
+    esac
 }
 
 apply_default_vars() {
     bosh int <(cat ${BBL_STATE_DIR}/bucc/ops/cpis/$(cpi)/vars.tmpl ${vars_file}) > ${vars_file}.tmp
+    mv ${vars_file}.tmp ${vars_file}
+    cat ${vars_file} | grep -vI '.*: null$' > ${vars_file}.tmp
     mv ${vars_file}.tmp ${vars_file}
 }
 
@@ -64,7 +63,7 @@ prepare_vars_file_for_cpi() {
             add_var "tenant_id" "${BBL_AZURE_TENANT_ID}"
             ;;
         gcp)
-            add_var_from_file "gcp_credentials_json" "${BBL_GCP_SERVICE_ACCOUNT_KEY_PATH}"
+            add_var_file "gcp_credentials_json" "${BBL_GCP_SERVICE_ACCOUNT_KEY_PATH}"
             add_var "project_id" "${BBL_GCP_PROJECT_ID}"
             add_var "zone" "${BBL_GCP_ZONE}"
             ;;
