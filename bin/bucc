@@ -228,7 +228,7 @@ up() {
     if [[ ${DEBUG} == true ]]; then
         echo -e "bosh create-env $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
     fi
-    bosh create-env $(int_args) ${state_arg}
+    bosh create-env $(int_args) ${state_arg} ${1}
 }
 
 down() {
@@ -236,7 +236,7 @@ down() {
       echo "please create a enviroment first with 'bucc up'"
       exit 1
     fi
-    bosh delete-env $(int_args) $state_arg
+    bosh delete-env $(int_args) ${state_arg} ${1}
     echo "you can use the clean command if your are planning to use a new cpi or ip"
 }
 
@@ -526,6 +526,10 @@ case "$1" in
                 --debug)
                     DEBUG=true
                     ;;
+                --var=*|--var-file=*)
+                    bosh_args="${bosh_args} ${1}"
+                    shift
+                    ;;
                 *)
                     echo ${1#*--} >> ${state}/flags
             esac
@@ -536,7 +540,7 @@ case "$1" in
         validate_vars_file
         validate_cpi_flags
 
-        up "$@"
+        up "${bosh_args}"
         ;;
 
     down)
@@ -552,10 +556,14 @@ case "$1" in
                     clean
                     exit 0
                     ;;
+                --var=*|--var-file=*)
+                    bosh_args="${bosh_args} ${1}"
+                    shift
+                    ;;
             esac
             shift
         done
-        down
+        down "${bosh_args}"
         ;;
 
     clean)
@@ -590,9 +598,9 @@ case "$1" in
         ;;
 
     bbr)
-	shift
-	_bbr "$@"
-	;;
+        shift
+        _bbr "$@"
+        ;;
 
     ssh)
         shift
