@@ -27,7 +27,7 @@ jobs:
         - { get: bucc-ci }
       - task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        params:
+        params: &cleanup-integration-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
           GOVC_INSECURE: true
           CLEANUP_VM_WITH_IP: 10.213.8.1
@@ -60,6 +60,10 @@ jobs:
       - task: bucc-down-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-down/task.yml
+      ensure:
+        task: cleanup-vsphere
+        file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        params: *cleanup-integration-params
       on_failure:
         put: notify
         params:
@@ -79,7 +83,7 @@ jobs:
         - { get: bucc-stable }
       - task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        params:
+        params: &cleanup-upgrade-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
           GOVC_INSECURE: true
           CLEANUP_VM_WITH_IP: 10.213.8.2
@@ -116,6 +120,10 @@ jobs:
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
         params: { TEST: get }
         input_mapping: { bucc-state: bucc-state-out }
+      ensure:
+        task: cleanup-vsphere
+        file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        params: *cleanup-upgrade-params
       on_failure:
         put: notify
         params:
@@ -181,6 +189,10 @@ jobs:
         params: { TEST: get }
         input_mapping: { bucc-state: bucc-state-out }
         attempts: 3
+      ensure:
+        task: cleanup
+        file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        params: *cleanup-dr-params
       on_failure:
         put: notify
         params:
