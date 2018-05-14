@@ -228,12 +228,8 @@ up() {
     if [[ ${DEBUG} == true ]]; then
         echo -e "bosh create-env $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
     fi
-    if [ $# -eq 0 ]; then
-        bosh create-env $(int_args) ${state_arg}
-    else
-        bosh create-env $(int_args) ${state_arg} "$@"
-    fi
 
+    bosh create-env $(int_args) ${state_arg} "$@"
 }
 
 down() {
@@ -241,11 +237,8 @@ down() {
       echo "please create a enviroment first with 'bucc up'"
       exit 1
     fi
-    if [ $# -eq 0 ]; then
-        bosh delete-env $(int_args) ${state_arg}
-    else
-        bosh delete-env $(int_args) ${state_arg} "$@"
-    fi
+
+    bosh delete-env $(int_args) ${state_arg} "$@"
     echo "you can use the clean command if your are planning to use a new cpi or ip"
 }
 
@@ -571,7 +564,7 @@ case "$1" in
             esac
             shift
         done
-        down "${bosh_args}"
+        down ${bosh_args}
         ;;
 
     clean)
