@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 cp -r bosh-cache/.bosh ${HOME} | true
 
 mv bucc-state/{vars.yml,state} bucc/
