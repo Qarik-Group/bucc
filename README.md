@@ -21,7 +21,7 @@ cd bucc
 
 Choose your cpi:
 ```
-bucc up --help
+./bin/bucc up --help
   --cpi    Cloud provider: [aws, gcp, virtualbox, azure, softlayer, openstack, vsphere, docker]
   --lite   Created bosh will use the warden cpi with garden runc
   --debug  Show arguments passed to 'bosh create-env'
@@ -39,12 +39,12 @@ bucc up --help
 
 From the repo root run:
 ```
-$ bucc up --lite
+$ ./bin/bucc up --lite
 ```
 
 To delete your VM run:
 ```
-$ bucc down
+$ ./bin/bucc down
 ```
 
 ## Using BUCC
