@@ -158,7 +158,7 @@ usage() {
     echo "BUCC (BOSH UAA Credhub Concourse) CLI v${version}"
     echo "  up -- creates the bucc VM with bosh create-env"
     echo "  down -- deletes VM with bosh delete-env - can be used with --clean"
-    echo "  clean -- start with a clean enviorment - use this only after you've tear down your env"
+    echo "  clean -- start with a clean enviorment - use this only after you've torn down your env"
     echo "  ssh -- ssh into the bucc VM"
     echo "  env -- sourceable envrionment variables for cli clients"
     echo "  int -- wrapper for 'bosh int' for the bosh manifest"
@@ -438,14 +438,14 @@ _uaac() {
 }
 
 store_int() {
-    bosh int $vars_store $@
+    bosh int $vars_store "$@"
 }
 
 int() {
     if [[ ! -s ${int_cache} ]]; then
         bosh int $(int_args) > ${int_cache}
     fi
-    bosh int ${int_cache} $@
+    bosh int ${int_cache} "$@"
 }
 
 ip() {
@@ -474,7 +474,7 @@ _ssh() {
     if [ $# -eq 0 ]; then
         ${cmd} -t 'command; sudo su -'
     else
-        ${cmd} $@
+        ${cmd} "$@"
     fi
     rm ${tmp_config}
 }
