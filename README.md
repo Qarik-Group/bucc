@@ -15,6 +15,7 @@ The bucc command line utility allows for easy bootstrapping of the BUCC stack (B
 ```
 git clone https://github.com/starkandwayne/bucc.git
 cd bucc
+source .envrc # if not using direnv
 ```
 
 ### Boot your BUCC VM
