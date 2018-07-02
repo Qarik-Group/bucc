@@ -166,6 +166,7 @@ usage() {
     echo "  bosh -- configures bosh cli"
     echo "  credhub -- configures credhub cli"
     echo "  uaac -- configures uaac cli"
+    echo "  uaa -- configures uaa cli"
     echo "  fly -- configures fly cli"
     echo "  bbr -- wrapper for bbr cli"
     echo "  routes -- add routes for virtualbox"
@@ -437,6 +438,11 @@ _uaac() {
     faketty uaac token client get uaa_admin --secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)
 }
 
+_uaa() {
+    faketty uaa target $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/url) --skip-ssl-validation
+    faketty uaa get-client-credentials-token uaa_admin --client_secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)
+}
+
 store_int() {
     bosh int $vars_store "$@"
 }
@@ -592,6 +598,10 @@ case "$1" in
 
     uaac)
         _uaac "$@"
+        ;;
+
+    uaa)
+        _uaa "$@"
         ;;
 
     fly)
