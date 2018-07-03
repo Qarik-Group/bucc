@@ -1,0 +1,15 @@
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: bbr-credhubdb
+    release: credhub
+    properties:
+      release_level_backup: true
+      credhub:
+        data_storage:
+          type: postgres
+          username: postgres
+          password: ((postgres_password))
+          host: 127.0.0.1
+          require_tls: false
+          port: 5432
