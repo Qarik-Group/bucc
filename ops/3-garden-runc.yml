@@ -1,0 +1,11 @@
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=garden?/release
+  value: garden-runc
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=garden/properties?/garden/listen_network
+  value: tcp
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=garden/properties?/garden/listen_address
+  value: 0.0.0.0:7777

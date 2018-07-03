@@ -1,0 +1,22 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: starkandwayne/concourse
+
+inputs:
+- name: bucc
+- name: bucc-ci
+- name: bosh-release
+
+outputs:
+- name: bucc-out
+
+run:
+  path: bucc-ci/ci/tasks/update-bosh-release/task
+
+params:
+  OPS_FILE_PATH:
+  RELEASE_NAME:
