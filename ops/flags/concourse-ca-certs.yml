@@ -4,4 +4,4 @@
     name: ca_certs
     release: os-conf
     properties:
-      certs: ((custom_ca_certs))
+      certs: ((concourse_ca_certs))
