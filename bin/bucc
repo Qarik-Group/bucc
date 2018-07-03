@@ -121,8 +121,6 @@ int_args() (
 
     if [ $(lite) = true ]; then
         ops_files+=(${repo_root}/ops/lite/*.yml)
-    elif [ $(lite) = false ]; then
-        ops_files+=(${repo_root}/ops/runc/*.yml)
     fi
 
     ops_files+=(${repo_root}/ops/*.yml)
