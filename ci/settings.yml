@@ -1,26 +1,23 @@
 ---
 meta:
   name: bucc
-  target: sw
-  url:     https://ci.starkandwayne.com
-  aws:
-    access_key: (( vault "secret/aws/cfcommunity:access" ))
-    secret_key: (( vault "secret/aws/cfcommunity:secret" ))
+  target: ci2
+  url:     https://ci2.starkandwayne.com
   lite:
     target: 10.58.111.44
-    client_secret: (( vault "secret/bosh-lites/lite44/users/admin:password" ))
-    ca_cert: (( vault "secret/bosh-lites/lite44/certs:rootCA.pem" ))
+    client_secret: ((lite44_client_secret))
+    ca_cert: ((lite44_ca_cert))
   vcenter:
-    username: (( vault "secret/pipelines/bucc/vcenter:username" ))
-    password: (( vault "secret/pipelines/bucc/vcenter:password" ))
+    username: ((vcenter_username))
+    password: ((vcenter_password))
   github:
     owner: starkandwayne
     repo:  bucc
-    private_key:  (( vault "secret/pipelines/bucc/github:private" ))
-    access_token: (( vault "secret/pipelines/bucc/github:token" ))
+    private_key:  ((github_private_key))
+    access_token: ((github_acces_token))
   aws:
-    access_key_id: (( vault "secret/pipelines/bucc/aws:access_key_id" ))
-    secret_access_key: (( vault "secret/pipelines/bucc/aws:secret_access_key_id" ))
+    access_key_id: ((aws_access_key))
+    secret_access_key: ((aws_secret_key))
   slack:
-    webhook: (( vault "secret/pipelines/bucc/slack:webhook" ))
+    webhook: ((slack_webhook))
     channel: "#bucc"
