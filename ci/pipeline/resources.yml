@@ -51,6 +51,7 @@ resources:
 
   - name: compile
     type: bosh-deployment
+    tags: [vsphere]
     source:
       deployment: compile-releases
       target: (( grab meta.lite.target ))
