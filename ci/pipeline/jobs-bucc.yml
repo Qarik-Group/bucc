@@ -27,12 +27,14 @@ jobs:
         - { get: bucc-ci }
       - task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        tags: [vsphere]
         params: &cleanup-integration-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
           GOVC_INSECURE: true
           CLEANUP_VM_WITH_IP: 10.213.8.1
       - task: bucc-up-vsphere
         file: bucc-ci/ci/tasks/bucc-up/task.yml
+        tags: [vsphere]
         params:
           ARGS: --cpi vsphere --lite
           VARS:
@@ -83,6 +85,7 @@ jobs:
         - { get: bucc-stable }
       - task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        tags: [vsphere]
         params: &cleanup-upgrade-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
           GOVC_INSECURE: true
@@ -90,6 +93,7 @@ jobs:
       - task: bucc-up-vsphere
         input_mapping: { bucc: bucc-stable }
         file: bucc-ci/ci/tasks/bucc-up/task.yml
+        tags: [vsphere]
         params: &up-upgrade-params
           ARGS: --cpi vsphere
           VARS:
@@ -109,20 +113,24 @@ jobs:
             vcenter_cluster: cluster1
       - task: bucc-pre-upgrade-test-vsphere
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
+        tags: [vsphere]
         params: { TEST: set }
         input_mapping: { bucc: bucc-stable, bucc-state: bucc-state-out }
       - task: bucc-upgrade-vsphere
         file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
+        tags: [vsphere]
         params: *up-upgrade-params
         attempts: 2
         input_mapping: { bucc-state: bucc-state-out }
       - task: bucc-post-upgrade-test-vsphere
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
+        tags: [vsphere]
         params: { TEST: get }
         input_mapping: { bucc-state: bucc-state-out }
       ensure:
         task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        tags: [vsphere]
         params: *cleanup-upgrade-params
       on_failure:
         put: notify
@@ -142,12 +150,14 @@ jobs:
         - { get: bucc-ci }
       - task: cleanup
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        tags: [vsphere]
         params: &cleanup-dr-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
           GOVC_INSECURE: true
           CLEANUP_VM_WITH_IP: 10.213.8.3
       - task: bucc-up
         file: bucc-ci/ci/tasks/bucc-up/task.yml
+        tags: [vsphere]
         params: &up-dr-params
           ARGS: --cpi vsphere
           VARS:
@@ -167,31 +177,39 @@ jobs:
             vcenter_cluster: cluster1
       - task: pre-disaster-test
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
+        tags: [vsphere]
         params: { TEST: set }
         input_mapping: { bucc-state: bucc-state-out }
       - task: bbr-backup
         file: bucc-ci/ci/tasks/bucc-bbr-backup/task.yml
+        tags: [vsphere]
         input_mapping: { bucc-state: bucc-state-out }
       - task: disaster
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        tags: [vsphere]
         params: *cleanup-dr-params
       - task: bbr-restore-creds
         file: bucc-ci/ci/tasks/bucc-bbr-restore-creds/task.yml
+        tags: [vsphere]
       - task: bucc-up
         file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
+        tags: [vsphere]
         params: *up-dr-params
         input_mapping: { bucc-state: bucc-state-out }
       - task: bbr-restore
         file: bucc-ci/ci/tasks/bucc-bbr-restore/task.yml
+        tags: [vsphere]
         input_mapping: { bucc-state: bucc-state-out }
       - task: post-disaster-test
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
+        tags: [vsphere]
         params: { TEST: get }
         input_mapping: { bucc-state: bucc-state-out }
         attempts: 3
       ensure:
         task: cleanup
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        tags: [vsphere]
         params: *cleanup-dr-params
       on_failure:
         put: notify
