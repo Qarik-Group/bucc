@@ -74,7 +74,7 @@ jobs:
         input_mapping:
           bosh-release: bosh-release-garden-runc
         params:
-          OPS_FILE_PATH: ops/1-garden-runc-release.yml
+          OPS_FILE_PATH: ops/3-garden-runc-release.yml
           RELEASE_NAME: garden-runc
       - task: bucc-manifests
         file: bucc-ci/ci/tasks/bucc-manifests/task.yml
