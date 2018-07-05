@@ -4,7 +4,7 @@ set -e
 set -o pipefail
 
 # Get release details
-pushd bosh-release-concourse > /dev/null
+pushd bosh-release > /dev/null
 release_name=$RELEASE_NAME
 release_version=$( cat version )
 url=$( cat url )
