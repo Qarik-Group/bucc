@@ -127,6 +127,12 @@ resources:
     source:
       repository: concourse/concourse
 
+  - name: bosh-release-garden-runc
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/garden-runc-release
+
+
   - name: credhub-cli
     type: github-release
     source:
