@@ -110,9 +110,10 @@ $ uaac client get admin
 ### Using Credhub
 
 ```
-$ bucc credhub
-  Setting the target url: https://192.168.50.6:8844
-  Login Successful
+$ source <(bucc env) # should not be necessary when using direnv
+
+$ credhub api
+https://192.168.50.6:8844
 
 $ credhub generate -t password --name test
   Type:          password
