@@ -12,5 +12,6 @@ local.yml
 /bin/credhub
 /bin/bbr
 /bin/bosh
+/bin/uaa
 /vars.yml
 /vars.yml.bck
