@@ -71,6 +71,7 @@ groups:
       - update-credhub-cli
       - update-bbr-cli
       - update-bosh-cli
+      - update-uaa-cli
 
 resource_types:
   - name: bosh-deployment
