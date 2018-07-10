@@ -57,6 +57,7 @@ resources:
       client: admin
       client_secret: (( grab meta.lite.client_secret ))
       ca_cert: (( grab meta.lite.ca_cert ))
+    tags: [vsphere]
 
   - name: compiled-releases-concourse
     type: s3
