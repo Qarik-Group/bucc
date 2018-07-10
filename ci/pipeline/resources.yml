@@ -153,3 +153,10 @@ resources:
       user: cloudfoundry
       repository: bosh-cli
       access_token: (( grab meta.github.access_token ))
+
+  - name: uaa-cli
+    type: github-release
+    source:
+      user: starkandwayne
+      repository: uaa-cli-releases
+      access_token: (( grab meta.github.access_token ))
