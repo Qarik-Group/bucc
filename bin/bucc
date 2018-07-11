@@ -169,6 +169,9 @@ usage() {
     echo "  bbr -- wrapper for bbr cli"
     echo "  routes -- add routes for virtualbox"
     echo "  test -- check if all systems are operational"
+    if [[ "$(cpi)" == "vsphere" ]]; then
+        echo "  govc -- installs vSphere CLI"
+    fi
     exit 1
 }
 
@@ -310,6 +313,12 @@ env() {
     echo "export CREDHUB_CLIENT=credhub-admin"
     echo "export CREDHUB_SECRET=$(get_var credhub_password)"
     echo "export CREDHUB_CA_CERT=$(ca_cert)"
+    if [[ "$(cpi)" == "vsphere" ]]; then
+        echo "export GOVC_URL='$(get_var vcenter_ip)'"
+        echo "export GOVC_USERNAME='$(get_var vcenter_user)'"
+        echo "export GOVC_PASSWORD='$(get_var vcenter_password)'"
+        echo "export GOVC_INSECURE=true"
+    fi
 }
 
 routes() {
@@ -455,6 +464,22 @@ _uaa() {
 
     faketty uaa target $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/url) --skip-ssl-validation
     faketty uaa get-client-credentials-token uaa_admin --client_secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)
+}
+
+govc() {
+    local url="https://github.com/vmware/govmomi/releases/download"
+    local version=$(grep govc ${repo_root}/.versions | cut -d= -f2)
+    local cli_path=${repo_root}/bin/govc
+
+    if ! ( [ -f ${cli_path} ] && ${cli_path} version | head -n 1 | grep ${version} > /dev/null); then
+      echo "installing govc cli '${version}' into: ${repo_root}/bin/"
+      pushd $(mktemp -d)
+      curl -s -L >govc.gz "${url}/v${version}/govc_$(platform)_amd64.gz"
+      gunzip govc.gz
+      chmod +x govc
+      mv govc ${repo_root}/bin/
+      popd
+    fi
 }
 
 store_int() {
@@ -643,6 +668,10 @@ case "$1" in
 
     test)
         smoke_tests
+        ;;
+
+    govc)
+        govc
         ;;
 
     *)
