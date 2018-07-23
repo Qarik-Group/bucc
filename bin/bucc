@@ -423,10 +423,18 @@ _ensure_bosh_cli_installed() {
       pushd $(mktemp -d)
       if [ "$(platform)" == "darwin" ]; then
           curl -s -L >bosh "${url}-${version}-darwin-amd64"
+          if [[ $? != 0 ]]; then
+            echo "Unable to download the bosh CLI. Please check your internet connection and try again."
+            exit 1
+          fi
           chmod +x bosh
           mv bosh ${repo_root}/bin/
       else
           curl -s -L >bosh "${url}-${version}-linux-amd64"
+          if [[ $? != 0 ]]; then
+            echo "Unable to download the bosh CLI. Please check your internet connection and try again."
+            exit 1
+          fi
           chmod +x bosh
           mv bosh ${repo_root}/bin/
       fi
