@@ -69,3 +69,4 @@ fly_cmd="${FLY_CMD:-fly}"
 set +x
 $fly_cmd --target ${TARGET} set-pipeline     --pipeline ${PIPELINE} --config .deploy.yml
 $fly_cmd --target ${TARGET} unpause-pipeline --pipeline ${PIPELINE}
+$fly_cmd --target ${TARGET} expose-pipeline  --pipeline ${PIPELINE}
