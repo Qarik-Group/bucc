@@ -23,7 +23,7 @@ releases:
 stemcells:
 - alias: large
   os: ubuntu-trusty
-  version: "3586.24"
+  version: "3586.16"
 update:
   canaries: 1
   canary_watch_time: 1000 - 90000
