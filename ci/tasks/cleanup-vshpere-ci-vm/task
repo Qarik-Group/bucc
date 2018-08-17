@@ -2,7 +2,7 @@
 
 set -x
 
-curl -L -s https://github.com/vmware/govmomi/releases/download/v0.15.0/govc_linux_amd64.gz | gunzip >/usr/local/bin/govc
+curl -L -s https://github.com/vmware/govmomi/releases/download/v0.18.0/govc_linux_amd64.gz | gunzip >/usr/local/bin/govc
 chmod +x /usr/local/bin/govc
 
 govc vm.destroy -vm.ip ${CLEANUP_VM_WITH_IP} | true
