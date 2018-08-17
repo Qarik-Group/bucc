@@ -55,16 +55,20 @@ jobs:
       - task: bucc-test-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-test/task.yml
+        tags: [vsphere]
       - task: bucc-acceptance-test
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-acceptance-test/task.yml
+        tags: [vsphere]
         attempts: 5
       - task: bucc-down-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-down/task.yml
+        tags: [vsphere]
       ensure:
         task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        tags: [vsphere]
         params: *cleanup-integration-params
       on_failure:
         put: notify
