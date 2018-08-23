@@ -13,7 +13,7 @@ if [ "${TEST}" = "set" ]; then
 
     fly -t bucc set-pipeline -n -c bucc-ci/ci/assets/acceptance-pipeline.yml -p test
 
-    credhub set --no-overwrite --name secret/ping --value pong --type value
+    credhub set --name secret/ping --value pong --type value
 elif  [ "${TEST}" = "get" ]; then
     bosh2 config --type=runtime --name=test | grep foo
 
