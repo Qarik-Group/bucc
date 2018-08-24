@@ -248,6 +248,16 @@ clean() {
   fi
   rm -rf ${state}
   mv ${vars_file} ${vars_file}.bck
+  unset BOSH_ENVIRONMENT
+  unset BOSH_CA_CERT
+  unset BOSH_CLIENT
+  unset BOSH_CLIENT_SECRET
+  unset BOSH_GW_USER
+  unset BOSH_GW_HOST
+  unset BOSH_GW_PRIVATE_KEY
+  unset CREDHUB_CLIENT
+  unset CREDHUB_SECRET
+  unset CREDHUB_CA_CERT
   echo "'state' dir has been cleaned and 'vars.yml' has been moved to 'vars.yml.bck'"
 }
 
