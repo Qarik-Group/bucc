@@ -22,7 +22,7 @@ releases:
   version: 6
 stemcells:
 - alias: large
-  os: ubuntu-trusty
+  os: ubuntu-xenial
   version: "97.12"
 update:
   canaries: 1
