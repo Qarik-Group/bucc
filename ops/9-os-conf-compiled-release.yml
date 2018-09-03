@@ -3,5 +3,5 @@
   value:
     name: os-conf
     version: 18
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-18-ubuntu-trusty-3468.21-20180130-023559-416695244-20180130023559.tgz
-    sha1: ea2d2ee77ebf0b404d9aac9602b84a4baf15fcd1
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-18-ubuntu-xenial-97.12-20180903-131053-366073984.tgz
+    sha1: 85af8c4725266aaf87bb5d0dd704d9e05f3c9e27
