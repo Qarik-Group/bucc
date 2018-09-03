@@ -3,5 +3,5 @@
   value:
     name: bucc-bbr
     version: 6
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bucc-bbr-6-ubuntu-trusty-3541.10-20180416-132210-782551293.tgz
-    sha1: a0472c2119a0bb6252bc3eb4713c367eb679f91c
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bucc-bbr-6-ubuntu-xenial-97.12-20180903-131555-204689417.tgz
+    sha1: f9b2975ed2bb42ecf0555ce3f744d9d3aab8866a
