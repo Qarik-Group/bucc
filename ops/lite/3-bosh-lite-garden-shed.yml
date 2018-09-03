@@ -1,6 +1,0 @@
-# Needed for garden_cpi since garden 1.10.0
-# related issue: https://github.com/cloudfoundry/bosh-deployment/issues/173
-
-- type: replace
-  path: /instance_groups/name=bosh/jobs/name=garden/properties?/garden/deprecated_use_garden_shed
-  value: true
