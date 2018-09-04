@@ -18,7 +18,8 @@
         auth_url: https://((internal_ip)):8443/oauth/authorize
         token_url: https://((internal_ip)):8443/oauth/token
         userinfo_url: https://((internal_ip)):8443/userinfo
-        ca_cert: ((uaa_ssl.ca))
+        ca_cert:
+          certificate: ((uaa_ssl.ca))
         scopes: [ concourse.main ]
       tls_cert: ((atc_ssl.certificate))
       tls_key: ((atc_ssl.private_key))
