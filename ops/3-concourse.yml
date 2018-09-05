@@ -77,8 +77,8 @@
     id: concourse
     secret: ((uaa_concourse_client_secret))
     authorities: ""
-    scope: openid,email,profile,roles
-    authorized-grant-types: "authorization_code,client_credentials,refresh_token"
+    scope: openid,email,profile,roles,concourse.main
+    authorized-grant-types: "authorization_code,refresh_token"
     access-token-validity: 3600
     refresh-token-validity: 3600
     autoapprove: true
