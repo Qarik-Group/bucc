@@ -20,7 +20,7 @@
         userinfo_url: https://((internal_ip)):8443/userinfo
         ca_cert:
           certificate: ((uaa_ssl.ca))
-        scopes: [ concourse.main ]
+        scopes: [ openid, concourse.main ]
       tls_cert: ((atc_ssl.certificate))
       tls_key: ((atc_ssl.private_key))
       bind_port: 80
