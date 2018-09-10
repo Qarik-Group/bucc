@@ -4,4 +4,4 @@
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1bosh_stemcell/value
-  value: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+  value: bosh-aws-xen-hvm-ubuntu-xenial-go_agent
