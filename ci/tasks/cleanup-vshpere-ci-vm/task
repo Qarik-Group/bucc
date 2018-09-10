@@ -5,4 +5,12 @@ set -x
 curl -L -s https://github.com/vmware/govmomi/releases/download/v0.18.0/govc_linux_amd64.gz | gunzip >/usr/local/bin/govc
 chmod +x /usr/local/bin/govc
 
+templates=$(govc vm.info -vm.ip ${CLEANUP_VM_WITH_IP} -json | grep -o 'sc-[-[:alnum:]]*' | sort -u)
+
 govc vm.destroy -vm.ip ${CLEANUP_VM_WITH_IP} | true
+
+for del in $templates; do
+  remove=$(echo "${del}" | xargs ) # remove leading spaces
+  echo "deleting ${del}"
+  govc vm.destroy "/Interxion MAD2/vm/bucc-ci/templates/${remove}"
+done
