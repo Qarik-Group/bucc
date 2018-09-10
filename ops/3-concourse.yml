@@ -68,8 +68,6 @@
   value:
     name: baggageclaim
     release: concourse
-    properties:
-      driver: overlay
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/concourse?
