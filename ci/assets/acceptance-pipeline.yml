@@ -5,6 +5,7 @@ jobs:
     - get: stemcell
     - get: bosh-deployment
     - get: docker-release
+    - get: xenial-ops-file
   - put: cloud-config
     params:
       manifest: bosh-deployment/((bosh_cpi))/cloud-config.yml
@@ -13,8 +14,18 @@ jobs:
     params:
       manifest: docker-release/manifests/swarm/docker-swarm.yml
       stemcells: [ stemcell/stemcell.tgz ]
+      ops_files: [ xenial-ops-file/xenial-ops-file.yml ]
 
 resources:
+- name: xenial-ops-file
+  type: file
+  source:
+    filename: xenial-ops-file.yml
+    content:
+    - type: replace
+      path: /stemcells/alias=default/os
+      value: ubuntu-xenial
+
 - name: bosh-deployment
   type: git
   source:
@@ -59,6 +70,12 @@ resource_types:
   type: docker-image
   source:
     repository: rkoster/bosh-config-resource
+    tag: latest
+
+- name: file
+  type: docker-image
+  source:
+    repository: aequitas/concourse-file-resource
     tag: latest
 
 - name: bosh-deployment
