@@ -17,7 +17,7 @@ get_releases() {
 }
 
 get_stemcell_version() {
-    get_releases | jq -s -r 'map(select(.url | contains("ubuntu"))) | .[0].url | capture("ubuntu[a-z\\-]+(?<version>[\\d\\.]+)") | .version'
+    get_releases | jq -s -r 'map(select(.url and (.url | contains("ubuntu")))) | .[0].url | capture("ubuntu[a-z\\-]+(?<version>[\\d\\.]+)") | .version'
 }
 
 release_paths=$(curl -s https://bosh.io/releases/ | grep '<a href="/releases/' | cut -d'"' -f2 | cut -d'?' -f1)
