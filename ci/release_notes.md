@@ -1,20 +1,22 @@
 ### Breaking Changes:
-if you use multiple teams with different auth systems, it can break your auth to concourse
-because we upgraded to Concourse to 4.x and they complety reworked there auth systems.
-please check the release notes, https://concourse-ci.org/download.html#v400
+Since Concourse 4.1 has completely changed it's authentication implementation,
+there are some team configurations that can result in a failing upgrade.
+Since BUCC does not configure multiple teams this will not affect you,
+unless you created teams yourself, in which case please check the [Concourse release notes](https://concourse-ci.org/download.html#v400)
+
+In general it is always recommended to do a `bucc bbr backup` before upgrading.
 
 ### Mayor Improvments
 - Switched to Xenial stemcell
-- Upgraded to Concourse 4.x.
-- switched to bpm for container management
+- Upgraded to Concourse 4.1.
+- The BOSH related processes are now using [bpm](https://github.com/cloudfoundry-incubator/bpm-release)
+  for improved isolation.
 
 ### Small Improvments:
-- Switched back to btrfs for the containers
-- Removed bucc-bbr job because it is fixed in upstream bosh-deployment repo
-- unset all bosh envs when running `bucc clean`
-- added check if internet connection is available thanks to @teancom
-- added uaa go cli
-- showing concourse on uaa homepage
-- add user defined certs thanks to @fenech
+- Unset all bosh envs when running `bucc clean`
+- Added check if internet connection is available (thanks to @teancom)
+- Added support [uaa go cli](https://github.com/cloudfoundry-incubator/uaa-cli) (thanks to @drnic)
+- Showing concourse on uaa homepage (thanks to @drnic)
+- Added global --concourse-ca-certs flag for trusted ca certs (thanks to @fenech)
 
 ### Bug fixes:
