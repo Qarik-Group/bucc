@@ -13,10 +13,8 @@ In general it is always recommended to do a `bucc bbr backup` before upgrading.
   for improved isolation.
 
 ### Small Improvments:
-- Unset all bosh envs when running `bucc clean`
 - Added check if internet connection is available (thanks to @teancom)
 - Added support for the [uaa go cli](https://github.com/cloudfoundry-incubator/uaa-cli) (thanks to @drnic)
 - Showing concourse on uaa homepage (thanks to @drnic)
 - Added global --concourse-ca-certs flag for trusted ca certs (thanks to @fenech)
-
-### Bug fixes:
+- Added ability to unset BUCC related environment variables with `source <(bucc env --clean)`
