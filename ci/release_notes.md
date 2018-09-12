@@ -18,3 +18,6 @@ In general it is always recommended to do a `bucc bbr backup` before upgrading.
 - Showing concourse on uaa homepage (thanks to @drnic)
 - Added global --concourse-ca-certs flag for trusted ca certs (thanks to @fenech)
 - Added ability to unset BUCC related environment variables with `source <(bucc env --clean)`
+
+### Fun Facts
+- As of this release bucc uses a bucc deployed concourse for it's [ci pipeline](https://ci2.starkandwayne.com/teams/starkandwayne/pipelines/bucc)
