@@ -57,6 +57,39 @@ jobs:
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": concourse-release job failed" ))'
 
+- name: postgres-release
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: false, passed: [sanity-check] }
+        - { get: bucc-ci, trigger: false }
+        - get: bosh-release-postgres
+          trigger: true
+          params:
+            tarball: false
+      - task: update-bosh-release
+        file: bucc-ci/ci/tasks/update-bosh-release/task.yml
+        input_mapping:
+          bosh-release: bosh-release-postgres
+        params:
+          OPS_FILE_PATH: ops/5-cf-postgres-release.yml
+          RELEASE_NAME: postgres
+      - task: bucc-manifests
+        file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": postgres-release job failed" ))'
+
 - name: garden-runc-release
   public: true
   serial: true
