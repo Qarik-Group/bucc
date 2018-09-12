@@ -163,7 +163,6 @@ usage() {
     echo "  info -- displays info about bucc deployed endpoints"
     echo "  bosh -- configures bosh cli"
     echo "  credhub -- configures credhub cli"
-    echo "  uaac -- configures uaac cli"
     echo "  uaa -- configures uaa cli"
     echo "  fly -- configures fly cli"
     echo "  bbr -- wrapper for bbr cli"
