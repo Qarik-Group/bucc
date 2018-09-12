@@ -247,17 +247,8 @@ clean() {
   fi
   rm -rf ${state}
   mv ${vars_file} ${vars_file}.bck
-  unset BOSH_ENVIRONMENT
-  unset BOSH_CA_CERT
-  unset BOSH_CLIENT
-  unset BOSH_CLIENT_SECRET
-  unset BOSH_GW_USER
-  unset BOSH_GW_HOST
-  unset BOSH_GW_PRIVATE_KEY
-  unset CREDHUB_CLIENT
-  unset CREDHUB_SECRET
-  unset CREDHUB_CA_CERT
   echo "'state' dir has been cleaned and 'vars.yml' has been moved to 'vars.yml.bck'"
+  echo "to also cleanup your current shell run `source <(bucc env --clean)`"
 }
 
 vars() {
@@ -302,6 +293,10 @@ get_var_with_default() {
 
 _alias() {
     get_var_with_default "alias" "bucc"
+}
+
+clean_env() {
+    env | grep -e 'BOSH\|CREDHUB' | cut -d'=' -f1 | sed 's/^/unset /'
 }
 
 env() {
@@ -617,6 +612,15 @@ case "$1" in
         ;;
 
     env)
+        shift
+        while [[ $# -gt 0 ]]; do
+            case "$1" in
+                -c|--clean|clean)
+                    clean_env
+                    exit 0
+                    ;;
+            esac
+        done
         env "$@"
         ;;
 
