@@ -540,6 +540,10 @@ smoke_tests() {
     if ! fly -t "$(_alias)" workers | grep running; then
         >&2 echo "no concourse workers"; exit 1
     fi
+
+    header "testing uaa"
+    ${bucc} uaa
+    uaa get-user admin -a userName
 }
 
 _ensure_bosh_cli_installed
