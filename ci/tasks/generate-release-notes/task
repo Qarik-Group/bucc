@@ -18,7 +18,7 @@ get_stemcell_version() {
     get_releases | jq -s -r 'map(select(.url | contains("ubuntu"))) | .[0].url | capture("ubuntu[a-z\\-]+(?<version>[\\d\\.]+)") | .version'
 }
 
-release_paths=$(curl -s bosh.io/releases/ | grep '<a href="/releases/' | cut -d'"' -f2 | cut -d'?' -f1)
+release_paths=$(curl -s https://bosh.io/releases/ | grep '<a href="/releases/' | cut -d'"' -f2 | cut -d'?' -f1)
 get_release_url() {
     # sort results to prefere cloudfoundry over cloudfoundry-{incubator,community}
     local release_path=$(echo -e "${release_paths}" | grep -E "/${1}$|/${1}-release$|/${1}-boshrelease$" | sort -n | tail -n 1)
