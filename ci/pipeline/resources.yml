@@ -129,6 +129,11 @@ resources:
     source:
       repository: concourse/concourse
 
+  - name: bosh-release-postgres
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/postgres-release
+
   - name: bosh-release-garden-runc
     type: bosh-io-release
     source:
