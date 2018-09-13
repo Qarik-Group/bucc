@@ -7,7 +7,7 @@ version=$(bosh2 int manifest/manifest.yml --path /stemcells/0/version)
 name=bosh-${CPI}-ubuntu-xenial-go_agent
 
 stemcell=$(curl -s "https://bosh.io/api/v1/stemcells/${name}?all=1" | \
-               jq -c --arg version "${version}" '.[] | select(.version == $version)')
+               jq -c --arg version "${version}" '.[] | select(.version == "$version")')
 
 url=$(echo ${stemcell} | jq -r '.regular.url' )
 sha1=$(echo ${stemcell} | jq -r '.regular.sha1' )
