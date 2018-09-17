@@ -76,12 +76,6 @@ validate_vars_file() {
     fi
 }
 
-vars_file() {
-    local state_vars=${state}/vars.yml
-    bosh int $vars_file > $state_vars
-    echo $state_vars
-}
-
 validate_cpi() {
     local cpis_dir=${repo_root}/ops/cpis
     if [ ! -d ${cpis_dir}/$(cpi) ]; then
@@ -117,7 +111,7 @@ normalize_flags() (
 int_args() (
     local ops_files=()
 
-    vars_file_arg="--vars-file $(vars_file)"
+    vars_file_arg="--vars-file $vars_file"
 
     if [ $(lite) = true ]; then
         ops_files+=(${repo_root}/ops/lite/*.yml)
@@ -252,7 +246,7 @@ clean() {
 }
 
 vars() {
-    cat $(vars_file)
+    cat ${vars_file}
     echo "bosh_environment: $(ip)"
     echo "bosh_target: $(ip)"
     echo "bosh_ca_cert: |"
