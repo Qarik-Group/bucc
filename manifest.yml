@@ -10,9 +10,9 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=18
   version: 18
 - name: credhub-importer
-  sha1: a945710d1d7d3dfb8f8e117aa6f81e2fb5c70709
-  url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/1/credhub-importer-1.tgz
-  version: 1
+  sha1: b8dcbe24ead72f3ca93747e0630e2f34c8b89cc4
+  url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/1.1.0/credhub-importer-1.1.0.tgz
+  version: 1.1.0
 - name: postgres
   sha1: a798999d29b9f5aa12035cff907b26674b491200
   url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=30
