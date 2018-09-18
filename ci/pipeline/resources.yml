@@ -105,6 +105,15 @@ resources:
       region_name: eu-west-1
       regexp: "bucc-bbr.*-(\\d+).tgz"
 
+  - name: compiled-releases-vault-credhub-proxy
+    type: s3
+    source:
+      bucket: "bucc-compiled-releases"
+      access_key_id: (( grab meta.aws.access_key_id ))
+      secret_access_key: (( grab meta.aws.secret_access_key ))
+      region_name: eu-west-1
+      regexp: "vault-credhub-proxy.*-(\\d+).tgz"
+
   - name: compiled-releases-manifest
     type: git
     source:
