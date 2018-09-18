@@ -1,0 +1,28 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: vault-credhub-proxy
+    url: git+https://github.com/starkandwayne/vault-credhub-proxy-release
+    version: 1
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: vault-credhub-proxy
+    release: vault-credhub-proxy
+    properties:
+      tls: ((vault-proxy_tls))
+      credhub:
+        server: "https://((internal_ip)):8443"
+        ca:
+        - ((uaa_ssl.ca))
+
+- type: replace
+  path: /variables/-
+  value:
+    name: vault-proxy_tls
+    type: certificate
+    options:
+      ca: credhub_ca
+      common_name: ((internal_ip))
+      alternative_names: [((internal_ip))]
