@@ -40,4 +40,5 @@
         uaa_service_provider_ssl: ((uaa_service_provider_ssl))
         uaa_ssl: ((uaa_ssl))
         ui_password: ((ui_password))
+        vault-proxy_tls: ((vault-proxy_tls))
         worker_key: ((worker_key))
