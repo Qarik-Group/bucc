@@ -11,11 +11,11 @@
     name: vault-credhub-proxy
     release: vault-credhub-proxy
     properties:
+      address: ((internal_ip)):8200
       tls: ((vault-proxy_tls))
       credhub:
         server: "https://((internal_ip)):8443"
-        ca:
-        - ((uaa_ssl.ca))
+        ca: ((uaa_ssl.ca))
 
 - type: replace
   path: /variables/-
