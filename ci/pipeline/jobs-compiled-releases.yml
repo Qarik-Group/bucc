@@ -16,6 +16,7 @@ jobs:
       - name: credhub-importer
       - name: postgres
       - name: bucc-bbr
+      - name: vault-credhub-proxy
   - put: compiled-releases-manifest
     params: { repository: compile-manifest-out }
 
@@ -72,6 +73,9 @@ jobs:
     - try:
         put: compiled-releases-bucc-bbr
         params: { file: "compiled-releases-clean/bucc-bbr*.tgz", acl: public-read }
+    - try:
+        put: compiled-releases-vault-credhub-proxy
+        params: { file: "compiled-releases-clean/vault-credhub-proxy*.tgz", acl: public-read }        
   on_failure:
     put: notify
     params:
