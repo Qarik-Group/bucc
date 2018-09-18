@@ -246,7 +246,7 @@ clean() {
 }
 
 vars() {
-    cat ${vars_file}
+    bosh int ${vars_file}
     echo "bosh_environment: $(ip)"
     echo "bosh_target: $(ip)"
     echo "bosh_ca_cert: |"
