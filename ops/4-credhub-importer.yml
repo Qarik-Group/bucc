@@ -2,9 +2,9 @@
   path: /releases/name=credhub-importer?
   value:
     name: credhub-importer
-    version: 1
-    url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/1/credhub-importer-1.tgz
-    sha1: a945710d1d7d3dfb8f8e117aa6f81e2fb5c70709
+    version: 1.1.0
+    url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/1.1.0/credhub-importer-1.1.0.tgz
+    sha1: b8dcbe24ead72f3ca93747e0630e2f34c8b89cc4
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
