@@ -250,3 +250,35 @@ jobs:
           username: (( grab meta.slack.username ))
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": update-uaa-cli job failed" ))'
+
+- name: update-safe-cli
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: false, passed: [sanity-check] }
+        - { get: bucc-ci, trigger: false }
+        - get: safe-cli
+          trigger: true
+          params:
+            globs:
+              - safe-linux*
+      - task: update-safe-cli
+        file: bucc-ci/ci/tasks/update-cli/task.yml
+        input_mapping: {update-cli: safe-cli}
+        params:
+          NAME: safe
+      - task: bucc-manifests
+        file: bucc-ci/ci/tasks/bucc-manifests/task.yml
+      - put: bucc
+        params:
+          merge: true
+          repository: bucc-out
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": update-safe-cli job failed" ))'

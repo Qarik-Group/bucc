@@ -176,3 +176,10 @@ resources:
       user: starkandwayne
       repository: uaa-cli-releases
       access_token: (( grab meta.github.access_token ))
+
+  - name: safe-cli
+    type: github-release
+    source:
+      user: starkandwayne
+      repository: safe
+      access_token: (( grab meta.github.access_token ))
