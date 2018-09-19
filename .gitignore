@@ -10,6 +10,7 @@ local.yml
 .config/
 /bin/fly
 /bin/credhub
+/bin/safe
 /bin/bbr
 /bin/bosh
 /bin/uaa

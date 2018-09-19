@@ -157,6 +157,7 @@ usage() {
     echo "  info -- displays info about bucc deployed endpoints"
     echo "  bosh -- configures bosh cli"
     echo "  credhub -- configures credhub cli"
+    echo "  safe -- configures safe cli"
     echo "  uaa -- configures uaa cli"
     echo "  fly -- configures fly cli"
     echo "  bbr -- wrapper for bbr cli"
@@ -256,6 +257,7 @@ vars() {
     echo "credhub_url: $(int --path /instance_groups/0/properties/director/config_server/url | rev | cut -c6- | rev)"
     echo "credhub_username: credhub-admin"
     echo "credhub_password: $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/credhub-admin/secret)"
+    echo "vault_url: https://$(int --path /instance_groups/0/jobs/name=vault-credhub-proxy/properties/address)"
     echo "concourse_url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
     echo "concourse_username: $(int --path /instance_groups/0/jobs/name=atc/properties/add_local_users/0 | cut -d: -f1)"
     echo "concourse_password: $(int --path /instance_groups/0/jobs/name=atc/properties/add_local_users/0 | cut -d: -f2)"
@@ -305,9 +307,10 @@ env() {
     echo "export BOSH_GW_USER=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)"
     echo "export BOSH_GW_HOST=$(ip)"
     echo "export BOSH_GW_PRIVATE_KEY=$(ssh_private_key)"
-    echo "export CREDHUB_CLIENT=credhub-admin"
+    echo "export CREDHUB_CLIENT=$(get_var credhub_username)"
     echo "export CREDHUB_SECRET=$(get_var credhub_password)"
     echo "export CREDHUB_CA_CERT=$(ca_cert)"
+    echo "export VAULT_CACERT=$(ca_cert)"
 }
 
 routes() {
@@ -387,9 +390,28 @@ _credhub() {
 
     ${cli_path} login --server $(get_var credhub_url) \
             --ca-cert $(ca_cert) \
-            --client-name credhub-admin \
+            --client-name $(get_var credhub_username) \
             --client-secret $(get_var credhub_password)
 }
+
+_safe() {
+    local url="https://github.com/starkandwayne/safe/releases/download"
+    local version=$(grep safe ${repo_root}/.versions | cut -d= -f2)
+    local cli_path=${repo_root}/bin/safe
+
+    if ! ( [ -f ${cli_path} ] && ${cli_path} --version 2>&1 | head -n 1 | grep ${version} > /dev/null); then
+      echo "installing safe cli '${version}' into: ${repo_root}/bin/"
+      pushd $(mktemp -d)
+      curl -s -L >safe "${url}/${version}/safe-$(platform)-amd64"
+      chmod +x safe
+      mv safe ${repo_root}/bin/
+      popd
+    fi
+
+    ${cli_path} target -k $(get_var vault_url) $(_alias)
+    echo $(get_var credhub_username):$(get_var credhub_password) | ${cli_path} auth token
+}
+
 
 _bbr() {
     local url="https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/download"
@@ -630,6 +652,10 @@ case "$1" in
         ;;
     credhub)
         _credhub "$@"
+        ;;
+
+    safe)
+        _safe "$@"
         ;;
 
     uaac)
