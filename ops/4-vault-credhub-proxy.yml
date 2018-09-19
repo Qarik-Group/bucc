@@ -14,8 +14,8 @@
       address: ((internal_ip)):8200
       tls: ((vault-proxy_tls))
       credhub:
-        server: "https://((internal_ip)):8443"
-        ca: ((uaa_ssl.ca))
+        server: "https://((internal_ip)):8844"
+        ca: ((credhub_tls.ca))((uaa_ssl.ca))
 
 - type: replace
   path: /variables/-
