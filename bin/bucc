@@ -310,7 +310,6 @@ env() {
     echo "export CREDHUB_CLIENT=$(get_var credhub_username)"
     echo "export CREDHUB_SECRET=$(get_var credhub_password)"
     echo "export CREDHUB_CA_CERT=$(ca_cert)"
-    echo "export VAULT_CACERT=$(ca_cert)"
 }
 
 routes() {
