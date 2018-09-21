@@ -548,6 +548,7 @@ smoke_tests() {
 
     header "testing concourse"
     ${bucc} fly
+    fly -t "$(_alias)" sync
 
     if ! fly -t "$(_alias)" workers | grep running; then
         >&2 echo "no concourse workers"; exit 1
@@ -556,6 +557,12 @@ smoke_tests() {
     header "testing uaa"
     ${bucc} uaa
     uaa get-user admin -a userName
+
+    header "testing safe"
+    ${bucc} safe
+    safe gen secret/account passphrase
+    safe get secret/account
+    safe delete secret/account
 }
 
 _ensure_bosh_cli_installed
