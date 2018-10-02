@@ -5,8 +5,8 @@ meta:
 
   lite:
     target: (( param "Bosh lite target" ))
-    client_secret: (( param "Bosh lite client secret" ))
-    ca_cert: (( param "Bosh lite ca cert" ))
+    client_secret: ((bosh-lite-admin-password))
+    ca_cert: ((bosh-lite-ca))
 
   vcenter:
     username: (( param "Please specify the username used for vCenter" ))

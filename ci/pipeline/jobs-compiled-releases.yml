@@ -31,14 +31,12 @@ jobs:
   - task: upload-stemcell
     input_mapping: { manifest: compiled-releases-manifest }
     file: bucc-ci/ci/tasks/upload-stemcell/task.yml
-    tags: [vsphere]
     params:
       BOSH_ENVIRONMENT: (( grab meta.lite.target ))
       BOSH_CLIENT: admin
       BOSH_CLIENT_SECRET: (( grab meta.lite.client_secret ))
       BOSH_CA_CERT: (( grab meta.lite.ca_cert ))
   - put: compile
-    tags: [vsphere]
     params:
       manifest: compiled-releases-manifest/manifest.yml
       cleanup: true
@@ -51,7 +49,7 @@ jobs:
   - get: bucc-ci
   - get: compile
     trigger: true
-    tags: [vsphere]
+    # tags: [vsphere]
     params:
       compiled_releases: *releases
   - task: remove-already-compiled-releases
@@ -75,7 +73,7 @@ jobs:
         params: { file: "compiled-releases-clean/bucc-bbr*.tgz", acl: public-read }
     - try:
         put: compiled-releases-vault-credhub-proxy
-        params: { file: "compiled-releases-clean/vault-credhub-proxy*.tgz", acl: public-read }        
+        params: { file: "compiled-releases-clean/vault-credhub-proxy*.tgz", acl: public-read }
   on_failure:
     put: notify
     params:
