@@ -4,9 +4,7 @@ meta:
   target: ci2
   url:     https://ci2.starkandwayne.com
   lite:
-    target: 10.58.111.44
-    client_secret: ((lite44_client_secret))
-    ca_cert: ((lite44_ca_cert))
+    target: 10.10.1.5
   vcenter:
     username: ((vcenter_username))
     password: ((vcenter_password))
