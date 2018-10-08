@@ -401,7 +401,7 @@ _safe() {
     if ! ( [ -f ${cli_path} ] && ${cli_path} --version 2>&1 | head -n 1 | grep ${version} > /dev/null); then
       echo "installing safe cli '${version}' into: ${repo_root}/bin/"
       pushd $(mktemp -d)
-      curl -s -L >safe "${url}/${version}/safe-$(platform)-amd64"
+      curl -s -L >safe "${url}/v${version}/safe-$(platform)-amd64"
       chmod +x safe
       mv safe ${repo_root}/bin/
       popd
