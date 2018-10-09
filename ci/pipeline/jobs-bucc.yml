@@ -47,7 +47,7 @@ jobs:
             vcenter_password: (( grab meta.vcenter.password ))
             vcenter_user: (( grab meta.vcenter.username ))
             vcenter_dc: Interxion MAD2
-            vcenter_ds: vol309|vol310
+            vcenter_ds: starkwayne_hybrid
             vcenter_disks: bucc-ci
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
@@ -110,7 +110,7 @@ jobs:
             vcenter_password: (( grab meta.vcenter.password ))
             vcenter_user: (( grab meta.vcenter.username ))
             vcenter_dc: Interxion MAD2
-            vcenter_ds: vol309|vol310
+            vcenter_ds: starkwayne_hybrid
             vcenter_disks: bucc-ci
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
@@ -174,7 +174,7 @@ jobs:
             vcenter_password: (( grab meta.vcenter.password ))
             vcenter_user: (( grab meta.vcenter.username ))
             vcenter_dc: Interxion MAD2
-            vcenter_ds: vol309|vol310
+            vcenter_ds: starkwayne_hybrid
             vcenter_disks: bucc-ci
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
