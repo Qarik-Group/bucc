@@ -209,10 +209,9 @@ faketty() {
 
 up() {
     local flags="--cpi $(cpi)"
-    local skip_drain=""
+    local skip_drain="--skip-drain"
     if [ $(lite) = true ]; then
         flags+=" --lite"
-        skip_drain="--skip-drain"
     fi
     if [ -f ${state}/flags ]; then
         flags+=" $(cat ${state}/flags | sed 's/^/--/' | xargs)"
@@ -228,10 +227,7 @@ up() {
 }
 
 down() {
-    local skip_drain=""
-    if [ $(lite) = true ]; then
-        skip_drain="--skip-drain"
-    fi
+    local skip_drain="--skip-drain"
     if [ ! -e $vars_file ]; then
       echo "please create a enviroment first with 'bucc up'"
       exit 1
