@@ -17,7 +17,7 @@ cat <<EOT > ops/6-bucc-creds-bbr.yml
     properties:
       creds:
 EOT
-bosh2 int <(spruce json state/creds.yml | jq -r 'keys | map({"\(.)": "((\(.)))"}) | add') | \
+bosh int <(spruce json state/creds.yml | jq -r 'keys | map({"\(.)": "((\(.)))"}) | add') | \
     sed 's/^/        /g' >> ops/6-bucc-creds-bbr.yml
 
 git config --global user.email "ci@starkandwayne.com"

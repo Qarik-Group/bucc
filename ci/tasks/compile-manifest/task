@@ -36,7 +36,7 @@ for name in $(echo "${RELEASES}" | jq -r '.[].name'); do
     echo "- ${release}" >> ${compile_manifest}
 done
 
-bosh2 int ${compile_manifest} > ${compile_manifest}.tmp
+bosh int ${compile_manifest} > ${compile_manifest}.tmp
 mv ${compile_manifest}{.tmp,}
 cat ${compile_manifest}
 

@@ -6,10 +6,10 @@ set -o pipefail
 pushd compiled-releases-in > /dev/null
 manifest=$(pwd)/manifest.yml
 
-stemcel_version=$(bosh2 int ${manifest} --path /stemcells/0/version)
+stemcel_version=$(bosh int ${manifest} --path /stemcells/0/version)
 
 for name in $(spruce json ${manifest} | jq -r '.releases[].name'); do
-    version=$(bosh2 int ${manifest} --path /releases/name=${name}/version | cut -d+ -f1)
+    version=$(bosh int ${manifest} --path /releases/name=${name}/version | cut -d+ -f1)
     releases_in_s3=$(curl -s "https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/?prefix=${name}")
 
     if [[ "${releases_in_s3}" != *"${version}-ubuntu-xenial-${stemcell_version}"* ]]; then
