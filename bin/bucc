@@ -209,8 +209,10 @@ faketty() {
 
 up() {
     local flags="--cpi $(cpi)"
+    local skip_drain=""
     if [ $(lite) = true ]; then
         flags+=" --lite"
+        skip_drain="--skip-drain"
     fi
     if [ -f ${state}/flags ]; then
         flags+=" $(cat ${state}/flags | sed 's/^/--/' | xargs)"
@@ -219,19 +221,23 @@ up() {
     echo -e "Flag files: '${state}/{cpi,lite,flags}'\n"
 
     if [[ ${DEBUG} == true ]]; then
-        echo -e "bosh create-env $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
+        echo -e "bosh create-env ${skip_drain} $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
     fi
 
-    bosh create-env $(int_args) ${state_arg} "$@"
+    bosh create-env ${skip_drain} $(int_args) ${state_arg} "$@"
 }
 
 down() {
+    local skip_drain=""
+    if [ $(lite) = true ]; then
+        skip_drain="--skip-drain"
+    fi
     if [ ! -e $vars_file ]; then
       echo "please create a enviroment first with 'bucc up'"
       exit 1
     fi
 
-    bosh delete-env $(int_args) ${state_arg} "$@"
+    bosh delete-env ${skip_drain} $(int_args) ${state_arg} "$@"
     echo "you can use the clean command if your are planning to use a new cpi or ip"
 }
 
