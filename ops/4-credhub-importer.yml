@@ -60,6 +60,15 @@
         - name: concourse/main/credhub_ca_cert
           type: value
           value: ((uaa_ssl.ca))((credhub_tls.ca))
+
+        # Safe
+        - name: concourse/main/vault_url
+          type: value
+          value: https://((internal_ip)):8200
+        - name: concourse/main/vault_secret
+          type: value
+          value: credhub-admin:((credhub_admin_client_secret))
+
         # Concourse
         - name: concourse/main/concourse_url
           type: value
