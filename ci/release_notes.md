@@ -1,3 +1,2 @@
 ### Bug fixes:
-
-### Small improvments
+- vault-credhub-proxy is now compatible with the latest safe cli
