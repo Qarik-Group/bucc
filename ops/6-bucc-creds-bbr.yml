@@ -13,6 +13,7 @@
         blobstore_server_tls: ((blobstore_server_tls))
         credhub_admin_client_secret: ((credhub_admin_client_secret))
         credhub_ca: ((credhub_ca))
+        credhub_cli_user_password: ((credhub_cli_user_password))
         credhub_encryption_password: ((credhub_encryption_password))
         credhub_importer_password: ((credhub_importer_password))
         credhub_tls: ((credhub_tls))
