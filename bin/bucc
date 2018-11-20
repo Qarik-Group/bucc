@@ -134,7 +134,7 @@ int_args() (
         ops_files+=(${project_root}/operators/*.yml)
     fi
 
-    ops_file_args=$(printf '%s\n' "${ops_files[@]}" | sed 's|\(.*\)/|\1@|' | sort -t@ -k2 | sed 's|@|/|' | sed 's/^/-o /' | xargs)
+    ops_file_args=$(printf '%s\n' "${ops_files[@]}" | awk -F"/" '{print $NF"|"$0}' | sort -t"|" -k1 | awk -F"|" '{print $NF}' | sed 's/^/-o /' | xargs)
     echo "${manifest} ${ops_file_args} ${vars_store_arg} ${vars_file_arg}"
 )
 
