@@ -1,0 +1,9 @@
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/ports/-
+  value: 443/tcp # concourse
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/ports/-
+  value: 8844/tcp # credhub
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/ports/-
+  value: 8200/tcp # vault
