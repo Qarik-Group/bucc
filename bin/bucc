@@ -150,9 +150,9 @@ usage() {
     echo "BUCC (BOSH UAA Credhub Concourse) CLI v${version}"
     echo "  up -- creates the bucc VM with bosh create-env"
     echo "  down -- deletes VM with bosh delete-env - can be used with --clean"
-    echo "  clean -- start with a clean enviorment - use this only after you've torn down your env"
+    echo "  clean -- start with a clean environment - use this only after you've torn down your env"
     echo "  ssh -- ssh into the bucc VM"
-    echo "  env -- sourceable envrionment variables for cli clients"
+    echo "  env -- sourceable environment variables for cli clients"
     echo "  int -- wrapper for 'bosh int' for the bosh manifest"
     echo "  info -- displays info about bucc deployed endpoints"
     echo "  bosh -- configures bosh cli"
@@ -185,7 +185,7 @@ up_usage() {
 }
 
 down_usage() {
-    echo "  -c | --clean  cleans up your enviroment by removing state files"
+    echo "  -c | --clean  cleans up your environment by removing state files"
 }
 
 platform() {
@@ -229,7 +229,7 @@ up() {
 down() {
     local skip_drain="--skip-drain"
     if [ ! -e $vars_file ]; then
-      echo "please create a enviroment first with 'bucc up'"
+      echo "please create a environment first with 'bucc up'"
       exit 1
     fi
 
@@ -239,7 +239,7 @@ down() {
 
 clean() {
   if curl -m 1 -k -s https://$(bosh int <(bucc vars) --path /bosh_target):25555/info | grep uaa &>/dev/null ; then
-    echo "your enviroment is still running, please tear it down with 'bucc down --clean'"
+    echo "your environment is still running, please tear it down with 'bucc down --clean'"
     exit 1
   fi
   rm -rf ${state}
