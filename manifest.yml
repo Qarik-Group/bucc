@@ -19,7 +19,7 @@ releases:
   version: 32
 - name: bucc-bbr
   url: git+https://github.com/starkandwayne/bucc-bbr-boshrelease
-  version: 7
+  version: 8
 - name: vault-credhub-proxy
   url: git+https://github.com/starkandwayne/vault-credhub-proxy-release
   version: 1.1.4
