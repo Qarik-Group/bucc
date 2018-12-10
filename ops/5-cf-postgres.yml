@@ -6,13 +6,21 @@
     properties:
       databases:
         port: 5432
-        databases:
-        - name: bosh    
+        databases: &databases
+        - name: bosh
         - name: uaa
         - name: atc
         - name: credhub
         roles:
         - name: postgres
           password: ((postgres_password))
-          
 
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: bbr-postgres-db
+    release: postgres
+    properties:
+      release_level_backup: true
+      postgres:
+        databases: *databases
