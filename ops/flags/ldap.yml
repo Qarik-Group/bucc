@@ -13,7 +13,6 @@
 #   userPassword: 'userDN-Password'
 #   groups:
 #     profile_type: groups-map-to-scopes
-#     autoAdd: true
 #     groupRoleAttribute: 'spring.security.ldap.dn'
 #     groupSearchFilter: 'member={0}'
 #     maxSearchDepth: 10
@@ -29,7 +28,7 @@
   value: ((ldap))
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/scim/external_groups?/ldap
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/external_groups?/ldap
   value:
     ((ldap_admin_group)):
       - uaa.user
