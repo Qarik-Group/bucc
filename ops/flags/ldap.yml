@@ -1,0 +1,43 @@
+# Example
+# ldap:
+#   enabled: true
+#   override: true
+#   mailAttributeName: mail
+#   mailSubstitute: ""
+#   mailSubstituteOverridesLdap: false
+#   referral: follow
+#   searchBase: 'dc=support,dc=pivotal'
+#   searchFilter: 'cn={0}'
+#   url: 'ldap://10.110.123.116'
+#   userDN: 'cn=test,cn=Users,dc=support,dc=pivotal'
+#   userPassword: 'userDN-Password'
+#   groups:
+#     profile_type: groups-map-to-scopes
+#     autoAdd: true
+#     groupRoleAttribute: 'spring.security.ldap.dn'
+#     groupSearchFilter: 'member={0}'
+#     maxSearchDepth: 10
+#     searchBase: 'dc=support,dc=pivotal'
+#     searchSubtree: true
+#   ldapdebug: Ldap configured through UAA
+#   profile_type: search-and-bind
+#   ssl:
+#     skipverification: true
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/ldap?
+  value: ((ldap))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/scim/external_groups?/ldap
+  value:
+    ((ldap_admin_group)):
+      - uaa.user
+      - openid
+      - bosh.admin
+      - credhub.read
+      - credhub.write
+    ((ldap_audit_group)):
+      - uaa.user
+      - openid
+      - bosh.read
