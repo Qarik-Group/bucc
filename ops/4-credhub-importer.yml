@@ -81,7 +81,7 @@
           value: ((ui_password))
         - name: concourse/main/concourse_ca_cert
           type: value
-          value: ((atc_ssl.ca))
+          value: ((atc_ssl.ca))((uaa_ssl.ca))
         - name: concourse/main/concourse_tsa_host
           type: value
           value: ((internal_ip))
@@ -91,7 +91,6 @@
         - name: concourse/main/concourse_worker_key
           type: json
           value: ((worker_key))
-
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
