@@ -46,6 +46,12 @@
         - name: concourse/main/bosh_stemcell
           type: value
           value: ((shouldbereplaced))
+        - name: concourse/main/default_ca
+          type: certificate
+          value:
+            ca: ((default_ca.ca))
+            certificate: ((default_ca.certificate))
+            private_key: ((default_ca.private_key))
 
         # Credhub
         - name: concourse/main/credhub_url
