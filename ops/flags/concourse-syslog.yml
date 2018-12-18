@@ -4,11 +4,9 @@
   path: /instance_groups/name=bosh/jobs/name=atc/properties/syslog?/address
   value: ((syslog_address))
 
-# Client hostname with which the build logs will be sent to the syslog server.
-# example: atc-syslog-drainer
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=atc/properties/syslog?/hostname
-  value: ((syslog_hostname))
+  value: ((internal_ip))
 
 # Transport protocol for syslog messages (Currently supporting tcp, udp & tls).
 # example: tcp
