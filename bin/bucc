@@ -330,14 +330,24 @@ routes() {
 
 
 info() {
+    if [[ "${1}" == "--internal-ip" ]]; then
+        local url="https://$(get_var internal_ip)"
+    else
+        local url=$(get_var concourse_url)
+    fi
+
     echo "Concourse:"
-    echo "  url: $(get_var concourse_url)"
+    echo "  url: ${url}"
     echo "  username: $(get_var concourse_username)"
     echo "  password: $(get_var concourse_password)"
 }
 
 _fly() {
-    local url=$(get_var concourse_url)
+    if [[ "${1}" == "--internal-ip" ]]; then
+        local url="https://$(get_var internal_ip)"
+    else
+        local url=$(get_var concourse_url)
+    fi
 
     if [ ! -f ${repo_root}/bin/fly ]; then
         echo "installing fly cli into: ${repo_root}/bin/"
@@ -655,6 +665,7 @@ case "$1" in
         ;;
 
     info)
+        shift
         info "$@"
         ;;
 
@@ -678,6 +689,7 @@ case "$1" in
         ;;
 
     fly)
+        shift
         _fly "$@"
         ;;
 
