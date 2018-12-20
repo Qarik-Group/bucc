@@ -19,6 +19,7 @@
         credhub_tls: ((credhub_tls))
         default_ca: ((default_ca))
         director_ssl: ((director_ssl))
+        gateway_ssh: ((gateway_ssh))
         hm_password: ((hm_password))
         jumpbox_ssh: ((jumpbox_ssh))
         mbus_bootstrap_password: ((mbus_bootstrap_password))
