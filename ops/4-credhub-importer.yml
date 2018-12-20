@@ -40,6 +40,12 @@
         - name: concourse/main/bosh_ssh_username
           type: value
           value: jumpbox
+        - name: concourse/main/bosh_gw_private_key
+          type: value
+          value: ((gateway_ssh.private_key))
+        - name: concourse/main/bosh_gw_username
+          type: value
+          value: gateway
         - name: concourse/main/bosh_cpi
           type: value
           value: ((shouldbereplaced))

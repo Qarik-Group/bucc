@@ -306,9 +306,9 @@ env() {
     echo "export BOSH_CA_CERT='$(cat $(ca_cert))'"
     echo "export BOSH_CLIENT=$(get_var bosh_client)"
     echo "export BOSH_CLIENT_SECRET=$(get_var bosh_client_secret)"
-    echo "export BOSH_GW_USER=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)"
+    echo "export BOSH_GW_USER=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/1/name)"
     echo "export BOSH_GW_HOST=$(ip)"
-    echo "export BOSH_GW_PRIVATE_KEY=$(ssh_private_key)"
+    echo "export BOSH_GW_PRIVATE_KEY=$(ssh_private_key gateway_ssh)"
     echo "export CREDHUB_CLIENT=$(get_var credhub_username)"
     echo "export CREDHUB_SECRET=$(get_var credhub_password)"
     echo "export CREDHUB_CA_CERT=$(ca_cert)"
@@ -446,7 +446,7 @@ _bbr() {
     fi
 
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
-    ${cli_path} director --host $(ip) --username ${user} --private-key-path $(ssh_private_key) "$@"
+    ${cli_path} director --host $(ip) --username ${user} --private-key-path $(ssh_private_key jumpbox_ssh) "$@"
 }
 
 _ensure_bosh_cli_installed() {
@@ -519,9 +519,9 @@ ip() {
 
 ssh_private_key() {
     local tmp=$(mktemp -d) # can be removed after fix https://github.com/cloudfoundry/bosh-cli/issues/418
-    local ssh_private_key="${tmp}/ssh.key"
-    store_int --path /jumpbox_ssh/private_key > $ssh_private_key
-    chmod 600 $ssh_private_key
+    local ssh_private_key="${tmp}/${1}.key"
+    store_int --path /${1}/private_key > $ssh_private_key
+    chmod 400 $ssh_private_key
     echo $ssh_private_key
 }
 
@@ -535,7 +535,7 @@ _ssh() {
         echo $BOSH_ALL_PROXY | sed -e 's$ssh+socks5://\(.*\):\(.*\)?.*=\(.*\)$ProxyCommand ssh -W %h:%p \1 -p \2 -i \3$g' > ${tmp_config}
     fi
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
-    cmd="ssh -i $(ssh_private_key) -F ${tmp_config} $user@$(ip)"
+    cmd="ssh -i $(ssh_private_key jumpbox_ssh) -F ${tmp_config} $user@$(ip)"
     if [ $# -eq 0 ]; then
         ${cmd} -t 'command; sudo su -'
     else
