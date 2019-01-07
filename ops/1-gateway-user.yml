@@ -8,6 +8,7 @@
     name: gateway
     public_key: ((gateway_ssh.public_key))
     sudo: false
+    groups: []
 
 - type: replace
   path: /variables/-
