@@ -152,6 +152,7 @@ usage() {
     echo "  down -- deletes VM with bosh delete-env - can be used with --clean"
     echo "  clean -- start with a clean environment - use this only after you've torn down your env"
     echo "  ssh -- ssh into the bucc VM"
+    echo "  rotate-certs -- regenerate certificates used by bucc"
     echo "  env -- sourceable environment variables for cli clients"
     echo "  int -- wrapper for 'bosh int' for the bosh manifest"
     echo "  info -- displays info about bucc deployed endpoints"
@@ -306,9 +307,9 @@ env() {
     echo "export BOSH_CA_CERT='$(cat $(ca_cert))'"
     echo "export BOSH_CLIENT=$(get_var bosh_client)"
     echo "export BOSH_CLIENT_SECRET=$(get_var bosh_client_secret)"
-    echo "export BOSH_GW_USER=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/1/name)"
+    echo "export BOSH_GW_USER=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)"
     echo "export BOSH_GW_HOST=$(ip)"
-    echo "export BOSH_GW_PRIVATE_KEY=$(ssh_private_key gateway_ssh)"
+    echo "export BOSH_GW_PRIVATE_KEY=$(ssh_private_key jumpbox_ssh)"
     echo "export CREDHUB_CLIENT=$(get_var credhub_username)"
     echo "export CREDHUB_SECRET=$(get_var credhub_password)"
     echo "export CREDHUB_CA_CERT=$(ca_cert)"
@@ -544,6 +545,17 @@ _ssh() {
     rm ${tmp_config}
 }
 
+_rotate_certs() {
+    local ops=""
+    for cert in $(grep "ca: |" -B1 "${vars_store}" | grep -v "ca: |" | grep ':' | cut -d: -f1); do
+        ops="${ops}"'- {"type":"remove","path":"/'"${cert}"'"}\n'
+    done
+    bosh int "${vars_store}" -o <(echo -e $ops) > "${vars_store}.tmp"
+    mv "${vars_store}.tmp" "${vars_store}"
+    echo "Certificates have been successfully removed from ${vars_store}"
+    echo "Please run bucc up to generate and deploy new certificates"
+}
+
 header() {
     printf "\n\033[0;34m${1}\033[0m\n\n"
 }
@@ -701,6 +713,11 @@ case "$1" in
     ssh)
         shift
         _ssh "$@"
+        ;;
+
+    rotate-certs)
+        shift
+        _rotate_certs "$@"
         ;;
 
     int)
