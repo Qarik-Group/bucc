@@ -2,6 +2,6 @@
   path: /releases/name=postgres?
   value:
     name: postgres
-    version: 33
-    url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=33
-    sha1: 5583e9a73e8074c3138f42bcbef41a399895b244
+    version: 34
+    url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=34
+    sha1: d4e8993d5052c425692a71ea4ad43e7d9a113a4b
