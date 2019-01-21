@@ -1,0 +1,7 @@
+- type: replace
+  path: /releases/name=director-bosh-dns?
+  value:
+    name: director-bosh-dns
+    version: 0.1.0
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/director-bosh-dns-0.1.0-ubuntu-xenial-170.21-20190121-124925-325464576.tgz
+    sha1: 0cd85cadad322a3449a9851d09c9c3fa04fc5464
