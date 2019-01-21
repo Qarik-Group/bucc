@@ -64,6 +64,9 @@ groups:
       - bucc-bbr-compiled-release-ops-file
       - vault-credhub-proxy-compiled-release-ops-file
       - bucc-creds-bbr-ops-file
+      - garden-runc-compiled-release-ops-file
+      - director-bosh-dns-compiled-release-ops-file
+      - bosh-dns-compiled-release-ops-file
   - name: upstream
     jobs:
       - bosh-deployment-repo

@@ -17,6 +17,9 @@ jobs:
       - name: postgres
       - name: bucc-bbr
       - name: vault-credhub-proxy
+      - name: director-bosh-dns
+      - name: bosh-dns
+      - name: garden-runc
   - put: compiled-releases-manifest
     params: { repository: compile-manifest-out }
 
@@ -74,6 +77,15 @@ jobs:
     - try:
         put: compiled-releases-vault-credhub-proxy
         params: { file: "compiled-releases-clean/vault-credhub-proxy*.tgz", acl: public-read }
+    - try:
+        put: compiled-releases-director-bosh-dns
+        params: { file: "compiled-releases-clean/director-bosh-dns*.tgz", acl: public-read }
+    - try:
+        put: compiled-releases-bosh-dns
+        params: { file: "compiled-releases-clean/bosh-dns*.tgz", acl: public-read }
+    - try:
+        put: compiled-releases-garden-runc
+        params: { file: "compiled-releases-clean/garden-runc*.tgz", acl: public-read }
   on_failure:
     put: notify
     params:
