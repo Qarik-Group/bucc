@@ -2,6 +2,6 @@
   path: /releases/name=bucc-bbr?
   value:
     name: bucc-bbr
-    version: 7
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bucc-bbr-7-ubuntu-xenial-97.16-20180919-140053-290045377.tgz
-    sha1: 6ba4c64cc270f7efa8d679736fb90c7212c94213
+    version: 8
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bucc-bbr-8-ubuntu-xenial-170.9-20181210-120244-757620791.tgz
+    sha1: b7f17f1deef7806176911088e19f94c52fd4703f
