@@ -161,7 +161,7 @@ resources:
   - name: bosh-release-concourse
     type: bosh-io-release
     source:
-      repository: concourse/concourse
+      repository: concourse/concourse-bosh-release
 
   - name: bosh-release-postgres
     type: bosh-io-release
