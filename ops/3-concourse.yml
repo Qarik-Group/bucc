@@ -54,6 +54,7 @@
     name: worker
     release: concourse
     properties:
+      ephemeral: true
       tsa:
         host: 127.0.0.1
         host_public_key: ((tsa_host_key.public_key))
