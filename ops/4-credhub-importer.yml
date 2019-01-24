@@ -104,6 +104,20 @@
           type: json
           value: ((worker_key))
 
+        # UAA
+        - name: concourse/main/uaa_url
+          type: value
+          value: https://((internal_ip)):8443
+        - name: concourse/main/uaa_client
+          type: value
+          value: uaa_admin
+        - name: concourse/main/uaa_client_secret
+          type: value
+          value: ((uaa_admin_client_secret))
+        - name: concourse/main/uaa_ca_cert
+          type: value
+          value: ((uaa_ssl.ca))
+
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
   value:
