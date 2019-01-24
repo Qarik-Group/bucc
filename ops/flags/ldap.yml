@@ -27,16 +27,19 @@
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/ldap?
   value: ((ldap))
 
+# Example
+# ldap_external_groups:
+#   cn=admin-group,cn=Groups,dc=support,dc=pivotal:
+#   - uaa.user
+#   - openid
+#   - bosh.admin
+#   - credhub.read
+#   - credhub.write
+#   cn=audit-group,cn=Groups,dc=support,dc=pivotal:
+#   - uaa.user
+#   - openid
+#   - bosh.read
+
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/external_groups?/ldap
-  value:
-    ((ldap_admin_group)):
-      - uaa.user
-      - openid
-      - bosh.admin
-      - credhub.read
-      - credhub.write
-    ((ldap_audit_group)):
-      - uaa.user
-      - openid
-      - bosh.read
+  value: ((ldap_external_groups))
