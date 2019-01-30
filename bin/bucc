@@ -190,6 +190,23 @@ down_usage() {
     echo "  -c | --clean  cleans up your environment by removing state files"
 }
 
+offline_usage() {
+  echo "  zip file location '/tmp/' *optional"
+  echo "  --cpi    Cloud provider: [$(cpis | xargs | sed 's/ /, /g')]"
+  echo "  --lite   Created bosh will use the warden cpi with garden runc"
+  echo "$(ls ${repo_root}/ops/flags | cut -d "." -f 1 | sed 's/^/  --/')"
+  echo ""
+  echo "  Optional cpi specific flags:"
+
+  local cpis_dir=${repo_root}/ops/cpis
+  for cpi in $(cpis); do
+      local flags_dir=${repo_root}/ops/cpis/${cpi}/flags
+      if [ -d ${flags_dir} ]; then
+          echo "    ${cpi}: $(ls ${flags_dir} | cut -d "." -f 1 | sed 's/^/--/' | xargs)"
+      fi
+  done
+}
+
 platform() {
     if [ "$(uname)" == "Darwin" ]; then
         echo "darwin"
