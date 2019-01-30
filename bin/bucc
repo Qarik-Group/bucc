@@ -434,7 +434,7 @@ _safe() {
 }
 
 
-_bbr() {
+_bbr_download() {
     local url="https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/download"
     local version=$(grep bbr ${repo_root}/.versions | cut -d= -f2)
     local cli_path=${repo_root}/bin/bbr
@@ -451,7 +451,11 @@ _bbr() {
       fi
       popd
     fi
+}
 
+_bbr() {
+    _bbr_download
+    local cli_path=${repo_root}/bin/bbr
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
     ${cli_path} director --host $(ip) --username ${user} --private-key-path $(ssh_private_key jumpbox_ssh) "$@"
 }
