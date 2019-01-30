@@ -69,7 +69,7 @@ validate_vars_file() {
     if [ ! -e $vars_file ]; then
         cp $cpi_vars $vars_file
         if [ ! $(cpi) = "virtualbox" ]; then
-            echo "We just copied a template in $vars_file please adjust it to your needs"
+            echo "We just copied a template in $vars_file please adjust it to your needs and run the command again"
             # we should break here or check file contents and see if we still have the right var file for the cpi
             exit 1
         fi
@@ -164,6 +164,7 @@ usage() {
     echo "  bbr -- wrapper for bbr cli"
     echo "  routes -- add routes for virtualbox"
     echo "  test -- check if all systems are operational"
+    echo "  offline -- create's an offline tarball, setting a path is optional. eg 'bucc offline /mypath/'"
     exit 1
 }
 
@@ -243,7 +244,7 @@ clean() {
     echo "your environment is still running, please tear it down with 'bucc down --clean'"
     exit 1
   fi
-  rm -rf ${state}
+  m -rf ${state} "${project_root}/operators" "${project_root}/src/offline_resources"
   mv ${vars_file} ${vars_file}.bck
   echo "'state' dir has been cleaned and 'vars.yml' has been moved to 'vars.yml.bck'"
   echo "to also cleanup your current shell run `source <(bucc env --clean)`"
@@ -592,6 +593,107 @@ smoke_tests() {
     safe delete secret/account
 }
 
+_spruce() {
+    local url="https://github.com/geofffranks/spruce/releases/download"
+    local version=$(grep spruce ${repo_root}/.versions | cut -d= -f2)
+    local cli_path=${repo_root}/bin/spruce
+
+    if ! ( [ -f ${cli_path} ] && ${cli_path} --version | head -n 1 | grep ${version} > /dev/null); then
+      echo "installing spruce cli '${version}' into: ${repo_root}/bin/"
+      pushd $(mktemp -d)
+      curl -s -L >spruce "${url}/v${version}/spruce-$(platform)-amd64"
+      chmod +x spruce
+      mv spruce ${repo_root}/bin/
+      popd
+    fi
+}
+
+# TODO: get rid of jq and spruce if possible otherwise add jq cli
+offline() {
+  set -e
+  _spruce
+  _credhub_download
+  _bbr_download
+
+  yml_filelocation=${project_root}/operators
+  offline_filelocation=${project_root}/src/offline_resources
+
+  releases=$(spruce json <(echo "releases:"; ${repo_root}/bin/bucc int --path /releases))
+  relases_candidates=$(echo ${releases} | jq '.releases[] | select(.url)')
+
+  echo "Downloading releases this can take a while!"
+  temp_dir=$(mktemp -d)
+  trap "rm -rf ${temp_dir}" EXIT
+  mkdir -p ${yml_filelocation} ${offline_filelocation}
+  pushd ${temp_dir}
+  for release in $(echo ${relases_candidates} | jq -c '.'); do
+
+    name=$(echo ${release} | jq -r '.name')
+    version=$(echo ${release} | jq -r '.version')
+    url=$(echo ${release} | jq -r '.url')
+    sha1=$(echo ${release} | jq -r '.sha1')
+    filename="${name}-${version}.tgz"
+
+    if [ ! -f "${offline_filelocation}/${filename}" ]; then
+      echo "Starting to Download ${name}-release"
+      curl --retry 5 -s -f -o ${filename} -L ${url}
+
+      cat > "9x-${name}-offfline-compiled-release.yml" <<YML
+      - type: replace
+        path: /releases/name=${name}?
+        value:
+          name: ${name}
+          version: ${version}
+          url: "file://../offline_resources/${filename}"
+          sha1: ${sha1}
+YML
+    echo "Moving files for ${name}-release"
+    mv *.yml ${yml_filelocation} &>/dev/null
+    mv *.tgz ${offline_filelocation} &>/dev/null
+    echo "Downloaded ${name}-release"
+  else
+    echo "Release ${name}-release was already downloaded"
+  fi
+  done
+
+  stemcell=$(spruce json <(${repo_root}/bin/bucc int --path /resource_pools/name=vms/stemcell) | jq 'select(.url)')
+  stemcell_sha1=$(echo ${stemcell} | jq -r '.sha1')
+  stemcell_url=$(echo ${stemcell} | jq -r '.url')
+  # TODO: getting the name could be handled better
+  stemcell_name=$(echo ${stemcell_url} | cut -d "-" -f 2,3,4,5)
+  # TODO: make get version more robust
+  stemcell_version=$(echo ${stemcell_url} | cut -d= -f2)
+  stemcell_filename="${stemcell_name}-${stemcell_version}.tgz"
+
+  if [ ! -f "${yml_filelocation}/9x-stemcell-offfline-stemcell.yml" ]; then
+    echo "Starting to download stemcell"
+    curl --retry 5 -s -f -o ${stemcell_filename} -L ${stemcell_url}
+    cat > "9x-stemcell-offfline-stemcell.yml" <<YML
+    - type: replace
+      path: /resource_pools/name=vms/stemcell?
+      value:
+        url: "file://../offline_resources/${stemcell_filename}"
+        sha1: ${sha1}
+YML
+    echo "Moving files for ${name}-release"
+    mv *.yml ${yml_filelocation} &>/dev/null
+    mv *.tgz ${offline_filelocation} &>/dev/null
+    echo "Downloaded ${name}-release"
+  else
+    echo "Stemcell ${stemcell_name} ${stemcell_version} was already downloaded"
+  fi
+  popd
+
+  echo "Compressing files"
+  # FIXME: for some reason gloabl version variable is not used, but the version of the last release in the manifest
+  version=$(grep bucc ${repo_root}/.versions | cut -d= -f2)
+  filelocation=${1:-'/tmp/'}
+  tarfile=${filelocation}bucc-${version}.tar.gz
+  tar -zcf ${tarfile} ${project_root}
+  echo "Your file is located in ${tarfile}"
+
+}
+
 _ensure_bosh_cli_installed
 case "$1" in
     up)
@@ -731,6 +833,37 @@ case "$1" in
 
     test)
         smoke_tests
+        ;;
+
+    offline)
+        shift
+        while [[ $# -gt 0 ]]; do
+            case "$1" in
+                -h|--help|help)
+                    offline_usage # TODO: write offline_usage
+                    exit 0
+                    ;;
+                --cpi)
+                    echo "$2" > ${state}/cpi
+                    shift
+                    ;;
+                --cpi=*)
+                    echo "${1#*=}" > ${state}/cpi
+                    ;;
+                --lite)
+                    echo "true" > ${state}/lite
+                    ;;
+                *)
+                    echo ${1#*--} >> ${state}/flags
+            esac
+            shift
+        done
+        normalize_flags
+        validate_cpi
+        validate_vars_file
+        validate_cpi_flags
+
+        offline "$@"
         ;;
 
     *)
