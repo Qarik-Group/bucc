@@ -863,6 +863,10 @@ case "$1" in
 
     offline)
         shift
+        if [ $# -eq 0 ] && [ -f ${state}/cpi] ; then
+            echo "Usage: $1 [--cpi] [--lite] [flags] [-h|--help]"
+            exit 1
+        fi
         while [[ $# -gt 0 ]]; do
             case "$1" in
                 -h|--help|help)
