@@ -389,11 +389,12 @@ _bosh() {
         bosh log-in -e "$(_alias)"
 }
 
-_credhub() {
+_credhub_download() {
+  set -x
     local url="https://github.com/cloudfoundry-incubator/credhub-cli/releases/download"
     local version=$(grep credhub ${repo_root}/.versions | cut -d= -f2)
     local cli_path=${repo_root}/bin/credhub
-
+    # FIXME: credhub check version lags because if it cannot connect to credhub https://github.com/cloudfoundry-incubator/credhub-cli/issues/46
     if ! ( [ -f ${cli_path} ] && ${cli_path} --version | head -n 1 | grep ${version} > /dev/null); then
       echo "installing credhub cli '${version}' into: ${repo_root}/bin/"
       pushd $(mktemp -d)
@@ -403,7 +404,11 @@ _credhub() {
       mv credhub ${repo_root}/bin/
       popd
     fi
+}
 
+_credhub() {
+    _credhub_download
+    local cli_path=${repo_root}/bin/credhub
     ${cli_path} login --server $(get_var credhub_url) \
             --ca-cert $(ca_cert) \
             --client-name $(get_var credhub_username) \
