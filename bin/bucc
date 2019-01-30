@@ -244,7 +244,7 @@ clean() {
     echo "your environment is still running, please tear it down with 'bucc down --clean'"
     exit 1
   fi
-  m -rf ${state} "${project_root}/operators" "${project_root}/src/offline_resources"
+  rm -rf ${state} "${project_root}/operators" "${project_root}/src/offline_resources"
   mv ${vars_file} ${vars_file}.bck
   echo "'state' dir has been cleaned and 'vars.yml' has been moved to 'vars.yml.bck'"
   echo "to also cleanup your current shell run `source <(bucc env --clean)`"
