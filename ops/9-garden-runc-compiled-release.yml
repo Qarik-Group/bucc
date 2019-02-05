@@ -2,6 +2,6 @@
   path: /releases/name=garden-runc?
   value:
     name: garden-runc
-    version: 1.18.0
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/garden-runc-1.18.0-ubuntu-xenial-170.21-20190121-145121-681866473.tgz
-    sha1: 55e8d31f599cbaa8c55b7d8c0dc5ba02b06fcd23
+    version: 1.18.1
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/garden-runc-1.18.1-ubuntu-xenial-170.25-20190205-142737-748859013.tgz
+    sha1: 187b8b1b7b910b888273fe75717cb10e551db642
