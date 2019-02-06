@@ -8,6 +8,8 @@
       external_url: &external_url https://((internal_ip))
       main_team:
         auth:
+          oauth:
+            groups: [ concourse.main ]
           local:
             users: [admin]
       add_local_users: [ 'admin:((ui_password))' ]
@@ -18,6 +20,7 @@
         auth_url: https://((internal_ip)):8443/oauth/authorize
         token_url: https://((internal_ip)):8443/oauth/token
         userinfo_url: https://((internal_ip)):8443/userinfo
+        groups_key: scope
         ca_cert:
           certificate: ((uaa_ssl.ca))
         scopes: [ openid, concourse.main ]
