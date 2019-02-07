@@ -85,6 +85,14 @@ validate_cpi() {
     fi
 }
 
+remove_flag() (
+    if [ -f ${state}/flags ]; then
+        touch ${state}/flags.tmp
+        cat ${state}/flags | grep -v "${1}" > ${state}/flags.tmp
+        mv ${state}/flags{.tmp,}
+    fi
+)
+
 validate_cpi_flags() {
     if [ -f ${state}/flags ]; then
         for option in $(cat ${state}/flags); do
@@ -94,6 +102,7 @@ validate_cpi_flags() {
             fi
             local supported_flags=$(ls ${flags_dirs} | grep yml | cut -d "." -f 1 | sed 's/^/--/' | xargs)
             if [[ ! ${supported_flags} == *"${option}"* ]]; then
+                remove_flag "${option}"
                 echo "unsupported flag: --${option}"
                 echo "flags for '--cpi $(cpi)' are: ${supported_flags}"
                 exit 1
