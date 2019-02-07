@@ -1,7 +1,7 @@
 ## Director bosh-dns
 Support for bosh-dns from the bucc VM itself has been added.
 This can be used for example to point to a syslog endpoint which still needs to be deployed.
-It has been implemented via a process which uses fsnotify to watch the director blobstore for dns updates.
+It has been implemented via [a process](https://github.com/starkandwayne/director-bosh-dns-release) which uses fsnotify to watch the director blobstore for dns updates.
 These records are then propagated into the vanilla bosh-dns process.
 
 ### Bug fixes:
