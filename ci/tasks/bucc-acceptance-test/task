@@ -15,6 +15,6 @@ if ! fly -t bucc builds | grep succeed; then
     >&2 echo "build did not succeed"; exit 1
 fi
 
-if ! bucc ssh "dig q-s0.docker.*.*.bosh +short" | grep "10.244"; then
+if ! bucc ssh -oStrictHostKeyChecking=no "dig q-s0.docker.*.*.bosh +short" | grep "10.244"; then
     >&2 echo "bosh dns did not return docker ip"; exit 1
 fi
