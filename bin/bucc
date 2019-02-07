@@ -368,8 +368,11 @@ _fly() {
         local url=$(get_var concourse_url)
     fi
 
-    if [ ! -f ${repo_root}/bin/fly ]; then
-        echo "installing fly cli into: ${repo_root}/bin/"
+    local fly=${repo_root}/bin/fly
+    local fly_version=$(int --path=/releases/name=concourse/version)
+
+    if [[ ! -f ${fly} || ("$(${fly} --version)" != "${fly_version}") ]]; then
+        echo "installing fly ${fly_version} into: ${repo_root}/bin/"
         pushd $(mktemp -d)
         curl -s -k -L >fly "${url}/api/v1/cli?arch=amd64&platform=$(platform)"
         chmod +x fly
