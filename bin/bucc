@@ -177,9 +177,10 @@ usage() {
 }
 
 up_usage() {
-    echo "  --cpi    Cloud provider: [$(cpis | xargs | sed 's/ /, /g')]"
-    echo "  --lite   Created bosh will use the warden cpi with garden runc"
-    echo "  --debug  Show arguments passed to 'bosh create-env'"
+    echo "  --cpi      Cloud provider: [$(cpis | xargs | sed 's/ /, /g')]"
+    echo "  --lite     Created bosh will use the warden cpi with garden runc"
+    echo "  --recreate Recreate VM in deployment, also when there are no changes"
+    echo "  --debug    Show arguments passed to 'bosh create-env'"
     echo "$(ls ${repo_root}/ops/flags | cut -d "." -f 1 | sed 's/^/  --/')"
     echo ""
     echo "  Optional cpi specific flags:"
@@ -628,7 +629,7 @@ case "$1" in
                 --debug)
                     DEBUG=true
                     ;;
-                --var=*|--var-file=*)
+                --var=*|--var-file=*|--recreate)
                     bosh_args="${bosh_args} ${1}"
                     ;;
                 *)
