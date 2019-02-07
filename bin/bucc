@@ -406,7 +406,7 @@ _credhub() {
     local version=$(grep credhub ${repo_root}/.versions | cut -d= -f2)
     local cli_path=${repo_root}/bin/credhub
 
-    if ! ( [ -f ${cli_path} ] && ${cli_path} --version | head -n 1 | grep ${version} > /dev/null); then
+    if ! ( [ -f ${cli_path} ] && CREDHUB_SERVER='' ${cli_path} --version | head -n 1 | grep ${version} > /dev/null); then
       echo "installing credhub cli '${version}' into: ${repo_root}/bin/"
       pushd $(mktemp -d)
       curl -s -L >credhub.tgz "${url}/${version}/credhub-$(platform)-${version}.tgz"
