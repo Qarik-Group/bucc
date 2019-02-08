@@ -6,6 +6,23 @@ The bucc command line utility allows for easy bootstrapping of the BUCC stack (B
 
 ### Prepare the Environment
 
+#### Mac
+
+1. If using bash 3.x can have broken pipeline issue.  Update to latest bash via brew:
+
+```
+brew update && brew install bash
+```
+#### Ubuntu 18.04/18.10
+
+1.  Make sure development environment is setup with proper utils and libraries:
+
+```
+sudo apt install libssl-dev libreadline-dev libgdbm-dev gcc make g++ ruby-dev zlibc zlib1g-dev zlib1g
+```
+
+### 
+
 1. Install [BOSH CLI v2.0.1+](https://bosh.io/docs/cli-v2.html)
 
 2. Optionall install [`direnv`](https://direnv.net/)
@@ -16,6 +33,7 @@ The bucc command line utility allows for easy bootstrapping of the BUCC stack (B
 git clone https://github.com/starkandwayne/bucc.git
 cd bucc
 source .envrc # if not using direnv
+wget -qO- https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/2.2.1/credhub-linux-2.2.1.tgz | tar xvz -C ./bin/
 ```
 
 ### Boot your BUCC VM
@@ -111,6 +129,10 @@ $ uaac client get admin
 
 ```
 $ source <(bucc env) # should not be necessary when using direnv
+
+$ bucc credhub
+Setting the target url: https://192.168.50.6:8844
+Login Successful
 
 $ credhub api
 https://192.168.50.6:8844
