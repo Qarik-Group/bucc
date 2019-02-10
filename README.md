@@ -6,13 +6,6 @@ The bucc command line utility allows for easy bootstrapping of the BUCC stack (B
 
 ### Prepare the Environment
 
-#### Mac
-
-1. If using bash 3.x can have broken pipeline issue.  Update to latest bash via brew:
-
-```
-brew update && brew install bash
-```
 #### Ubuntu 18.04/18.10
 
 1.  Make sure development environment is setup with proper utils and libraries:
