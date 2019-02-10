@@ -181,7 +181,12 @@ bucc info
 ```
 $ bucc fly
 
+  logging in to team 'main'
+
   target saved
+  Example fly commands:
+    fly -t bucc pipelines
+    fly -t bucc builds
 
 $ fly -t bucc pipelines
   name  paused  public
