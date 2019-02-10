@@ -52,19 +52,26 @@ wget -qO- https://github.com/cloudfoundry-incubator/credhub-cli/releases/downloa
 Choose your cpi:
 ```
 bucc up --help
-  --cpi    Cloud provider: [aws, gcp, virtualbox, azure, softlayer, openstack, vsphere, docker]
-  --lite   Created bosh will use the warden cpi with garden runc
-  --debug  Show arguments passed to 'bosh create-env'
+  --cpi      Cloud provider: [softlayer, virtualbox, gcp, vsphere, aws, docker, azure, 1-extra-ports.yml, openstack]
+  --lite     Created bosh will use the warden cpi with garden runc
+  --recreate Recreate VM in deployment, also when there are no changes
+  --debug    Show arguments passed to 'bosh create-env'
+  --concourse-ca-certs
+  --concourse-lb
+  --concourse-syslog
+  --ldap
   --oauth-providers
   --proxy
 
   Optional cpi specific flags:
-    azure: --managed-disks
-    gcp: --service-account
     softlayer: --cpi-dynamic
-    openstack: --custom-ca --disk-az --dns --ignore-server-availability-zone --keystone-v2 --ntp --root-disk-size --trusted-certs
+    virtualbox: --remote
+    gcp: --ephemeral-external-ip --service-account --target-pool
     vsphere: --dns --resource-pool
+    aws: --auto-assign-public-ip --lb-target-groups --security-groups --spot-instance
     docker: --unix-sock
+    azure: --load-balancer --managed-disks
+    openstack: --custom-ca --disk-az --dns --floating-ip --ignore-server-availability-zone --keystone-v2 --ntp --root-disk-size --trusted-certs
 ```
 
 From the repo root run:
