@@ -94,15 +94,17 @@ $ source <(bucc env) # should not be necessary when using direnv
 $ bosh alias-env bucc
   Using environment '192.168.50.6' as client 'admin'
 
-  Name      Bosh
-  Director
-  UUID      3e107016-3fc2-40af-8ac5-8e53025d53f3
-  Version   260.5.0 (00000000)
-  CPI       virtualbox_cpi
-  Features  compiled_package_cache: disabled
-            dns: disabled
-            snapshots: disabled
-  User      admin
+  Name               bosh  
+  UUID               94e87b44-a7eb-4b67-a568-52553f87cd6e  
+  Version            268.6.0 (00000000)  
+  Director Stemcell  ubuntu-xenial/170.9  
+  CPI                warden_cpi  
+  Features           compiled_package_cache: disabled  
+                     config_server: enabled  
+                     local_dns: enabled  
+                     power_dns: disabled  
+                     snapshots: disabled  
+  User               admin
 
   Succeeded
 
