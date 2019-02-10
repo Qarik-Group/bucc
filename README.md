@@ -149,10 +149,11 @@ $ credhub api
 https://192.168.50.6:8844
 
 $ credhub generate -t password --name test
-  Type:          password
-  Name:          /test
-  Value:         Nfjbu0HKKI9eHmbGY6hNLjssDphpdO
-  Updated:       2017-03-23T14:49:03Z
+  id: 63947a28-ee47-4d3c-9320-7972c70ec431
+  name: /test
+  type: password
+  value: <redacted>
+  version_created_at: "2019-02-10T13:35:06Z"
 ```
 
 ### Using Concourse
