@@ -863,8 +863,9 @@ case "$1" in
 
     offline)
         shift
-        if [ $# -eq 0 ] && [ -f ${state}/cpi] ; then
-            echo "Usage: $1 [--cpi] [--lite] [flags] [-h|--help]"
+        # TODO: by default virtualbox is used we need a good check
+        if [ $# -eq 0 ] ; then
+            echo "Usage: $1 [--cpi] [--lite] [flags] [zip file location] [-h|--help]"
             exit 1
         fi
         while [[ $# -gt 0 ]]; do
