@@ -6,17 +6,7 @@ The bucc command line utility allows for easy bootstrapping of the BUCC stack (B
 
 ### Prepare the Environment
 
-#### Ubuntu 18.04/18.10
-
-1.  Make sure development environment is setup with proper utils and libraries:
-
-```
-sudo apt install libssl-dev libreadline-dev libgdbm-dev gcc make g++ ruby-dev zlibc zlib1g-dev zlib1g
-```
-
-### Next Steps
-
-1. Install [BOSH CLI v2.0.1+](https://bosh.io/docs/cli-v2.html)
+1. Install [BOSH CLI v2.0.1+](https://bosh.io/docs/cli-v2.html) and [dependencies](https://bosh.io/docs/cli-v2-install/#additional-dependencies).
 
 2. Optionall install [`direnv`](https://direnv.net/)
 
@@ -26,18 +16,6 @@ sudo apt install libssl-dev libreadline-dev libgdbm-dev gcc make g++ ruby-dev zl
 git clone https://github.com/starkandwayne/bucc.git
 cd bucc
 source .envrc # if not using direnv
-```
-
-4. Install the credhub cli into the bin directory
-
-Linux
-```
-wget -qO- https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/2.2.1/credhub-linux-2.2.1.tgz | tar xvz -C ./bin/
-```
-
-Mac
-```
-wget -qO- https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/2.2.1/credhub-darwin-2.2.1.tgz | tar xvz -C ./bin/
 ```
 
 ### Boot your BUCC VM
