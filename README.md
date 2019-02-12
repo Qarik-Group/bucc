@@ -87,33 +87,32 @@ $ bosh vms
 
 ### Using UAA
 
-1. Install the cli
+1. Use UAA
 
 ```
-gem install cf-uaac
-```
+$ bucc uaa
 
-2. Use UAA
+  installing uaa cli '0.0.1' into: /Users/dcarter/fun/tryagain/bucc/bin/
+  Target set to https://192.168.50.6:8443
+  Access token successfully fetched and added to context.
 
-```
-$ bucc uaac
-
-  Target: https://192.168.50.6:8443
-  Context: uaa_admin, from client uaa_admin
-
-
-  Successfully fetched token via client credentials grant.
-  Target: https://192.168.50.6:8443
-  Context: uaa_admin, from client uaa_admin
-
-$ uaac client get admin
-  scope: uaa.none
-  client_id: admin
-  resource_ids: none
-  authorized_grant_types: client_credentials
-  autoapprove:
-  authorities: bosh.admin
-  lastmodified: 1490280436993
+$ uaa get-client admin
+  {
+    "client_id": "admin",
+    "scope": [
+      "uaa.none"
+    ],
+    "resource_ids": [
+      "none"
+    ],
+    "authorized_grant_types": [
+      "client_credentials"
+    ],
+    "authorities": [
+      "bosh.admin"
+    ],
+    "lastModified": 1549969159011 . 
+  }
 ```
 
 ### Using Credhub
