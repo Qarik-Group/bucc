@@ -64,7 +64,7 @@ cpis() {
 }
 
 validate_vars_file() {
-    # Todo: prettify
+    # TODO: prettify
     local cpi_vars=${repo_root}/ops/cpis/$(cpi)/vars.tmpl
     if [ ! -e $vars_file ]; then
         cp $cpi_vars $vars_file
@@ -407,7 +407,6 @@ _bosh() {
 }
 
 _credhub_download() {
-  set -x
     local url="https://github.com/cloudfoundry-incubator/credhub-cli/releases/download"
     local version=$(grep credhub ${repo_root}/.versions | cut -d= -f2)
     local cli_path=${repo_root}/bin/credhub
@@ -636,7 +635,7 @@ _spruce() {
 
 # TODO: get rid of jq and spruce if possible otherwise add jq cli
 offline() {
-  set -e
+  echo "Getting dependecies"
   _spruce
   _credhub_download
   _bbr_download
