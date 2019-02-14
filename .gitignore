@@ -14,7 +14,6 @@ local.yml
 /bin/bbr
 /bin/bosh
 /bin/uaa
-/bin/spruce
 /vars.yml
 /vars.yml.bck
 /src/offline_resources

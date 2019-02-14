@@ -431,7 +431,7 @@ _credhub() {
             --client-secret $(get_var credhub_password)
 }
 
-_safe() {
+_safe_download() {
     local url="https://github.com/starkandwayne/safe/releases/download"
     local version=$(grep safe ${repo_root}/.versions | cut -d= -f2)
     local cli_path=${repo_root}/bin/safe
@@ -444,9 +444,12 @@ _safe() {
       mv safe ${repo_root}/bin/
       popd
     fi
+}
 
-    ${cli_path} target -k $(get_var vault_url) $(_alias)
-    echo $(get_var credhub_username):$(get_var credhub_password) | ${cli_path} auth token
+_safe() {
+  _safe_download
+  ${cli_path} target -k $(get_var vault_url) $(_alias)
+  echo $(get_var credhub_username):$(get_var credhub_password) | ${cli_path} auth token
 }
 
 
@@ -511,7 +514,7 @@ _uaac() {
     faketty uaac token client get uaa_admin --secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)
 }
 
-_uaa() {
+_uaa_download() {
     local url="https://github.com/starkandwayne/uaa-cli-releases/releases/download"
     local version=$(grep uaa ${repo_root}/.versions | cut -d= -f2)
     local cli_path=${repo_root}/bin/uaa
@@ -524,9 +527,12 @@ _uaa() {
       mv uaa ${repo_root}/bin/
       popd
     fi
+}
 
-    faketty uaa target $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/url) --skip-ssl-validation
-    faketty uaa get-client-credentials-token uaa_admin --client_secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)
+_uaa() {
+  _uaa_download
+  faketty uaa target $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/url) --skip-ssl-validation
+  faketty uaa get-client-credentials-token uaa_admin --client_secret $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/uaa_admin/secret)
 }
 
 store_int() {
@@ -618,72 +624,56 @@ smoke_tests() {
     safe delete secret/account
 }
 
-_spruce() {
-    local url="https://github.com/geofffranks/spruce/releases/download"
-    local version=$(grep spruce ${repo_root}/.versions | cut -d= -f2)
-    local cli_path=${repo_root}/bin/spruce
-
-    if ! ( [ -f ${cli_path} ] && ${cli_path} --version | head -n 1 | grep ${version} > /dev/null); then
-      echo "installing spruce cli '${version}' into: ${repo_root}/bin/"
-      pushd $(mktemp -d)
-      curl -s -L >spruce "${url}/v${version}/spruce-$(platform)-amd64"
-      chmod +x spruce
-      mv spruce ${repo_root}/bin/
-      popd
-    fi
-}
-
 # TODO: get rid of jq and spruce if possible otherwise add jq cli
 offline() {
-  echo "Getting dependecies"
-  _spruce
+  set -e
+  echo "Checking for missing dependecies"
   _credhub_download
   _bbr_download
+  _uaa_download
+  _safe_download
 
   yml_filelocation=${project_root}/operators
   offline_filelocation=${project_root}/src/offline_resources
 
-  releases=$(spruce json <(echo "releases:"; ${repo_root}/bin/bucc int --path /releases))
-  relases_candidates=$(echo ${releases} | jq '.releases[] | select(.url)')
+  release_names=$(int --path /releases | grep name: | awk '{print $3}')
 
   echo "Downloading releases this can take a while!"
   temp_dir=$(mktemp -d)
   trap "rm -rf ${temp_dir}" EXIT
   mkdir -p ${yml_filelocation} ${offline_filelocation}
   pushd ${temp_dir}
-  for release in $(echo ${relases_candidates} | jq -c '.'); do
+  for release_name in $release_names; do
 
-    name=$(echo ${release} | jq -r '.name')
-    version=$(echo ${release} | jq -r '.version')
-    url=$(echo ${release} | jq -r '.url')
-    sha1=$(echo ${release} | jq -r '.sha1')
-    filename="${name}-${version}.tgz"
+    version=$(int --path /releases/name=$release_name/version)
+    url=$(int --path /releases/name=$release_name/url)
+    sha1=$(int --path /releases/name=$release_name/sha1)
+    filename="${release_name}-${version}.tgz"
 
     if [ ! -f "${offline_filelocation}/${filename}" ]; then
-      echo "Starting to Download ${name}-release"
+      echo "Starting to Download ${release_name}-release"
       curl --retry 5 -s -f -o ${filename} -L ${url}
 
-      cat > "9x-${name}-offfline-compiled-release.yml" <<YML
+      cat > "9x-${release_name}-offfline-compiled-release.yml" <<YML
       - type: replace
-        path: /releases/name=${name}?
+        path: /releases/name=${release_name}?
         value:
-          name: ${name}
+          name: ${release_name}
           version: ${version}
           url: "file://../offline_resources/${filename}"
           sha1: ${sha1}
 YML
-    echo "Moving files for ${name}-release"
+    echo "Moving files for ${release_name}-release"
     mv *.yml ${yml_filelocation} &>/dev/null
     mv *.tgz ${offline_filelocation} &>/dev/null
-    echo "Downloaded ${name}-release"
+    echo "Downloaded ${release_name}-release"
   else
-    echo "Release ${name}-release was already downloaded"
+    echo "Release ${release_name}-release was already downloaded"
   fi
   done
 
-  stemcell=$(spruce json <(${repo_root}/bin/bucc int --path /resource_pools/name=vms/stemcell) | jq 'select(.url)')
-  stemcell_sha1=$(echo ${stemcell} | jq -r '.sha1')
-  stemcell_url=$(echo ${stemcell} | jq -r '.url')
+  stemcell_sha1=$(int --path /resource_pools/name=vms/stemcell/sha1)
+  stemcell_url=$(int --path /resource_pools/name=vms/stemcell/url)
   # TODO: getting the name could be handled better
   stemcell_name=$(echo ${stemcell_url} | cut -d "-" -f 2,3,4,5)
   # TODO: make get version more robust
