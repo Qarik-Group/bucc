@@ -30,7 +30,6 @@ echo ${VARS} > "vars.yml"
 echo 0 > /proc/sys/net/ipv4/ip_forward
 trap "echo 1 > /proc/sys/net/ipv4/ip_forward" EXIT
 ./bin/bucc up
-# Enable internet access
 
 
 popd > /dev/null
