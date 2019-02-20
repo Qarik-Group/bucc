@@ -461,6 +461,7 @@ _safe_download() {
 
 _safe() {
   _safe_download
+  local cli_path=${repo_root}/bin/safe
   ${cli_path} target -k $(get_var vault_url) $(_alias)
   echo $(get_var credhub_username):$(get_var credhub_password) | ${cli_path} auth token
 }
