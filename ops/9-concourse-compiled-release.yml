@@ -2,6 +2,6 @@
   path: /releases/name=concourse?
   value:
     name: concourse
-    version: 4.2.2
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-4.2.2-ubuntu-xenial-170.21-20190122-131718-823983069.tgz
-    sha1: 7cb382f7dbb8a92493e865f72b4910661db865df
+    version: 4.2.3
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-4.2.3-ubuntu-xenial-250.9-20190223-005706-751116974.tgz
+    sha1: 3d56ef8d99a71b4a6c98584449b0b9ab136ae572
