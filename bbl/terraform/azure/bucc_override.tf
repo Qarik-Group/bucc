@@ -10,7 +10,7 @@ output "director__load_balancer" {
 # add vault port for jumpbox
 resource "azurerm_network_security_rule" "vault" {
   name                        = "${var.env_id}-vault"
-  priority                    = 204
+  priority                    = 300
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
