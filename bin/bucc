@@ -320,6 +320,7 @@ env() {
     echo "export BOSH_GW_USER=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)"
     echo "export BOSH_GW_HOST=$(ip)"
     echo "export BOSH_GW_PRIVATE_KEY=$(ssh_private_key jumpbox_ssh)"
+    echo "export CREDHUB_SERVER=$(get_var credhub_url)"
     echo "export CREDHUB_CLIENT=$(get_var credhub_username)"
     echo "export CREDHUB_SECRET=$(get_var credhub_password)"
     echo "export CREDHUB_CA_CERT=$(ca_cert)"
