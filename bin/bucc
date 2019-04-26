@@ -271,9 +271,9 @@ vars() {
     echo "credhub_username: credhub-admin"
     echo "credhub_password: $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/credhub-admin/secret)"
     echo "vault_url: https://$(int --path /instance_groups/0/jobs/name=vault-credhub-proxy/properties/address)"
-    echo "concourse_url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
-    echo "concourse_username: $(int --path /instance_groups/0/jobs/name=atc/properties/add_local_users/0 | cut -d: -f1)"
-    echo "concourse_password: $(int --path /instance_groups/0/jobs/name=atc/properties/add_local_users/0 | cut -d: -f2)"
+    echo "concourse_url: $(int --path /instance_groups/0/jobs/name=web/properties/external_url)"
+    echo "concourse_username: $(int --path /instance_groups/0/jobs/name=web/properties/add_local_users/0 | cut -d: -f1)"
+    echo "concourse_password: $(int --path /instance_groups/0/jobs/name=web/properties/add_local_users/0 | cut -d: -f2)"
     echo "concourse_ca_cert: |"
     echo "$(cat $(ca_cert) | sed 's/^/  /')"
 }
@@ -543,6 +543,17 @@ jump() {
     echo $BOSH_ALL_PROXY | sed -e 's$ssh+socks5://\(.*\):.*=\(.*\)$-o "ProxyCommand=ssh \1 -i \2 nc %h %p"$g'
 }
 
+_scp() {
+    tmp_config=$(mktemp)
+    if [[ "$BOSH_ALL_PROXY" == "ssh+socks5"* ]]; then
+        echo $BOSH_ALL_PROXY | sed -e 's$ssh+socks5://\(.*\):\(.*\)?.*=\(.*\)$ProxyCommand ssh -W %h:%p \1 -p \2 -i \3$g' > ${tmp_config}
+    fi
+    local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
+    cmd="scp -i $(ssh_private_key jumpbox_ssh) -F ${tmp_config} $1 $user@$(ip):$2"
+    
+    ${cmd} 
+    rm ${tmp_config}
+}
 _ssh() {
     tmp_config=$(mktemp)
     if [[ "$BOSH_ALL_PROXY" == "ssh+socks5"* ]]; then
@@ -550,6 +561,7 @@ _ssh() {
     fi
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
     cmd="ssh -i $(ssh_private_key jumpbox_ssh) -F ${tmp_config} $user@$(ip)"
+    
     if [ $# -eq 0 ]; then
         ${cmd} -t 'command; sudo su -'
     else
@@ -726,6 +738,10 @@ case "$1" in
     ssh)
         shift
         _ssh "$@"
+        ;;
+    scp)
+        shift
+        _scp "$@"
         ;;
 
     rotate-certs)
