@@ -1,6 +1,6 @@
 # CONCOURSE
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=atc/properties/external_url
+  path: /instance_groups/name=bosh/jobs/name=web/properties/external_url
   value: &external_url https://((concourse_domain))
 
 - type: replace
@@ -14,7 +14,7 @@
   value: https://((concourse_domain))/sky/issuer/callback
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=atc/properties/generic_oauth/auth_url
+  path: /instance_groups/name=bosh/jobs/name=web/properties/generic_oauth/auth_url
   value: "https://((concourse_domain)):8443/oauth/authorize"
 
 - type: replace
