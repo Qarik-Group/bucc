@@ -42,7 +42,7 @@
       token_signing_key: ((token_signing_key))
       worker_gateway:
         host_key: ((tsa_host_key))
-        authorized_keys: | 
+        authorized_keys: |
           ((worker_key.public_key))
 
 
@@ -55,7 +55,8 @@
       ephemeral: true
       worker_gateway:
         worker_key: ((worker_key))
-        hosts: 
+        host_public_key: ((tsa_host_key.public_key))
+        hosts:
         - 127.0.0.1:2222
 
 - type: replace
