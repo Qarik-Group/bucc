@@ -11,3 +11,11 @@
 - type: replace
   path: /instance_groups/name=bosh/networks/name=default/static_ips
   value: [((static_ip))]
+
+- type: replace
+  path: /cloud_provider/mbus
+  value: https://mbus:((mbus_bootstrap_password))@((static_ip)):6868
+
+- type: replace
+  path: /variables/name=mbus_bootstrap_ssl/options/alternative_names/-
+  value: ((static_ip))
