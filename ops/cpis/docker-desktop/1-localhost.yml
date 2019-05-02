@@ -1,0 +1,13 @@
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/PortBindings?
+  value:
+    443/tcp: [{ HostPort: "443", HostIp: "0.0.0.0" }] # concourse
+    8844/tcp: [{ HostPort: "8844", HostIp: "0.0.0.0" }] # credhub
+    8200/tcp: [{ HostPort: "8200", HostIp: "0.0.0.0" }] # vault
+    8443/tcp: [{ HostPort: "8443", HostIp: "0.0.0.0" }] # uaa
+    25555/tcp: [{ HostPort: "25555", HostIp: "0.0.0.0" }] # director
+    22/tcp: [{ HostPort: "22", HostIp: "0.0.0.0" }] # ssh
+
+- type: replace
+  path: /instance_groups/name=bosh/networks/name=default/static_ips
+  value: [((static_ip))]

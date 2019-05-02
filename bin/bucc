@@ -68,7 +68,7 @@ validate_vars_file() {
     local cpi_vars=${repo_root}/ops/cpis/$(cpi)/vars.tmpl
     if [ ! -e $vars_file ]; then
         cp $cpi_vars $vars_file
-        if [ ! $(cpi) = "virtualbox" ]; then
+        if [ ! $(cpi) = "virtualbox" ] && [ ! $(cpi) = "docker-desktop" ] ; then
             echo "We just copied a template in $vars_file please adjust it to your needs"
             # we should break here or check file contents and see if we still have the right var file for the cpi
             exit 1
@@ -234,7 +234,9 @@ up() {
         echo -e "bosh create-env ${skip_drain} $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
     fi
 
-    bosh create-env ${skip_drain} $(int_args) ${state_arg} "$@"
+
+
+    bosh --tty create-env ${skip_drain} $(int_args) ${state_arg} "$@"
 }
 
 down() {
@@ -244,7 +246,7 @@ down() {
       exit 1
     fi
 
-    bosh delete-env ${skip_drain} $(int_args) ${state_arg} "$@"
+    bosh --tty delete-env ${skip_drain} $(int_args) ${state_arg} "$@"
     echo "you can use the clean command if your are planning to use a new cpi or ip"
 }
 

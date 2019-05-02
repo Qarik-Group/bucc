@@ -1,0 +1,3 @@
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=garden/properties/garden/apparmor_profile?
+  value: "" # overwrites garden-default which is the default
