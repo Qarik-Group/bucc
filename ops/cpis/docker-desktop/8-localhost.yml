@@ -21,13 +21,56 @@
   value: [((static_ip))]
 
 - type: replace
-  path: /cloud_provider/mbus
-  value: https://mbus:((mbus_bootstrap_password))@((static_ip)):6868
+  path: /variables/name=mbus_bootstrap_ssl/options/alternative_names/-
+  value: ((static_ip))
 
 - type: replace
-  path: /variables/name=mbus_bootstrap_ssl/options/alternative_names/-
+  path: /variables/name=director_ssl/options/alternative_names/-
+  value: ((static_ip))
+
+- type: replace
+  path: /variables/name=director_ssl/options/alternative_names/-
+  value: ((static_ip))
+
+- type: replace
+  path: /variables/name=credhub_tls/options/alternative_names/-
+  value: ((static_ip))
+
+- type: replace
+  path: /variables/name=uaa_ssl/options/alternative_names/-
+  value: ((static_ip))
+
+- type: replace
+  path: /variables/name=atc_ssl/options/alternative_names/-
+  value: ((static_ip))
+
+- type: replace
+  path: /variables/name=vault-proxy_tls/options/alternative_names/-
   value: ((static_ip))
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=vault-credhub-proxy/properties/address
   value: ((static_ip)):8200
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1bosh_environment/value
+  value: ((static_ip))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1credhub_url/value
+  value: https://((static_ip)):8844
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1vault_url/value
+  value: https://((static_ip)):8200
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1concourse_url/value
+  value: https://((static_ip))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1concourse_tsa_host/value
+  value: ((static_ip))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1uaa_url/value
+  value: https://((static_ip)):8443
