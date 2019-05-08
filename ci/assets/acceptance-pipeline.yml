@@ -46,7 +46,7 @@ resources:
     content:
     - type: replace
       path: /instance_groups/name=docker/jobs/name=docker/properties/storage_driver?
-      value: aufs
+      value: vfs
 
 - name: bosh-deployment
   type: git
