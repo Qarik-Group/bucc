@@ -1,0 +1,34 @@
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/PortBindings?
+  value:
+    6868/tcp: [{ HostPort: "6868", HostIp: "0.0.0.0" }] # bosh agent
+    443/tcp: [{ HostPort: "443", HostIp: "0.0.0.0" }] # concourse
+    8844/tcp: [{ HostPort: "8844", HostIp: "0.0.0.0" }] # credhub
+    8200/tcp: [{ HostPort: "8200", HostIp: "0.0.0.0" }] # vault
+    8443/tcp: [{ HostPort: "8443", HostIp: "0.0.0.0" }] # uaa
+    25555/tcp: [{ HostPort: "25555", HostIp: "0.0.0.0" }] # director
+    22/tcp: [{ HostPort: "22", HostIp: "0.0.0.0" }] # ssh
+
+# disable ipv6 so agent port forwarding works
+# when enabled curl -k -I https://localhost:6868/agent results in
+# empty response
+- type: replace
+  path: /resource_pools/name=vms/env/bosh/ipv6?/enable
+  value: false
+
+- type: replace
+  path: /instance_groups/name=bosh/networks/name=default/static_ips
+  value: [((static_ip))]
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=vault-credhub-proxy/properties/address
+  value: 0.0.0.0:8200
+
+# use houdini so we can reach services on localhost
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=worker/properties/garden?/use_houdini
+  value: true
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=worker/properties/baggageclaim?/disable_user_namespaces
+  value: true

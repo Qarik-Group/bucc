@@ -24,7 +24,7 @@
           value: ((director_name))
         - name: concourse/main/bosh_environment
           type: value
-          value: ((internal_ip))
+          value: https://((internal_ip)):25555
         - name: concourse/main/bosh_ca_cert
           type: value
           value: ((director_ssl.ca))
