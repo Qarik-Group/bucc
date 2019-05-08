@@ -1,5 +1,5 @@
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=atc/properties/credhub?
+  path: /instance_groups/name=bosh/jobs/name=web/properties/credhub?
   value:
     url: "https://((internal_ip)):8844/api/"
     tls:

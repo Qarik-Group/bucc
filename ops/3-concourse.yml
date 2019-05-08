@@ -1,7 +1,7 @@
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
   value:
-    name: atc
+    name: web
     release: concourse
     properties:
       token_signing_key: ((token_signing_key))
@@ -39,17 +39,12 @@
           name: &atc_role postgres
           password: &atc_password ((postgres_password))
 
-- type: replace
-  path: /instance_groups/name=bosh/jobs/-
-  value:
-    name: tsa
-    release: concourse
-    properties:
-      host_key: ((tsa_host_key))
       token_signing_key: ((token_signing_key))
-      authorized_keys: [((worker_key.public_key))]
-      atc:
-        urls: [ "http://127.0.0.1" ]
+      worker_gateway:
+        host_key: ((tsa_host_key))
+        authorized_keys: |
+          ((worker_key.public_key))
+
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -58,21 +53,11 @@
     release: concourse
     properties:
       ephemeral: true
-      tsa:
-        host: 127.0.0.1
-        host_public_key: ((tsa_host_key.public_key))
+      worker_gateway:
         worker_key: ((worker_key))
-      baggageclaim:
-        url: http://127.0.0.1:7788
-      garden:
-        address: 127.0.0.1:7777
-
-- type: replace
-  path: /instance_groups/name=bosh/jobs/-
-  value:
-    name: baggageclaim
-    release: concourse
-    properties: {}
+        host_public_key: ((tsa_host_key.public_key))
+        hosts:
+        - 127.0.0.1:2222
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/concourse?
