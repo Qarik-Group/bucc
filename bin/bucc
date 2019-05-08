@@ -264,7 +264,7 @@ clean() {
 vars() {
     bosh int ${vars_file}
     echo "bosh_environment: $(ip)"
-    echo "bosh_target: $(ip)"
+    echo "bosh_target: https://$(ip):25555"
     echo "bosh_ca_cert: |"
     echo "$(cat $(ca_cert) | sed 's/^/  /')"
     echo "bosh_client: admin"
