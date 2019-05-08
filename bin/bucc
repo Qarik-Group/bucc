@@ -272,7 +272,7 @@ vars() {
     echo "credhub_url: $(int --path /instance_groups/0/properties/director/config_server/url | rev | cut -c6- | rev)"
     echo "credhub_username: credhub-admin"
     echo "credhub_password: $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/credhub-admin/secret)"
-    echo "vault_url: https://$(int --path /instance_groups/0/jobs/name=vault-credhub-proxy/properties/address)"
+    echo "vault_url: https://$(int --path /instance_groups/0/jobs/name=vault-credhub-proxy/properties/address  | sed 's/0.0.0.0/localhost/g')"
     echo "concourse_url: $(int --path /instance_groups/0/jobs/name=web/properties/external_url)"
     echo "concourse_username: $(int --path /instance_groups/0/jobs/name=web/properties/add_local_users/0 | cut -d: -f1)"
     echo "concourse_password: $(int --path /instance_groups/0/jobs/name=web/properties/add_local_users/0 | cut -d: -f2)"
