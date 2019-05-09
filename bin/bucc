@@ -218,6 +218,15 @@ faketty() {
     esac
 }
 
+run_hook() {
+    local hook=${repo_root}/ops/cpis/$(cpi)/${1}.sh
+    if [ -f ${hook} ]; then
+        echo "Running ${1} hook: ${hook}"
+        ${hook} ${vars_file}
+        echo ""
+    fi
+}
+
 up() {
     local flags="--cpi $(cpi)"
     local skip_drain="--skip-drain"
@@ -234,7 +243,7 @@ up() {
         echo -e "bosh create-env ${skip_drain} $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
     fi
 
-
+    run_hook "pre-up"
 
     bosh --tty create-env ${skip_drain} $(int_args) ${state_arg} "$@"
 }
@@ -247,6 +256,9 @@ down() {
     fi
 
     bosh --tty delete-env ${skip_drain} $(int_args) ${state_arg} "$@"
+
+    run_hook "post-down"
+
     echo "you can use the clean command if your are planning to use a new cpi or ip"
 }
 
@@ -553,8 +565,8 @@ _scp() {
     fi
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
     cmd="scp -i $(ssh_private_key jumpbox_ssh) -F ${tmp_config} $1 $user@$(ip):$2"
-    
-    ${cmd} 
+
+    ${cmd}
     rm ${tmp_config}
 }
 _ssh() {
@@ -564,7 +576,7 @@ _ssh() {
     fi
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
     cmd="ssh -i $(ssh_private_key jumpbox_ssh) -F ${tmp_config} $user@$(ip)"
-    
+
     if [ $# -eq 0 ]; then
         ${cmd} -t 'command; sudo su -'
     else
