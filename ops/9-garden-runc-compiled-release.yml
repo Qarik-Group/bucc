@@ -3,5 +3,5 @@
   value:
     name: garden-runc
     version: 1.19.1
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/garden-runc-1.19.1-ubuntu-xenial-315.13-20190502-100255-084595443.tgz
-    sha1: 11edf8545291801355ae70ca8120e158af7c16f2
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/garden-runc-1.19.1-ubuntu-xenial-315.22-20190515-001523-399097629.tgz
+    sha1: d6c535ec5250b59eb7e54dd3110578a145e61230
