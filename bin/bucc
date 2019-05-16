@@ -124,6 +124,10 @@ int_args() (
 
     if [ $(lite) = true ]; then
         ops_files+=(${repo_root}/ops/lite/*.yml)
+        local cpi_lite_ops_dir="${repo_root}/ops/cpis/$(cpi)/lite/*.yml"
+        if [ -f ${cpi_lite_ops_dir} ]; then
+            ops_files+=(${cpi_lite_ops_dir})
+        fi
     fi
 
     ops_files+=(${repo_root}/ops/*.yml)
