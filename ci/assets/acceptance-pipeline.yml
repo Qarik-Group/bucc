@@ -74,15 +74,15 @@ resources:
 - name: cloud-config
   type: bosh-config
   source:
-    type: cloud-config
+    config: cloud
     <<: *bosh_env
 
 resource_types:
 - name: bosh-config
   type: docker-image
   source:
-    repository: rkoster/bosh-config-resource
-    tag: latest
+    repository: cfcommunity/bosh-config-resource
+    tag: edge
 
 - name: file
   type: docker-image
