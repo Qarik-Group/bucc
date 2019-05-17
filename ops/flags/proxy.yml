@@ -24,13 +24,13 @@
   value: ((internal_ip)),((no_proxy)) 
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=garden/properties/garden/http_proxy?
+  path: /instance_groups/name=bosh/jobs/name=garden?/properties/garden/http_proxy?
   value: ((http_proxy))
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=garden/properties/garden/https_proxy?
+  path: /instance_groups/name=bosh/jobs/name=garden?/properties/garden/https_proxy?
   value: ((https_proxy))
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=garden/properties/garden/no_proxy?
+  path: /instance_groups/name=bosh/jobs/name=garden?/properties/garden/no_proxy?
   value: 127.0.0.1,((internal_ip)),((no_proxy)) 
