@@ -12,7 +12,9 @@
     release: vault-credhub-proxy
     properties:
       address: ((internal_ip)):8200
-      tls: ((vault-proxy_tls))
+      tls:
+        certificate: ((vault-proxy_tls.certificate))
+        private_key: ((vault-proxy_tls.private_key))
       credhub:
         server: "https://((internal_ip)):8844"
         ca: ((credhub_tls.ca))((uaa_ssl.ca))
