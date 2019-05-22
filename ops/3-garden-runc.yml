@@ -8,16 +8,8 @@
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=garden/properties?/garden/listen_address
-  value: 0.0.0.0:7778
-
-- type: replace
-  path: /instance_groups/name=bosh/properties/warden_cpi/warden/connect_address
-  value: 127.0.0.1:7778
+  value: 0.0.0.0:7777
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=garden/properties?/garden/allow_host_access
   value: true
-
-- path: /instance_groups/name=bosh/properties/agent/env/bosh/blobstores/0/options/endpoint?
-  type: replace
-  value: http://10.254.50.4:25250

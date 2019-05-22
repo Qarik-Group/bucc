@@ -52,6 +52,7 @@
     name: worker
     release: concourse
     properties:
+      external_garden_url: http://127.0.0.1:7777
       ephemeral: true
       worker_gateway:
         worker_key: ((worker_key))
