@@ -3,5 +3,5 @@
   value:
     name: postgres
     version: 37
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/postgres-37-ubuntu-xenial-315.34-20190528-124808-174973267.tgz
-    sha1: 1905efce5a6a1d620e4bf44e9d6b3af94e5e039c
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/postgres-37-ubuntu-xenial-315.36-20190605-053607-139691516.tgz
+    sha1: e4cc18677fb70838a9bda90f56545b47f5744ab5
