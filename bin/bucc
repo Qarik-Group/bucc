@@ -277,6 +277,14 @@ clean() {
   echo "to also cleanup your current shell run `source <(bucc env --clean)`"
 }
 
+clean_bosh_downloads() {
+    shas=$(int --path /releases | grep sha1: | awk '{print $2}')
+    shas="${shas}\n$(int --path /resource_pools/name=vms/stemcell/sha1)"
+    match=$(echo "${shas}" | xargs | sed 's/ /\\|/g')
+    pushd ~/.bosh/downloads
+    ls | grep -v "${match}" | xargs rm
+}
+
 vars() {
     bosh int ${vars_file}
     echo "bosh_environment: $(ip)"
@@ -701,6 +709,10 @@ case "$1" in
 
     clean)
         clean "$@"
+        ;;
+
+    clean_downloads)
+        clean_bosh_downloads "$@"
         ;;
 
     bosh)
