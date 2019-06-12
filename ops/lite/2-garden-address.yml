@@ -1,0 +1,3 @@
+- path: /instance_groups/name=bosh/properties/warden_cpi/warden/connect_address
+  type: replace
+  value: 127.0.0.1:7778
