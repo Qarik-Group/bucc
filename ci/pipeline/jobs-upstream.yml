@@ -4,7 +4,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, trigger: false, passed: [sanity-check] }
         - { get: bosh-deployment, trigger: true }
         - { get: bucc-ci, trigger: false}
@@ -29,7 +29,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, trigger: false, passed: [sanity-check] }
         - { get: bucc-ci, trigger: false }
         - get: bosh-release-concourse
@@ -62,7 +62,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, trigger: false, passed: [sanity-check] }
         - { get: bucc-ci, trigger: false }
         - get: bosh-release-postgres
@@ -95,7 +95,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, trigger: false, passed: [sanity-check] }
         - { get: bucc-ci, trigger: false }
         - get: bosh-release-garden-runc
@@ -128,7 +128,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, trigger: false, passed: [sanity-check] }
         - { get: bucc-ci, trigger: false }
         - get: credhub-cli
@@ -160,7 +160,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, trigger: false, passed: [sanity-check] }
         - { get: bucc-ci, trigger: false }
         - get: bbr-cli
@@ -192,7 +192,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, trigger: false, passed: [sanity-check] }
         - { get: bucc-ci, trigger: false }
         - get: bosh-cli
@@ -224,7 +224,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, trigger: false, passed: [sanity-check] }
         - { get: bucc-ci, trigger: false }
         - get: uaa-cli
@@ -256,7 +256,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, trigger: false, passed: [sanity-check] }
         - { get: bucc-ci, trigger: false }
         - get: safe-cli
