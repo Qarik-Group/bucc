@@ -29,9 +29,9 @@ jobs:
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
         tags: [vsphere]
         params: &cleanup-integration-params
-          GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
+          GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@(( grab meta.vcenter.ip ))"  ))
           GOVC_INSECURE: true
-          CLEANUP_VM_WITH_IP: 10.213.8.1
+          CLEANUP_VM_WITH_IP: 10.135.8.1
       - task: bucc-up-vsphere
         file: bucc-ci/ci/tasks/bucc-up/task.yml
         tags: [vsphere]
@@ -39,15 +39,15 @@ jobs:
           ARGS: --cpi vsphere --lite
           VARS:
             director_name: snw-bosh
-            internal_cidr: 10.213.0.0/20
-            internal_gw: 10.213.0.1
-            internal_ip: 10.213.8.1
-            network_name: net-10-213-0-0
-            vcenter_ip: 10.58.111.2
+            internal_cidr: 10.135.0.0/16
+            internal_gw: 10.135.0.1
+            internal_ip: 10.135.8.1
+            network_name: 10-135
+            vcenter_ip: (( grab meta.vcenter.ip ))
             vcenter_password: (( grab meta.vcenter.password ))
             vcenter_user: (( grab meta.vcenter.username ))
-            vcenter_dc: Interxion MAD2
-            vcenter_ds: starkwayne_hybrid
+            vcenter_dc: Buffalo-Lab
+            vcenter_ds: iSCSI-1
             vcenter_disks: bucc-ci
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
@@ -91,9 +91,9 @@ jobs:
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
         tags: [vsphere]
         params: &cleanup-upgrade-params
-          GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
+          GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@(( grab meta.vcenter.ip ))"  ))
           GOVC_INSECURE: true
-          CLEANUP_VM_WITH_IP: 10.213.8.2
+          CLEANUP_VM_WITH_IP: 10.135.8.2
       - task: bucc-up-vsphere
         input_mapping: { bucc: bucc-stable }
         file: bucc-ci/ci/tasks/bucc-up/task.yml
@@ -102,15 +102,15 @@ jobs:
           ARGS: --cpi vsphere
           VARS:
             director_name: snw-bosh
-            internal_cidr: 10.213.0.0/20
-            internal_gw: 10.213.0.1
-            internal_ip: 10.213.8.2
-            network_name: net-10-213-0-0
-            vcenter_ip: 10.58.111.2
+            internal_cidr: 10.135.0.0/16
+            internal_gw: 10.135.0.1
+            internal_ip: 10.135.8.2
+            network_name: 10-135
+            vcenter_ip: (( grab meta.vcenter.ip ))
             vcenter_password: (( grab meta.vcenter.password ))
             vcenter_user: (( grab meta.vcenter.username ))
-            vcenter_dc: Interxion MAD2
-            vcenter_ds: starkwayne_hybrid
+            vcenter_dc: Buffalo-Lab
+            vcenter_ds: iSCSI-1
             vcenter_disks: bucc-ci
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
@@ -156,9 +156,9 @@ jobs:
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
         tags: [vsphere]
         params: &cleanup-dr-params
-          GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
+          GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@(( grab meta.vcenter.ip ))"  ))
           GOVC_INSECURE: true
-          CLEANUP_VM_WITH_IP: 10.213.8.3
+          CLEANUP_VM_WITH_IP: 10.135.8.3
       - task: bucc-up
         file: bucc-ci/ci/tasks/bucc-up/task.yml
         tags: [vsphere]
@@ -169,12 +169,12 @@ jobs:
             internal_cidr: 10.213.0.0/20
             internal_gw: 10.213.0.1
             internal_ip: 10.213.8.3
-            network_name: net-10-213-0-0
-            vcenter_ip: 10.58.111.2
+            network_name: 10-135
+            vcenter_ip: (( grab meta.vcenter.ip ))
             vcenter_password: (( grab meta.vcenter.password ))
             vcenter_user: (( grab meta.vcenter.username ))
-            vcenter_dc: Interxion MAD2
-            vcenter_ds: starkwayne_hybrid
+            vcenter_dc: Buffalo-Lab
+            vcenter_ds: iSCSI-1
             vcenter_disks: bucc-ci
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
