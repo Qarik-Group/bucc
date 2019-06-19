@@ -23,7 +23,7 @@ source .envrc # if not using direnv
 Choose your cpi:
 ```
 bucc up --help
-  --cpi      Cloud provider: [softlayer, virtualbox, gcp, vsphere, aws, docker, azure, 1-extra-ports.yml, openstack]
+  --cpi      Cloud provider: [aws, virtualbox, gcp, docker-desktop, softlayer, openstack, azure, docker, vsphere]
   --lite     Created bosh will use the warden cpi with garden runc
   --recreate Recreate VM in deployment, also when there are no changes
   --debug    Show arguments passed to 'bosh create-env'
@@ -35,14 +35,14 @@ bucc up --help
   --proxy
 
   Optional cpi specific flags:
-    softlayer: --cpi-dynamic
+    aws: --auto-assign-public-ip --lb-target-groups --security-groups --spot-instance
     virtualbox: --remote
     gcp: --ephemeral-external-ip --service-account --target-pool
-    vsphere: --dns --resource-pool
-    aws: --auto-assign-public-ip --lb-target-groups --security-groups --spot-instance
-    docker: --unix-sock
-    azure: --load-balancer --managed-disks
+    softlayer: --cpi-dynamic
     openstack: --custom-ca --disk-az --dns --floating-ip --ignore-server-availability-zone --keystone-v2 --ntp --root-disk-size --trusted-certs
+    azure: --load-balancer --managed-disks
+    docker: --unix-sock
+    vsphere: --dns --resource-pool
 ```
 
 From the repo root run:

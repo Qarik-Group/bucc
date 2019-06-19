@@ -11,6 +11,7 @@ meta:
   vcenter:
     username: (( param "Please specify the username used for vCenter" ))
     password: (( param "Please specify the password used for vCenter" ))
+    ip: vsphere.lab.starkandwayne.com
 
   github:
     uri:          (( concat "git@github.com:" meta.github.owner "/" meta.github.repo ))
