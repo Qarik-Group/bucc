@@ -269,11 +269,12 @@ jobs:
 
 - name: rc
   public: true
+  serial: true
   plan:
     - do:
       - in_parallel:
           - { get: bucc,    trigger: true,  passed: [pre] }
-          - { get: version, trigger: true, passed: [pre], params: {pre: rc} }
+          - { get: version, trigger: false, passed: [pre], params: {pre: rc} }
       - put: version
         params: {file: version/number}
       on_failure:
