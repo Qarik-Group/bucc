@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 repo_root=$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))
 
 if [ -e "bbl-state.json" ]; then
