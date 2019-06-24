@@ -260,6 +260,11 @@ down() {
     fi
 
     bosh --tty delete-env ${skip_drain} $(int_args) ${state_arg} "$@"
+    exit_code=$?
+    if [[ $exit_code -ne 0 ]]; then
+      exit $exit_code
+    fi
+
 
     run_hook "post-down"
 
