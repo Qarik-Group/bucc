@@ -22,4 +22,4 @@ params:
   ARGS:
 
 run:
-  path: bucc-ci/ci/tasks/bucc-up/task
+  path: bucc-ci/ci/tasks/bucc-offline/task

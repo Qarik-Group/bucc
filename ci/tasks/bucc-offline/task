@@ -19,16 +19,21 @@ pushd bucc > /dev/null
 echo "Bucc version"
 ./bin/bucc | head -n1
 
+echo "Creating vars file"
 echo ${VARS} > "vars.yml"
 
+echo "Creating offline tarball"
 ./bin/bucc offline ${ARGS}
 
 # TODO: are we going to test  and use extract tarbal?
 
 # TODO: should we trap the ip ip_forward so that even if bucc fails the network is enabled again.
 # Disable internet access
+echo "Disable internet"
 echo 0 > /proc/sys/net/ipv4/ip_forward
 trap "echo 1 > /proc/sys/net/ipv4/ip_forward" EXIT
+
+echo "Run BUCC up"
 ./bin/bucc up
 
 
