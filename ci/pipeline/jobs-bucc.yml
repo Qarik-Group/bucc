@@ -228,7 +228,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, trigger: true, passed: [sanity-check] }
         - { get: bucc-ci }
       - task: cleanup-vsphere
