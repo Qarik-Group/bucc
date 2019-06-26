@@ -3,7 +3,7 @@ jobs:
   public: true
   serial: true
   plan:
-  - aggregate:
+  - in_parallel:
     - { get: compile-manifest, resource: compiled-releases-manifest }
     - { get: bucc, trigger: true, passed: [sanity-check] }
     - { get: bucc-ci }
@@ -18,7 +18,7 @@ jobs:
       - name: bucc-bbr
       - name: vault-credhub-proxy
       - name: director-bosh-dns
-      - name: bosh-dns
+      - name: bosh-dnsf
       - name: garden-runc
   - put: compiled-releases-manifest
     params: { repository: compile-manifest-out }
@@ -28,7 +28,7 @@ jobs:
   serial: true
   serial_groups: [ bosh-lite ]
   plan:
-  - aggregate:
+  - in_parallel:
     - { get: compiled-releases-manifest, trigger: true }
     - { get: bucc-ci }
   - task: upload-stemcell
@@ -58,7 +58,7 @@ jobs:
   - task: remove-already-compiled-releases
     input_mapping: { compiled-releases-in: compile }
     file: bucc-ci/ci/tasks/remove-already-compiled-releases/task.yml
-  - aggregate:
+  - in_parallel:
     - try:
         put: compiled-releases-concourse
         params: { file: "compiled-releases-clean/concourse*.tgz", acl: public-read }

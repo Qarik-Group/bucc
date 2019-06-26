@@ -41,7 +41,8 @@ gen_manifest() {
 
     ./bin/bucc int --var-errs > ${manifest}
 
-    if ! grep -q ${cpi} ${manifest}; then
+    real_cpi=$(echo "${cpi}" | sed "s/-desktop//g")
+    if ! grep -q ${real_cpi} ${manifest}; then
         echo "Invalid manifest missing cpi: ${cpi}"
         echo ""
         cat ${manifest}

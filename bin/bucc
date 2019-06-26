@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 repo_root=$(dirname $(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd))
 
 if [ -e "bbl-state.json" ]; then
@@ -68,7 +68,7 @@ validate_vars_file() {
     local cpi_vars=${repo_root}/ops/cpis/$(cpi)/vars.tmpl
     if [ ! -e $vars_file ]; then
         cp $cpi_vars $vars_file
-        if [ ! $(cpi) = "virtualbox" ]; then
+        if [ ! $(cpi) = "virtualbox" ] && [ ! $(cpi) = "docker-desktop" ] ; then
             echo "We just copied a template in $vars_file please adjust it to your needs and run the command again"
             # we should break here or check file contents and see if we still have the right var file for the cpi
             exit 1
@@ -124,6 +124,10 @@ int_args() (
 
     if [ $(lite) = true ]; then
         ops_files+=(${repo_root}/ops/lite/*.yml)
+        local cpi_lite_ops_dir="${repo_root}/ops/cpis/$(cpi)/lite"
+        if [ -d "${cpi_lite_ops_dir}" ]; then
+            ops_files+=(${cpi_lite_ops_dir}/*.yml)
+        fi
     fi
 
     ops_files+=(${repo_root}/ops/*.yml)
@@ -236,6 +240,15 @@ faketty() {
     esac
 }
 
+run_hook() {
+    local hook=${repo_root}/ops/cpis/$(cpi)/${1}.sh
+    if [ -f ${hook} ]; then
+        echo "Running ${1} hook: ${hook}"
+        ${hook} ${vars_file}
+        echo ""
+    fi
+}
+
 up() {
     local flags="--cpi $(cpi)"
     local skip_drain="--skip-drain"
@@ -252,7 +265,9 @@ up() {
         echo -e "bosh create-env ${skip_drain} $(int_args | sed 's/yml/yml \\ \\n/g') ${state_arg}\n"
     fi
 
-    bosh create-env ${skip_drain} $(int_args) ${state_arg} "$@"
+    run_hook "pre-up"
+
+    bosh --tty create-env ${skip_drain} $(int_args) ${state_arg} "$@"
 }
 
 down() {
@@ -262,7 +277,10 @@ down() {
       exit 1
     fi
 
-    bosh delete-env ${skip_drain} $(int_args) ${state_arg} "$@"
+    bosh --tty delete-env ${skip_drain} $(int_args) ${state_arg} "$@"
+
+    run_hook "post-down"
+
     echo "you can use the clean command if your are planning to use a new cpi or ip"
 }
 
@@ -277,10 +295,18 @@ clean() {
   echo "to also cleanup your current shell run `source <(bucc env --clean)`"
 }
 
+clean_bosh_downloads() {
+    shas=$(int --path /releases | grep sha1: | awk '{print $2}')
+    shas="${shas}\n$(int --path /resource_pools/name=vms/stemcell/sha1)"
+    match=$(echo "${shas}" | xargs | sed 's/ /\\|/g')
+    pushd ~/.bosh/downloads
+    ls | grep -v "${match}" | xargs rm
+}
+
 vars() {
     bosh int ${vars_file}
     echo "bosh_environment: $(ip)"
-    echo "bosh_target: $(ip)"
+    echo "bosh_target: https://$(ip):25555"
     echo "bosh_ca_cert: |"
     echo "$(cat $(ca_cert) | sed 's/^/  /')"
     echo "bosh_client: admin"
@@ -288,10 +314,10 @@ vars() {
     echo "credhub_url: $(int --path /instance_groups/0/properties/director/config_server/url | rev | cut -c6- | rev)"
     echo "credhub_username: credhub-admin"
     echo "credhub_password: $(int --path /instance_groups/0/jobs/name=uaa/properties/uaa/clients/credhub-admin/secret)"
-    echo "vault_url: https://$(int --path /instance_groups/0/jobs/name=vault-credhub-proxy/properties/address)"
-    echo "concourse_url: $(int --path /instance_groups/0/jobs/name=atc/properties/external_url)"
-    echo "concourse_username: $(int --path /instance_groups/0/jobs/name=atc/properties/add_local_users/0 | cut -d: -f1)"
-    echo "concourse_password: $(int --path /instance_groups/0/jobs/name=atc/properties/add_local_users/0 | cut -d: -f2)"
+    echo "vault_url: https://$(int --path /instance_groups/0/jobs/name=vault-credhub-proxy/properties/address  | sed 's/0.0.0.0/localhost/g')"
+    echo "concourse_url: $(int --path /instance_groups/0/jobs/name=web/properties/external_url)"
+    echo "concourse_username: $(int --path /instance_groups/0/jobs/name=web/properties/add_local_users/0 | cut -d: -f1)"
+    echo "concourse_password: $(int --path /instance_groups/0/jobs/name=web/properties/add_local_users/0 | cut -d: -f2)"
     echo "concourse_ca_cert: |"
     echo "$(cat $(ca_cert) | sed 's/^/  /')"
 }
@@ -338,6 +364,7 @@ env() {
     echo "export BOSH_GW_USER=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)"
     echo "export BOSH_GW_HOST=$(ip)"
     echo "export BOSH_GW_PRIVATE_KEY=$(ssh_private_key jumpbox_ssh)"
+    echo "export CREDHUB_SERVER=$(get_var credhub_url)"
     echo "export CREDHUB_CLIENT=$(get_var credhub_username)"
     echo "export CREDHUB_SECRET=$(get_var credhub_password)"
     echo "export CREDHUB_CA_CERT=$(ca_cert)"
@@ -576,6 +603,17 @@ jump() {
     echo $BOSH_ALL_PROXY | sed -e 's$ssh+socks5://\(.*\):.*=\(.*\)$-o "ProxyCommand=ssh \1 -i \2 nc %h %p"$g'
 }
 
+_scp() {
+    tmp_config=$(mktemp)
+    if [[ "$BOSH_ALL_PROXY" == "ssh+socks5"* ]]; then
+        echo $BOSH_ALL_PROXY | sed -e 's$ssh+socks5://\(.*\):\(.*\)?.*=\(.*\)$ProxyCommand ssh -W %h:%p \1 -p \2 -i \3$g' > ${tmp_config}
+    fi
+    local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
+    cmd="scp -i $(ssh_private_key jumpbox_ssh) -F ${tmp_config} $1 $user@$(ip):$2"
+
+    ${cmd}
+    rm ${tmp_config}
+}
 _ssh() {
     tmp_config=$(mktemp)
     if [[ "$BOSH_ALL_PROXY" == "ssh+socks5"* ]]; then
@@ -583,6 +621,7 @@ _ssh() {
     fi
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
     cmd="ssh -i $(ssh_private_key jumpbox_ssh) -F ${tmp_config} $user@$(ip)"
+
     if [ $# -eq 0 ]; then
         ${cmd} -t 'command; sudo su -'
     else
@@ -790,6 +829,10 @@ case "$1" in
         clean "$@"
         ;;
 
+    clean_downloads)
+        clean_bosh_downloads "$@"
+        ;;
+
     bosh)
         _bosh "$@"
         ;;
@@ -844,6 +887,10 @@ case "$1" in
     ssh)
         shift
         _ssh "$@"
+        ;;
+    scp)
+        shift
+        _scp "$@"
         ;;
 
     rotate-certs)

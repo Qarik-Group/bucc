@@ -23,7 +23,7 @@ source .envrc # if not using direnv
 Choose your cpi:
 ```
 bucc up --help
-  --cpi      Cloud provider: [softlayer, virtualbox, gcp, vsphere, aws, docker, azure, 1-extra-ports.yml, openstack]
+  --cpi      Cloud provider: [aws, virtualbox, gcp, docker-desktop, softlayer, openstack, azure, docker, vsphere]
   --lite     Created bosh will use the warden cpi with garden runc
   --recreate Recreate VM in deployment, also when there are no changes
   --debug    Show arguments passed to 'bosh create-env'
@@ -35,14 +35,14 @@ bucc up --help
   --proxy
 
   Optional cpi specific flags:
-    softlayer: --cpi-dynamic
+    aws: --auto-assign-public-ip --lb-target-groups --security-groups --spot-instance
     virtualbox: --remote
     gcp: --ephemeral-external-ip --service-account --target-pool
-    vsphere: --dns --resource-pool
-    aws: --auto-assign-public-ip --lb-target-groups --security-groups --spot-instance
-    docker: --unix-sock
-    azure: --load-balancer --managed-disks
+    softlayer: --cpi-dynamic
     openstack: --custom-ca --disk-az --dns --floating-ip --ignore-server-availability-zone --keystone-v2 --ntp --root-disk-size --trusted-certs
+    azure: --load-balancer --managed-disks
+    docker: --unix-sock
+    vsphere: --dns --resource-pool
 ```
 
 From the repo root run:
@@ -65,16 +65,16 @@ $ source <(bucc env) # should not be necessary when using direnv
 $ bosh alias-env bucc
   Using environment '192.168.50.6' as client 'admin'
 
-  Name               bosh  
-  UUID               94e87b44-a7eb-4b67-a568-52553f87cd6e  
-  Version            268.6.0 (00000000)  
-  Director Stemcell  ubuntu-xenial/170.9  
-  CPI                warden_cpi  
-  Features           compiled_package_cache: disabled  
-                     config_server: enabled  
-                     local_dns: enabled  
-                     power_dns: disabled  
-                     snapshots: disabled  
+  Name               bosh
+  UUID               94e87b44-a7eb-4b67-a568-52553f87cd6e
+  Version            268.6.0 (00000000)
+  Director Stemcell  ubuntu-xenial/170.9
+  CPI                warden_cpi
+  Features           compiled_package_cache: disabled
+                     config_server: enabled
+                     local_dns: enabled
+                     power_dns: disabled
+                     snapshots: disabled
   User               admin
 
   Succeeded
@@ -111,7 +111,7 @@ $ uaa get-client admin
     "authorities": [
       "bosh.admin"
     ],
-    "lastModified": 1549969159011 . 
+    "lastModified": 1549969159011 .
   }
 ```
 

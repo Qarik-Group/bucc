@@ -1,15 +1,15 @@
 # Remote syslog server address with port.
 # example: 0.0.0.0:514
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=atc/properties/syslog?/address
+  path: /instance_groups/name=bosh/jobs/name=web/properties/syslog?/address
   value: ((syslog_address))
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=atc/properties/syslog?/hostname
+  path: /instance_groups/name=bosh/jobs/name=web/properties/syslog?/hostname
   value: ((internal_ip))
 
 # Transport protocol for syslog messages (Currently supporting tcp, udp & tls).
 # example: tcp
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=atc/properties/syslog?/transport
+  path: /instance_groups/name=bosh/jobs/name=web/properties/syslog?/transport
   value: ((syslog_transport))

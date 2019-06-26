@@ -4,7 +4,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - get: bucc
         - get: bucc-ci
         - { get: compiled-releases-concourse, trigger: true }
@@ -31,7 +31,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - get: bucc
         - get: bucc-ci
         - { get: compiled-releases-os-conf, trigger: true }
@@ -58,7 +58,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - get: bucc
         - get: bucc-ci
         - { get: compiled-releases-credhub-importer, trigger: true }
@@ -85,7 +85,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - get: bucc
         - get: bucc-ci
         - { get: compiled-releases-postgres, trigger: true }
@@ -112,7 +112,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - get: bucc
         - get: bucc-ci
         - { get: compiled-releases-bucc-bbr, trigger: true }
@@ -139,7 +139,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - get: bucc
         - get: bucc-ci
         - { get: compiled-releases-vault-credhub-proxy, trigger: true }
@@ -166,7 +166,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - get: bucc
         - get: bucc-ci
         - { get: compiled-releases-director-bosh-dns, trigger: true }
@@ -193,7 +193,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - get: bucc
         - get: bucc-ci
         - { get: compiled-releases-bosh-dns, trigger: true }
@@ -220,7 +220,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - get: bucc
         - get: bucc-ci
         - { get: compiled-releases-garden-runc, trigger: true }
@@ -247,7 +247,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - aggregate:
+      - in_parallel:
         - { get: bucc, passed: [sanity-check], trigger: true }
         - { get: bucc-ci }
       - task: generate-bucc-creds-bbr-ops-file

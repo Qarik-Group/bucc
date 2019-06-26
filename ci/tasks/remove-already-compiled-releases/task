@@ -6,13 +6,18 @@ set -o pipefail
 pushd compiled-releases-in > /dev/null
 manifest=$(pwd)/manifest.yml
 
-stemcel_version=$(bosh int ${manifest} --path /stemcells/0/version)
+stemcell_version=$(bosh int ${manifest} --path /stemcells/0/version)
 
 for name in $(spruce json ${manifest} | jq -r '.releases[].name'); do
     version=$(bosh int ${manifest} --path /releases/name=${name}/version)
-    releases_in_s3=$(curl -s "https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/?prefix=${name}")
+    url="https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/?prefix=${name}"
+    blob="${version}-ubuntu-xenial-${stemcell_version}"
 
-    if [[ "${releases_in_s3}" != *"${version}-ubuntu-xenial-${stemcell_version}"* ]]; then
+    if ! curl -s "${url}" | grep -q "${blob}"; then
+        echo "did not find blob in ${url}"
+        echo "moving ${blob} into upload dir"
         cp ${name}*.tgz ../compiled-releases-clean/
+    else
+        echo "skipping ${blob} found in: ${url}"
     fi
 done

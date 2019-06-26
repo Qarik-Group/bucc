@@ -1,6 +1,7 @@
 aws: [ lite, normal ]
 azure: [ lite, normal ]
-docker: [ lite ]
+docker: [ lite, normal ]
+docker-desktop: [ lite ]
 google: [ lite, normal ]
 openstack: [ lite, normal ]
 virtualbox: [ lite ]

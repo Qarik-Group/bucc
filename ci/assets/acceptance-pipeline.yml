@@ -1,3 +1,13 @@
+params:
+  bosh_env: &bosh_env
+    target: ((bosh_environment))
+    client: ((bosh_client))
+    client_id: ((bosh_client))
+    client_secret: ((bosh_client_secret))
+    ca_cert: ((bosh_ca_cert))
+  deployment: &deployment
+    deployment: docker-swarm
+
 jobs:
 - name: test
   plan:
@@ -36,7 +46,7 @@ resources:
     content:
     - type: replace
       path: /instance_groups/name=docker/jobs/name=docker/properties/storage_driver?
-      value: aufs
+      value: vfs
 
 - name: bosh-deployment
   type: git
@@ -64,25 +74,15 @@ resources:
 - name: cloud-config
   type: bosh-config
   source:
-    type: cloud-config
+    config: cloud
     <<: *bosh_env
-
-params:
-  bosh_env: &bosh_env
-    target: ((bosh_environment))
-    client: ((bosh_client))
-    client_id: ((bosh_client))
-    client_secret: ((bosh_client_secret))
-    ca_cert: ((bosh_ca_cert))
-  deployment: &deployment
-    deployment: docker-swarm
 
 resource_types:
 - name: bosh-config
   type: docker-image
   source:
-    repository: rkoster/bosh-config-resource
-    tag: latest
+    repository: cfcommunity/bosh-config-resource
+    tag: edge
 
 - name: file
   type: docker-image
