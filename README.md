@@ -65,16 +65,16 @@ $ source <(bucc env) # should not be necessary when using direnv
 $ bosh alias-env bucc
   Using environment '192.168.50.6' as client 'admin'
 
-  Name               bosh  
-  UUID               94e87b44-a7eb-4b67-a568-52553f87cd6e  
-  Version            268.6.0 (00000000)  
-  Director Stemcell  ubuntu-xenial/170.9  
-  CPI                warden_cpi  
-  Features           compiled_package_cache: disabled  
-                     config_server: enabled  
-                     local_dns: enabled  
-                     power_dns: disabled  
-                     snapshots: disabled  
+  Name               bosh
+  UUID               94e87b44-a7eb-4b67-a568-52553f87cd6e
+  Version            268.6.0 (00000000)
+  Director Stemcell  ubuntu-xenial/170.9
+  CPI                warden_cpi
+  Features           compiled_package_cache: disabled
+                     config_server: enabled
+                     local_dns: enabled
+                     power_dns: disabled
+                     snapshots: disabled
   User               admin
 
   Succeeded
@@ -111,7 +111,7 @@ $ uaa get-client admin
     "authorities": [
       "bosh.admin"
     ],
-    "lastModified": 1549969159011 . 
+    "lastModified": 1549969159011 .
   }
 ```
 

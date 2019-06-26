@@ -223,6 +223,63 @@ jobs:
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": disaster-recovery-test job failed" ))'
 
+- name: offline-test
+  public: true
+  serial: true
+  plan:
+    - do:
+      - aggregate:
+        - { get: bucc, trigger: true, passed: [sanity-check] }
+        - { get: bucc-ci }
+      - task: cleanup-vsphere
+        file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        tags: [vsphere]
+        params: &cleanup-offline-params
+          GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@10.58.111.2"  ))
+          GOVC_INSECURE: true
+          CLEANUP_VM_WITH_IP: 10.213.8.4
+      - task: bucc-offline-vsphere
+        file: bucc-ci/ci/tasks/bucc-offline/task.yml
+        tags: [vsphere]
+        params:
+          ARGS: --cpi vsphere --lite
+          VARS:
+            director_name: snw-bosh
+            internal_cidr: 10.213.0.0/20
+            internal_gw: 10.213.0.1
+            internal_ip: 10.213.8.4
+            network_name: net-10-213-0-0
+            vcenter_ip: 10.58.111.2
+            vcenter_password: (( grab meta.vcenter.password ))
+            vcenter_user: (( grab meta.vcenter.username ))
+            vcenter_dc: Interxion MAD2
+            vcenter_ds: starkwayne_hybrid
+            vcenter_disks: bucc-ci
+            vcenter_templates: bucc-ci/templates
+            vcenter_vms: bucc-ci/vms
+            vcenter_cluster: cluster1
+      - task: bucc-test-vsphere
+        input_mapping: { bucc-state: bucc-state-out }
+        file: bucc-ci/ci/tasks/bucc-test/task.yml
+        tags: [vsphere]
+        attempts: 5
+      - task: bucc-down-vsphere
+        input_mapping: { bucc-state: bucc-state-out }
+        file: bucc-ci/ci/tasks/bucc-down/task.yml
+        tags: [vsphere]
+      ensure:
+        task: cleanup-vsphere
+        file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
+        tags: [vsphere]
+        params: *cleanup-offline-params
+      on_failure:
+        put: notify
+        params:
+          channel:  (( grab meta.slack.channel ))
+          username: (( grab meta.slack.username ))
+          icon_url: (( grab meta.slack.icon ))
+          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": offline-test job failed" ))'
+
 - name: pre
   public: true
   serial: true

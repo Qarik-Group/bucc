@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ -d bucc-state/state ]; then
+    mv bucc-state/{vars.yml,state} bucc/ || true
+fi
+
+# Never skip deploy, needed for DR tests
+if [ -f bucc/state/state.json ]; then
+    jq '.current_manifest_sha = ""' bucc/state/state.json > state.json
+    mv state.json bucc/state/state.json
+fi
+
+cp -r bosh-cache/.bosh ${HOME} | true
+
+pushd bucc > /dev/null
+
+echo "Bucc version"
+./bin/bucc | head -n1
+
+echo ${VARS} > "vars.yml"
+
+./bin/bucc offline ${ARGS}
+
+# TODO: are we going to test  and use extract tarbal?
+
+# TODO: should we trap the ip ip_forward so that even if bucc fails the network is enabled again.
+# Disable internet access
+echo 0 > /proc/sys/net/ipv4/ip_forward
+trap "echo 1 > /proc/sys/net/ipv4/ip_forward" EXIT
+./bin/bucc up
+
+
+popd > /dev/null
+
+mv bucc/{vars.yml,state} bucc-state-out
+
+cp -r ${HOME}/.bosh bosh-cache
