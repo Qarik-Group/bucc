@@ -728,9 +728,9 @@ YML
   stemcell_sha1=$(int --path /resource_pools/name=vms/stemcell/sha1)
   stemcell_url=$(int --path /resource_pools/name=vms/stemcell/url)
   # TODO: getting the name could be handled better
-  stemcell_name=$(echo ${stemcell_url} | cut -d "-" -f 2,3,4,5)
+  stemcell_name=$(echo ${stemcell_url} | cut -d "-" -f 6,7,8,9)
   # TODO: make get version more robust
-  stemcell_version=$(echo ${stemcell_url} | cut -d= -f2)
+  stemcell_version=$(echo ${stemcell_url} | cut -d "/" -f5)
   stemcell_filename="${stemcell_name}-${stemcell_version}.tgz"
 
   if [ ! -f "${yml_filelocation}/9x-stemcell-offfline-stemcell.yml" ]; then
