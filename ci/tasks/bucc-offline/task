@@ -29,9 +29,15 @@ echo "Creating offline tarball"
 
 # TODO: should we trap the ip ip_forward so that even if bucc fails the network is enabled again.
 # Disable internet access
-echo "Disable internet"
-echo 0 > /proc/sys/net/ipv4/ip_forward
-trap "echo 1 > /proc/sys/net/ipv4/ip_forward" EXIT
+apt-get install -q -y ufw
+ufw allow to 104.27.162.93
+ufw allow to 10.0.0.0/8
+ufw default deny outgoing
+ufw enable
+#
+# echo "Disable internet"
+# echo 0 > /proc/sys/net/ipv4/ip_forward
+# trap "echo 1 > /proc/sys/net/ipv4/ip_forward" EXIT
 
 echo "Run BUCC up"
 ./bin/bucc up

@@ -240,6 +240,7 @@ jobs:
           CLEANUP_VM_WITH_IP: 10.135.8.4
       - task: bucc-offline-vsphere
         file: bucc-ci/ci/tasks/bucc-offline/task.yml
+        privileged: true
         tags: [vsphere]
         params:
           ARGS: --cpi vsphere --lite
