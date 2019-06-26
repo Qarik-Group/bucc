@@ -286,7 +286,7 @@ jobs:
   plan:
   - do:
     - in_parallel:
-        - { get: bucc,    trigger: true,  passed: [integration-test, upgrade-test, disaster-recovery-test] }
+        - { get: bucc,    trigger: true,  passed: [integration-test, upgrade-test, disaster-recovery-test, offline-test] }
         - { get: version, trigger: true }
     - task: release-notes
       config:
