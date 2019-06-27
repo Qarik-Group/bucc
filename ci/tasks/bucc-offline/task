@@ -16,30 +16,27 @@ cp -r bosh-cache/.bosh ${HOME} | true
 
 pushd bucc > /dev/null
 
-echo "Bucc version"
+echo "==== Bucc version ===="
 ./bin/bucc | head -n1
 
-echo "Creating vars file"
+echo "==== Creating vars file ===="
 echo ${VARS} > "vars.yml"
 
-echo "Creating offline tarball"
+echo "==== Creating offline tarball ===="
 ./bin/bucc offline ${ARGS}
 
 # TODO: are we going to test  and use extract tarbal?
 
-# TODO: should we trap the ip ip_forward so that even if bucc fails the network is enabled again.
-# Disable internet access
+echo "==== Enable Firewall ===="
 apt-get install -q -y ufw
 ufw allow to 10.0.0.0/8
 ufw allow out 53
 ufw default deny outgoing
+sed -i '/ok icmp codes for INPUT/a -A ufw-before-output -p icmp -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT' /etc/ufw/before.rules
+sed -i '/ok icmp codes for INPUT/a -A ufw-before-output -p icmp -m state --state ESTABLISHED,RELATED -j ACCEPT' /etc/ufw/before.rules
 ufw enable
-#
-# echo "Disable internet"
-# echo 0 > /proc/sys/net/ipv4/ip_forward
-# trap "echo 1 > /proc/sys/net/ipv4/ip_forward" EXIT
 
-echo "Run BUCC up"
+echo "==== Run BUCC up ===="
 ./bin/bucc up
 
 
