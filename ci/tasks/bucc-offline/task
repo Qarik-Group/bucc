@@ -30,9 +30,8 @@ echo "Creating offline tarball"
 # TODO: should we trap the ip ip_forward so that even if bucc fails the network is enabled again.
 # Disable internet access
 apt-get install -q -y ufw
-ufw allow to 104.27.162.93
-ufw allow to 8.8.8.8
 ufw allow to 10.0.0.0/8
+ufw allow out 53
 ufw default deny outgoing
 ufw enable
 #
