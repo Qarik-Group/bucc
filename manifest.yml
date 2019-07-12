@@ -6,17 +6,17 @@ releases:
   url: https://bosh.io/d/github.com/concourse/concourse-bosh-release?v=5.3.0
   version: 5.3.0
 - name: os-conf
-  sha1: 78d79f08ff5001cc2a24f572837c7a9c59a0e796
-  url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=18
-  version: 18
+  sha1: 7579a96515b265c6d828924bf4f5fae115798199
+  url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=21.0.0
+  version: 21.0.0
 - name: credhub-importer
   sha1: b8dcbe24ead72f3ca93747e0630e2f34c8b89cc4
   url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/1.1.0/credhub-importer-1.1.0.tgz
   version: 1.1.0
 - name: postgres
-  sha1: 0bffec6b98df81219a18ec8da0e19721be799eed
-  url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=37
-  version: 37
+  sha1: 23620deb20c34cefadff74c0e5bfdffaaea1a807
+  url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=38
+  version: 38
 - name: bucc-bbr
   url: git+https://github.com/starkandwayne/bucc-bbr-boshrelease
   version: 8
@@ -32,13 +32,13 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.10.0
   version: 1.10.0
 - name: garden-runc
-  sha1: a7fb55e4039a41b80c579d4bf553a4aa915f9478
-  url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.19.2
-  version: 1.19.2
+  sha1: 76810f5dd66d8320b344b3eca197c5b669a3a633
+  url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.19.3
+  version: 1.19.3
 stemcells:
 - alias: large
   os: ubuntu-xenial
-  version: "315.36"
+  version: "315.64"
 update:
   canaries: 1
   canary_watch_time: 1000 - 90000
