@@ -3,5 +3,5 @@
   value:
     name: vault-credhub-proxy
     version: 1.1.4
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/vault-credhub-proxy-1.1.4-ubuntu-xenial-315.36-20190605-053701-860361408.tgz
-    sha1: 368bd33556357a3fb12b25a7b94645bef920fbc4
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/vault-credhub-proxy-1.1.4-ubuntu-xenial-315.64-20190712-123321-248499627.tgz
+    sha1: e3618f14c7be261635e8923ad7fbf6a0b789a988
