@@ -18,7 +18,7 @@ jobs:
       - name: bucc-bbr
       - name: vault-credhub-proxy
       - name: director-bosh-dns
-      - name: bosh-dnsf
+      - name: bosh-dns
       - name: garden-runc
   - put: compiled-releases-manifest
     params: { repository: compile-manifest-out }
