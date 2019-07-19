@@ -3,5 +3,5 @@
   value:
     name: concourse
     version: 5.4.0
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-5.4.0-ubuntu-xenial-315.70-20190719-145551-775054525.tgz
-    sha1: 76a5044d9e4975b4766b2d49b8fbc99455945efe
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-5.4.0-ubuntu-xenial-456.1-20190719-205045-055290346.tgz
+    sha1: 21124497f7e48127f33f2ba49f64216bdb1db699
