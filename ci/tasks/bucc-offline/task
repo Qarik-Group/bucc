@@ -25,11 +25,8 @@ echo ${VARS} > "vars.yml"
 echo "==== Creating offline tarball ===="
 ./bin/bucc offline ${ARGS} --destination /tmp/offline
 
-tar -xf /tmp/offline/bucc-*.tgz
-
+tar -xf /tmp/offline/bucc-*.tar.gz -C /tmp/offline
 pushd /tmp/offline/bucc
-
-# TODO: are we going to test  and use extract tarbal?
 
 echo "==== Enable Firewall ===="
 apt-get install -q -y ufw

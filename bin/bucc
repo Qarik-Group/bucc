@@ -757,7 +757,9 @@ YML
   filelocation=${1}
   tarfile=${filelocation}/bucc-${version}.tar.gz
   mkdir -p ${filelocation}
-  tar -zcf ${tarfile} ${project_root}
+  parentdir=$(dirname ${project_root})
+  dirname=$(basename ${project_root})
+  tar -zcf ${tarfile} -C ${parentdir} ${dirname}
   echo "Your file is located in ${tarfile}"
 
 }
