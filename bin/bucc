@@ -205,9 +205,9 @@ down_usage() {
 }
 
 offline_usage() {
-  echo "  zip file location '/tmp/' *optional"
-  echo "  --cpi    Cloud provider: [$(cpis | xargs | sed 's/ /, /g')]"
-  echo "  --lite   Created bosh will use the warden cpi with garden runc"
+  echo "  --destination  Zip file location (default: /tmp)"
+  echo "  --cpi          Cloud provider: [$(cpis | xargs | sed 's/ /, /g')]"
+  echo "  --lite         Created bosh will use the warden cpi with garden runc"
   echo "$(ls ${repo_root}/ops/flags | cut -d "." -f 1 | sed 's/^/  --/')"
   echo ""
   echo "  Optional cpi specific flags:"
@@ -677,7 +677,6 @@ smoke_tests() {
     safe delete secret/account
 }
 
-# TODO: get rid of jq and spruce if possible otherwise add jq cli
 offline() {
   set -e
   echo "Checking for missing dependecies"
@@ -755,8 +754,8 @@ YML
   echo "Compressing files"
   # FIXME: for some reason gloabl version variable is not used, but the version of the last release in the manifest
   version=$(grep bucc ${repo_root}/.versions | cut -d= -f2)
-  filelocation=${1:-'/tmp/'}
-  tarfile=${filelocation}bucc-${version}.tar.gz
+  filelocation=${1}
+  tarfile=${filelocation}/bucc-${version}.tar.gz
   tar -zcf ${tarfile} ${project_root}
   echo "Your file is located in ${tarfile}"
 
@@ -915,9 +914,10 @@ case "$1" in
         shift
         # TODO: by default virtualbox is used we need a good check
         if [ $# -eq 0 ] ; then
-            echo "Usage: $1 [--cpi] [--lite] [flags] [zip file location] [-h|--help]"
+            echo "Usage: $1 [--cpi] [--lite] [--destination] [flags] [-h|--help]"
             exit 1
         fi
+        destination=${TMPDIR:-/tmp}
         while [[ $# -gt 0 ]]; do
             case "$1" in
                 -h|--help|help)
@@ -934,6 +934,10 @@ case "$1" in
                 --lite)
                     echo "true" > ${state}/lite
                     ;;
+                --destination)
+                    destination=${2%/}
+                    shift
+                    ;;
                 *)
                     echo ${1#*--} >> ${state}/flags
             esac
@@ -944,7 +948,7 @@ case "$1" in
         validate_vars_file
         validate_cpi_flags
 
-        offline "$@"
+        offline "${destination}"
         ;;
 
     *)

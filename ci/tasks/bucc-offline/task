@@ -23,18 +23,19 @@ echo "==== Creating vars file ===="
 echo ${VARS} > "vars.yml"
 
 echo "==== Creating offline tarball ===="
-./bin/bucc offline ${ARGS}
+./bin/bucc offline ${ARGS} --destination /tmp/offline
+
+tar -xf /tmp/offline/bucc-*.tgz
+
+pushd /tmp/offline/bucc
 
 # TODO: are we going to test  and use extract tarbal?
 
 echo "==== Enable Firewall ===="
 apt-get install -q -y ufw
-ufw allow to 10.0.0.0/8
 ufw allow out from any to 10.0.0.0/8
 ufw allow out 53
 ufw default deny outgoing
-sed -i '/ok icmp codes for INPUT/a -A ufw-before-output -p icmp -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT' /etc/ufw/before.rules
-sed -i '/ok icmp codes for INPUT/a -A ufw-before-output -p icmp -m state --state ESTABLISHED,RELATED -j ACCEPT' /etc/ufw/before.rules
 ufw enable
 
 echo "==== Run BUCC up ===="
