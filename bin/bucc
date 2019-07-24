@@ -756,6 +756,7 @@ YML
   version=$(grep bucc ${repo_root}/.versions | cut -d= -f2)
   filelocation=${1}
   tarfile=${filelocation}/bucc-${version}.tar.gz
+  mkdir -p ${filelocation}
   tar -zcf ${tarfile} ${project_root}
   echo "Your file is located in ${tarfile}"
 
