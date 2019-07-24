@@ -180,3 +180,13 @@ tar -xf ${last_backup}/bosh-0-bucc-creds.tar -C state
 bucc up # clean BUCC with credentials (creds.yml) from backup
 bucc bbr restore --artifact-path=${last_backup}
 ```
+
+## Support for air gaped environments
+To use bucc in offline environment run:
+
+```
+bucc offline --cpi virtualbox --lite --destination /tmp/offline
+# copy /tmp/offline/bucc-*.tgz to your offline envrionment
+tar -xf bucc-*.tgz && bucc
+./bin/bucc up
+```
