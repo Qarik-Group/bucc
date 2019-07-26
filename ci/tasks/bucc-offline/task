@@ -26,6 +26,8 @@ echo "==== Creating offline tarball ===="
 ./bin/bucc offline ${ARGS} --destination /tmp/offline
 
 tar -xf /tmp/offline/bucc-*.tar.gz -C /tmp/offline
+
+popd
 pushd /tmp/offline/bucc
 
 echo "==== Enable Firewall ===="
@@ -38,9 +40,8 @@ ufw enable
 echo "==== Run BUCC up ===="
 ./bin/bucc up
 
-
 popd > /dev/null
 
-mv bucc/{vars.yml,state} bucc-state-out
+mv /tmp/offline/bucc/{vars.yml,state} bucc-state-out
 
 cp -r ${HOME}/.bosh bosh-cache
