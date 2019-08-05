@@ -41,7 +41,6 @@
         uaa_concourse_client_secret: ((uaa_concourse_client_secret))
         uaa_encryption_key_1: ((uaa_encryption_key_1))
         uaa_jwt_signing_key: ((uaa_jwt_signing_key))
-        uaa_login_client_secret: ((uaa_login_client_secret))
         uaa_service_provider_ssl: ((uaa_service_provider_ssl))
         uaa_ssl: ((uaa_ssl))
         ui_password: ((ui_password))
