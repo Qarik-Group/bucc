@@ -5,6 +5,11 @@
   path: /networks/name=default/type
   value: dynamic
 
+- type: replace
+  path: /networks/name=default/cloud_properties
+  value:
+    subnet: ((network))
+
 - type: remove
   path: /resource_pools/name=vms/cloud_properties/ports
 
