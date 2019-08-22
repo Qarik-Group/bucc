@@ -11,7 +11,7 @@
     name: vault-credhub-proxy
     release: vault-credhub-proxy
     properties:
-      address: ((internal_ip)):8200
+      address: 0.0.0.0:8200
       tls:
         certificate: ((vault-proxy_tls.certificate))
         private_key: ((vault-proxy_tls.private_key))
