@@ -6,6 +6,11 @@
   value: dynamic
 
 - type: replace
+  path: /networks/name=default/dns?
+  value:
+  - 8.8.4.4
+
+- type: replace
   path: /networks/name=default/cloud_properties?
   value:
     name: ((network))
@@ -19,3 +24,4 @@
     8200/tcp: [{ HostPort: "8200", HostIp: ((internal_ip)) }] # vault
     8443/tcp: [{ HostPort: "8443", HostIp: ((internal_ip)) }] # uaa
     25555/tcp: [{ HostPort: "25555", HostIp: ((internal_ip)) }] # director
+    25250/tcp: [{ HostPort: "25250", HostIp: ((internal_ip)) }] # blobstore
