@@ -20,6 +20,7 @@
   value:
     6868/tcp: [{ HostPort: "6868", HostIp: ((internal_ip)) }] # bosh agent
     443/tcp: [{ HostPort: "443", HostIp: ((internal_ip)) }] # concourse
+    4222/tcp: [{ HostPort: "4222", HostIp: ((internal_ip)) }] # nats
     8844/tcp: [{ HostPort: "8844", HostIp: ((internal_ip)) }] # credhub
     8200/tcp: [{ HostPort: "8200", HostIp: ((internal_ip)) }] # vault
     8443/tcp: [{ HostPort: "8443", HostIp: ((internal_ip)) }] # uaa
