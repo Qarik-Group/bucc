@@ -1,0 +1,20 @@
+- type: remove
+  path: /networks/name=default/subnets
+
+- type: replace
+  path: /networks/name=default/type
+  value: dynamic
+
+- type: remove
+  path: /resource_pools/name=vms/cloud_properties/ports
+
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/PortBindings?
+  value:
+    6868/tcp: [{ HostPort: "6868", HostIp: ((internal_ip)) }] # bosh agent
+    443/tcp: [{ HostPort: "443", HostIp: ((internal_ip)) }] # concourse
+    8844/tcp: [{ HostPort: "8844", HostIp: ((internal_ip)) }] # credhub
+    8200/tcp: [{ HostPort: "8200", HostIp: ((internal_ip)) }] # vault
+    8443/tcp: [{ HostPort: "8443", HostIp: ((internal_ip)) }] # uaa
+    25555/tcp: [{ HostPort: "25555", HostIp: ((internal_ip)) }] # director
+    22/tcp: [{ HostPort: "22", HostIp: ((internal_ip)) }] # ssh
