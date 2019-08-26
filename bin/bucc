@@ -588,7 +588,7 @@ int() {
 }
 
 ip() {
-    int --path /networks/name=default/subnets/0/static/0
+    get_var internal_ip
 }
 
 ssh_private_key() {
