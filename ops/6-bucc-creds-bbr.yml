@@ -10,6 +10,7 @@
         blobstore_agent_password: ((blobstore_agent_password))
         blobstore_ca: ((blobstore_ca))
         blobstore_director_password: ((blobstore_director_password))
+        blobstore_secret: ((blobstore_secret))
         blobstore_server_tls: ((blobstore_server_tls))
         credhub_admin_client_secret: ((credhub_admin_client_secret))
         credhub_ca: ((credhub_ca))
