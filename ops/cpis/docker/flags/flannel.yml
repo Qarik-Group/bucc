@@ -1,28 +1,28 @@
-- type: remove
-  path: /networks/name=default/subnets
-
-- type: replace
-  path: /networks/name=default/type
-  value: dynamic
-
-- type: replace
-  path: /networks/name=default/dns?
-  value:
-  - 8.8.4.4
-
-- type: replace
-  path: /networks/name=default/cloud_properties?
-  value:
-    name: ((network))
+# - type: remove
+#   path: /networks/name=default/subnets
+#
+# - type: replace
+#   path: /networks/name=default/type
+#   value: dynamic
+#
+# - type: replace
+#   path: /networks/name=default/dns?
+#   value:
+#   - 8.8.4.4
+#
+# - type: replace
+#   path: /networks/name=default/cloud_properties?
+#   value:
+#     name: ((network))
 
 - type: replace
   path: /resource_pools/name=vms/cloud_properties/PortBindings?
   value:
-    6868/tcp: [{ HostPort: "6868", HostIp: ((internal_ip)) }] # bosh agent
-    443/tcp: [{ HostPort: "443", HostIp: ((internal_ip)) }] # concourse
-    4222/tcp: [{ HostPort: "4222", HostIp: ((internal_ip)) }] # nats
-    8844/tcp: [{ HostPort: "8844", HostIp: ((internal_ip)) }] # credhub
-    8200/tcp: [{ HostPort: "8200", HostIp: ((internal_ip)) }] # vault
-    8443/tcp: [{ HostPort: "8443", HostIp: ((internal_ip)) }] # uaa
-    25555/tcp: [{ HostPort: "25555", HostIp: ((internal_ip)) }] # director
-    25250/tcp: [{ HostPort: "25250", HostIp: ((internal_ip)) }] # blobstore
+    # 6868/tcp: [{ HostPort: "6868", HostIp: ((internal_ip)) }] # bosh agent
+    443/tcp: [{ HostPort: "443", HostIp: 0.0.0.0 }] # concourse
+    # 4222/tcp: [{ HostPort: "4222", HostIp: ((internal_ip)) }] # nats
+    # 8844/tcp: [{ HostPort: "8844", HostIp: ((internal_ip)) }] # credhub
+    # 8200/tcp: [{ HostPort: "8200", HostIp: ((internal_ip)) }] # vault
+    8443/tcp: [{ HostPort: "8443", HostIp: 0.0.0.0 }] # uaa
+    # 25555/tcp: [{ HostPort: "25555", HostIp: ((internal_ip)) }] # director
+    # 25250/tcp: [{ HostPort: "25250", HostIp: ((internal_ip)) }] # blobstore
