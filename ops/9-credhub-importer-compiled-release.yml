@@ -3,5 +3,5 @@
   value:
     name: credhub-importer
     version: 1.1.0
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/credhub-importer-1.1.0-ubuntu-xenial-456.14-20190827-231330-946085363.tgz
-    sha1: 2eddd8fc7d16d3a00eb7e69101501d6ee6ce4261
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/credhub-importer-1.1.0-ubuntu-xenial-456.16-20190831-020136-405295653.tgz
+    sha1: 2d7f498d666b0f831cc6af9c53ffaf98521c5010
