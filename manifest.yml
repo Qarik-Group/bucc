@@ -2,9 +2,9 @@ instance_groups: []
 name: compile-releases
 releases:
 - name: concourse
-  sha1: c7051a773cc33435f7d608a020d8e0765c8faf4a
-  url: https://bosh.io/d/github.com/concourse/concourse-bosh-release?v=5.4.1
-  version: 5.4.1
+  sha1: 8297b003456f73512474ef4928aa811b567cffef
+  url: https://bosh.io/d/github.com/concourse/concourse-bosh-release?v=5.5.0
+  version: 5.5.0
 - name: os-conf
   sha1: 7579a96515b265c6d828924bf4f5fae115798199
   url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=21.0.0
@@ -32,13 +32,13 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.10.0
   version: 1.10.0
 - name: garden-runc
-  sha1: 7302a9a6af254f79ca57d327c6d5afdf0c17031b
-  url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.19.5
-  version: 1.19.5
+  sha1: 6bf0e0615112ebf989d2884c0ee740d13ba5e3a1
+  url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.19.6
+  version: 1.19.6
 stemcells:
 - alias: large
   os: ubuntu-xenial
-  version: "456.16"
+  version: "456.22"
 update:
   canaries: 1
   canary_watch_time: 1000 - 90000
