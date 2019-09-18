@@ -8,7 +8,7 @@ The bucc command line utility allows for easy bootstrapping of the BUCC stack (B
 
 1. Install [BOSH CLI v2.0.1+](https://bosh.io/docs/cli-v2.html) and [dependencies](https://bosh.io/docs/cli-v2-install/#additional-dependencies).
 
-2. Optionall install [`direnv`](https://direnv.net/)
+2. Optionally install [`direnv`](https://direnv.net/)
 
 3. Clone this repository
 
@@ -181,8 +181,8 @@ bucc up # clean BUCC with credentials (creds.yml) from backup
 bucc bbr restore --artifact-path=${last_backup}
 ```
 
-## Support for air gaped environments
-To use bucc in offline environment run:
+## Support for air-gapped environments
+To use bucc in an offline environment run:
 
 ```
 bucc offline --cpi virtualbox --lite --destination /tmp/offline
