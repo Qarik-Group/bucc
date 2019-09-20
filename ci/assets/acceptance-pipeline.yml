@@ -11,7 +11,7 @@ params:
 jobs:
 - name: test
   plan:
-  - aggregate:
+  - in_parallel:
     - get: stemcell
     - get: bosh-deployment
     - get: docker-release
