@@ -1,0 +1,5 @@
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/PortBindings?
+  value:
+    443/tcp: [{ HostPort: "443", HostIp: ((host_ip)) }] # concourse
+    8443/tcp: [{ HostPort: "8443", HostIp: ((host_ip)) }] # uaa
