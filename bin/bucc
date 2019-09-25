@@ -742,10 +742,10 @@ YML
         url: "file://../offline_resources/${stemcell_filename}"
         sha1: ${sha1}
 YML
-    echo "Moving files for ${name}-release"
+    echo "Moving files for ${stemcell_name}-release"
     mv *.yml ${yml_filelocation} &>/dev/null
     mv *.tgz ${offline_filelocation} &>/dev/null
-    echo "Downloaded ${name}-release"
+    echo "Downloaded ${stemcell_name}-release"
   else
     echo "Stemcell ${stemcell_name} ${stemcell_version} was already downloaded"
   fi
