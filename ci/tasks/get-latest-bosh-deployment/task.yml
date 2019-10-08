@@ -12,9 +12,7 @@ inputs:
   - name: bosh-deployment
 
 outputs:
-- name: bucc-out
-
-params: []
+  - name: bucc-out
 
 run:
   path: bucc-ci/ci/tasks/get-latest-bosh-deployment/task
