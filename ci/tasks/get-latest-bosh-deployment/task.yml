@@ -14,7 +14,5 @@ inputs:
 outputs:
   - name: bucc-out
 
-params: []
-
 run:
   path: bucc-ci/ci/tasks/get-latest-bosh-deployment/task
