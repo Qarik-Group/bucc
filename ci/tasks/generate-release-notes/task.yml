@@ -14,7 +14,5 @@ inputs:
 outputs:
   - name: release-notes
 
-params: []
-
 run:
   path: bucc-ci/ci/tasks/generate-release-notes/task

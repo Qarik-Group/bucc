@@ -13,7 +13,5 @@ inputs:
 outputs:
   - name: compiled-releases
 
-params: []
-
 run:
   path: bucc-ci/ci/tasks/compile-releases/task
