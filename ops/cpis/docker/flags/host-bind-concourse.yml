@@ -30,7 +30,7 @@
 # UAA
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/url
-  value: "https://((host_port)):((uaa_host_port))"
+  value: "https://((host_ip)):((uaa_host_port))"
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/zones/internal/hostnames/-
