@@ -12,7 +12,7 @@ inputs:
   - name: bosh-deployment
 
 outputs:
-- name: bucc-out
+  - name: bucc-out
 
 params: []
 
