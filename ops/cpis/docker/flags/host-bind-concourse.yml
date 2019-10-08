@@ -1,5 +1,43 @@
 - type: replace
   path: /resource_pools/name=vms/cloud_properties/PortBindings?
   value:
-    443/tcp: [{ HostPort: "443", HostIp: ((host_ip)) }] # concourse
-    8443/tcp: [{ HostPort: "8443", HostIp: ((host_ip)) }] # uaa
+    443/tcp: [{ HostPort: ((concourse_host_port)), HostIp: ((host_ip)) }] # concourse
+    8443/tcp: [{ HostPort: ((uaa_host_port)), HostIp: ((host_ip)) }] # uaa
+
+# CONCOURSE
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=web/properties/external_url
+  value: &external_url https://((host_ip)):((concourse_host_port))
+
+- type: replace
+  path: /variables/name=atc_ssl/options/alternative_names
+  value:
+    - ((internal_ip))
+    - ((host_ip))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/concourse/redirect-uri
+  value: https://((host_ip)):((concourse_host_port))/sky/issuer/callback
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=web/properties/generic_oauth/auth_url
+  value: "https://((host_ip)):((uaa_host_port))/oauth/authorize"
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub-importer/properties/credhub/import_credentials/name=concourse~1main~1concourse_url/value
+  value: *external_url
+
+# UAA
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/url
+  value: "https://((host_port)):((uaa_host_port))"
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/zones/internal/hostnames/-
+  value: ((internal_ip))
+
+- type: replace
+  path: /variables/name=uaa_ssl/options/alternative_names
+  value:
+    - ((internal_ip))
+    - ((host_ip))
