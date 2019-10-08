@@ -29,7 +29,7 @@ resources:
       uri:         (( grab meta.github.uri ))
       branch:      (( grab meta.github.branch ))
       private_key: (( grab meta.github.private_key ))
-      paths: [ci/*]
+      paths: [ci/**]
       disable_ci_skip: true
 
   - name: bosh-deployment
