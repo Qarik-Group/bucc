@@ -2,7 +2,7 @@
 
 set -e
 
-cp -r bosh-cache/.bosh ${HOME} | true
+ln -s ${PWD}/bosh-cache/.bosh/ ${HOME}/.bosh
 
 mv bucc-state/{vars.yml,state} bucc/
 ./bucc/bin/bucc down

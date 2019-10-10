@@ -12,7 +12,7 @@ if [ -f bucc/state/state.json ]; then
     mv state.json bucc/state/state.json
 fi
 
-cp -r bosh-cache/.bosh ${HOME} | true
+ln -s ${PWD}/bosh-cache/.bosh/ ${HOME}/.bosh
 
 pushd bucc > /dev/null
 
@@ -43,5 +43,3 @@ echo "==== Run BUCC up ===="
 popd > /dev/null
 
 mv /tmp/offline/bucc/{vars.yml,state} bucc-state-out
-
-cp -r ${HOME}/.bosh bosh-cache
