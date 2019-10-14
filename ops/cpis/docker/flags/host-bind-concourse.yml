@@ -1,8 +1,8 @@
 - type: replace
   path: /resource_pools/name=vms/cloud_properties/PortBindings?
   value:
-    443/tcp: [{ HostPort: ((concourse_host_port)), HostIp: ((host_ip)) }] # concourse
-    8443/tcp: [{ HostPort: ((uaa_host_port)), HostIp: ((host_ip)) }] # uaa
+    443/tcp: [{ HostPort: ((concourse_host_port)), HostIp: "0.0.0.0" }] # concourse
+    8443/tcp: [{ HostPort: ((uaa_host_port)), HostIp: "0.0.0.0" }] # uaa
 
 # CONCOURSE
 - type: replace
