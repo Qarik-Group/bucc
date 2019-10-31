@@ -2,6 +2,6 @@ credhub=2.6.0
 bucc=0.7.3
 bbr=1.5.2
 bosh=6.1.1
-uaa=0.0.1
+uaa=0.10.0
 safe=1.3.4
 
