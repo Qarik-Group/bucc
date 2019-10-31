@@ -173,7 +173,6 @@ resources:
     source:
       repository: cloudfoundry/garden-runc-release
 
-
   - name: credhub-cli
     type: github-release
     source:
@@ -198,8 +197,8 @@ resources:
   - name: uaa-cli
     type: github-release
     source:
-      user: starkandwayne
-      repository: uaa-cli-releases
+      user: cloudfoundry-incubator
+      repository: uaa-cli
       access_token: (( grab meta.github.access_token ))
 
   - name: safe-cli
