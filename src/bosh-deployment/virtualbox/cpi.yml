@@ -25,7 +25,7 @@
     properties:
       agent:
         mbus: nats://nats:((nats_password))@((internal_ip)):4222
-        blobstore: null
+      blobstore: null
       ntp:
       - 0.pool.ntp.org
       - 1.pool.ntp.org

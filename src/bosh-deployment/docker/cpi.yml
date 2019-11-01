@@ -52,7 +52,6 @@
   type: replace
   value:
     agent:
-      blobstore: null
       mbus: https://mbus:((mbus_bootstrap_password))@0.0.0.0:6868
     docker:
       host: ((docker_host))
