@@ -3,5 +3,5 @@
   value:
     name: bucc-bbr
     version: 8
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bucc-bbr-8-ubuntu-xenial-621.5-20191030-222305-25937705.tgz
-    sha1: d2c3c5e74029a31cf67af921bfdd2b932bc04d1e
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bucc-bbr-8-ubuntu-xenial-621.26-20191202-194353-707811489.tgz
+    sha1: cdf97215552a9864048b94900aea02a96dc7151a
