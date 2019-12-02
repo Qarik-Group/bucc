@@ -22,7 +22,7 @@ releases:
   version: 8
 - name: vault-credhub-proxy
   url: git+https://github.com/starkandwayne/vault-credhub-proxy-release
-  version: 1.1.4
+  version: 1.1.5
 - name: director-bosh-dns
   sha1: a365141b2204233fca76c6d97ca85ff6805e2b33
   url: https://github.com/starkandwayne/director-bosh-dns-release/releases/download/v0.1.0/director-bosh-dns-0.1.0.tgz
