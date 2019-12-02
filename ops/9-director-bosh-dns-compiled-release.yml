@@ -3,5 +3,5 @@
   value:
     name: director-bosh-dns
     version: 0.1.0
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/director-bosh-dns-0.1.0-ubuntu-xenial-621.5-20191030-222454-21222942.tgz
-    sha1: 158c2bf6bea77184c081af268f1ef99f97b59f87
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/director-bosh-dns-0.1.0-ubuntu-xenial-621.26-20191202-194540-665644183.tgz
+    sha1: ef5f2ba0e0bc088a1ae6d2ab5cec34f0f850f7f4
