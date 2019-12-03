@@ -13,7 +13,7 @@ if [ -f bucc/state/state.json ]; then
 fi
 
 mkdir -p ${PWD}/bosh-cache/.bosh
-ln -s ${PWD}/bosh-cache/.bosh/ ${HOME}/.bosh
+ln -f -s ${PWD}/bosh-cache/.bosh/ ${HOME}/.bosh
 
 pushd bucc > /dev/null
 
