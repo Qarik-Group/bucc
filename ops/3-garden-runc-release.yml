@@ -2,6 +2,6 @@
   path: /releases/name=garden-runc?
   value:
     name: garden-runc
-    version: 1.19.9
-    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.19.9
-    sha1: 1c678e1c7a3506c0e408860571560081c15e3c6d
+    version: 1.19.7
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.19.7
+    sha1: 4584474e3345e36510baac6df78602f5878cfc5f
