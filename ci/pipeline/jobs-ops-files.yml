@@ -229,7 +229,7 @@ jobs:
         input_mapping:
           compiled-release: compiled-releases-garden-runc
         params:
-          OPS_FILE_PATH: ops/9-garden-runc-compiled-release.yml
+          OPS_FILE_PATH: ops/lite/9-garden-runc-compiled-release.yml
       - put: bucc
         params:
           merge: true
