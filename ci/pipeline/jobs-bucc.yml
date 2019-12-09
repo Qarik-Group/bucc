@@ -36,7 +36,7 @@ jobs:
         file: bucc-ci/ci/tasks/bucc-up/task.yml
         tags: [vsphere]
         params:
-          ARGS: --cpi vsphere --lite
+          ARGS: --cpi vsphere --lite --tags
           VARS:
             director_name: snw-bosh
             internal_cidr: 10.135.0.0/16
@@ -52,6 +52,7 @@ jobs:
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
             vcenter_cluster: cluster1
+            tags: [ { type: VirtualMachine, ci_job: integration-test } ]
       - task: bucc-test-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-test/task.yml
@@ -99,7 +100,7 @@ jobs:
         file: bucc-ci/ci/tasks/bucc-up/task.yml
         tags: [vsphere]
         params: &up-upgrade-params
-          ARGS: --cpi vsphere
+          ARGS: --cpi vsphere --tags
           VARS:
             director_name: snw-bosh
             internal_cidr: 10.135.0.0/16
@@ -115,6 +116,7 @@ jobs:
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
             vcenter_cluster: cluster1
+            tags: [ { type: VirtualMachine, ci_job: upgrade-test } ]
       - task: bucc-pre-upgrade-test-vsphere
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
         tags: [vsphere]
@@ -163,7 +165,7 @@ jobs:
         file: bucc-ci/ci/tasks/bucc-up/task.yml
         tags: [vsphere]
         params: &up-dr-params
-          ARGS: --cpi vsphere
+          ARGS: --cpi vsphere --tags
           VARS:
             director_name: snw-bosh
             internal_cidr: 10.135.0.0/16
@@ -179,6 +181,7 @@ jobs:
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
             vcenter_cluster: cluster1
+            tags: [ { type: VirtualMachine, ci_job: disaster-recovery-test } ]
       - task: pre-disaster-test
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
         tags: [vsphere]
@@ -243,7 +246,7 @@ jobs:
         privileged: true
         tags: [vsphere]
         params:
-          ARGS: --cpi vsphere --lite
+          ARGS: --cpi vsphere --lite --tags
           VARS:
             director_name: snw-bosh
             internal_cidr: 10.135.0.0/16
@@ -259,6 +262,7 @@ jobs:
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
             vcenter_cluster: cluster1
+            tags: [ { type: VirtualMachine, ci_job: offline-test } ]
       - task: bucc-test-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-test/task.yml
