@@ -32,6 +32,3 @@
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=worker/properties/baggageclaim?/disable_user_namespaces
   value: true
-
-- type: remove
-  path: /instance_groups/name=bosh/jobs/name=worker/properties/external_garden_url
