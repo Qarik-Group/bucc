@@ -12,7 +12,7 @@ inputs:
 params:
   GOVC_URL:
   GOVC_INSECURE: false
-  CLEANUP_VM_WITH_IP:
-    
+  CLEANUP_VM_TAG:
+
 run:
   path: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task

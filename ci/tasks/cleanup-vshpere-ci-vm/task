@@ -2,15 +2,21 @@
 
 set -x
 
-curl -L -s https://github.com/vmware/govmomi/releases/download/v0.18.0/govc_linux_amd64.gz | gunzip >/usr/local/bin/govc
+curl -L -s https://github.com/vmware/govmomi/releases/download/v0.21.0/govc_linux_amd64.gz | gunzip >/usr/local/bin/govc
 chmod +x /usr/local/bin/govc
 
-templates=$(govc vm.info -vm.ip ${CLEANUP_VM_WITH_IP} -json | grep -o 'sc-[-[:alnum:]]*' | sort -u | head -1)
+govc ls /Buffalo-Lab/vm/bucc-ci/vms \
+    | xargs -L1 govc vm.info -json -vm.ipath=  \
+    | jq -r -S --arg=tag=$CLEANUP_VM_TAG '.VirtualMachines
+      | map(select(.Value[].Value | contains($tag)))
+      | .[].Config.Hardware.Device[].Backing.Parent.Uuid' \
+          | grep -v null | xargs govc vm.destroy -vm.uuid= \
+          | true
 
-govc vm.destroy -vm.ip ${CLEANUP_VM_WITH_IP} | true
-
-for del in $templates; do
-  remove=$(echo "${del}" | xargs ) # remove leading spaces
-  echo "deleting ${del}"
-  govc vm.destroy "/Buffalo-Lab/vm/bucc-ci/templates/${remove}"
-done
+govc ls /Buffalo-Lab/vm/bucc-ci/vms \
+    | xargs -L1 govc vm.info -json -vm.ipath=  \
+    | jq -r -S --arg=tag=$CLEANUP_VM_TAG '.VirtualMachines
+      | map(select(.Value[].Value | contains($tag)))
+      | .[].Config.InstanceUuid' \
+          | grep -v null | xargs govc vm.destroy -vm.uuid= \
+          | true
