@@ -27,14 +27,14 @@ jobs:
         - { get: bucc-ci }
       - task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-integration-test]
         params: &cleanup-integration-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@" meta.vcenter.ip ))
           GOVC_INSECURE: true
           CLEANUP_VM_WITH_IP: 10.135.8.1
       - task: bucc-up-vsphere
         file: bucc-ci/ci/tasks/bucc-up/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-integration-test]
         params:
           ARGS: --cpi vsphere --lite --tags
           VARS:
@@ -56,20 +56,20 @@ jobs:
       - task: bucc-test-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-test/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-integration-test]
       - task: bucc-acceptance-test
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-acceptance-test/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-integration-test]
         attempts: 5
       - task: bucc-down-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-down/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-integration-test]
       ensure:
         task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-integration-test]
         params: *cleanup-integration-params
       on_failure:
         put: notify
@@ -90,7 +90,7 @@ jobs:
         - { get: bucc-stable }
       - task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-upgrade-test]
         params: &cleanup-upgrade-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@" meta.vcenter.ip  ))
           GOVC_INSECURE: true
@@ -98,7 +98,7 @@ jobs:
       - task: bucc-up-vsphere
         input_mapping: { bucc: bucc-stable }
         file: bucc-ci/ci/tasks/bucc-up/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-upgrade-test]
         params: &up-upgrade-params
           ARGS: --cpi vsphere --tags
           VARS:
@@ -119,24 +119,24 @@ jobs:
             tags: [ { type: VirtualMachine, ci_job: upgrade-test } ]
       - task: bucc-pre-upgrade-test-vsphere
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-upgrade-test]
         params: { TEST: set }
         input_mapping: { bucc: bucc-stable, bucc-state: bucc-state-out }
       - task: bucc-upgrade-vsphere
         file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-upgrade-test]
         params: *up-upgrade-params
         attempts: 2
         input_mapping: { bucc-state: bucc-state-out }
       - task: bucc-post-upgrade-test-vsphere
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-upgrade-test]
         params: { TEST: get }
         input_mapping: { bucc-state: bucc-state-out }
       ensure:
         task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-upgrade-test]
         params: *cleanup-upgrade-params
       on_failure:
         put: notify
@@ -156,14 +156,14 @@ jobs:
         - { get: bucc-ci }
       - task: cleanup
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-disaster-recovery-test]
         params: &cleanup-dr-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@" meta.vcenter.ip  ))
           GOVC_INSECURE: true
           CLEANUP_VM_WITH_IP: 10.135.8.3
       - task: bucc-up
         file: bucc-ci/ci/tasks/bucc-up/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-disaster-recovery-test]
         params: &up-dr-params
           ARGS: --cpi vsphere --tags
           VARS:
@@ -184,39 +184,39 @@ jobs:
             tags: [ { type: VirtualMachine, ci_job: disaster-recovery-test } ]
       - task: pre-disaster-test
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-disaster-recovery-test]
         params: { TEST: set }
         input_mapping: { bucc-state: bucc-state-out }
       - task: bbr-backup
         file: bucc-ci/ci/tasks/bucc-bbr-backup/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-disaster-recovery-test]
         input_mapping: { bucc-state: bucc-state-out }
       - task: disaster
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-disaster-recovery-test]
         params: *cleanup-dr-params
       - task: bbr-restore-creds
         file: bucc-ci/ci/tasks/bucc-bbr-restore-creds/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-disaster-recovery-test]
       - task: bucc-up
         file: bucc-ci/ci/tasks/bucc-upgrade/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-disaster-recovery-test]
         params: *up-dr-params
         input_mapping: { bucc-state: bucc-state-out }
       - task: bbr-restore
         file: bucc-ci/ci/tasks/bucc-bbr-restore/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-disaster-recovery-test]
         input_mapping: { bucc-state: bucc-state-out }
       - task: post-disaster-test
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-disaster-recovery-test]
         params: { TEST: get }
         input_mapping: { bucc-state: bucc-state-out }
         attempts: 3
       ensure:
         task: cleanup
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-disaster-recovery-test]
         params: *cleanup-dr-params
       on_failure:
         put: notify
@@ -236,7 +236,7 @@ jobs:
         - { get: bucc-ci }
       - task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-offline-test]
         params: &cleanup-offline-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@" meta.vcenter.ip  ))
           GOVC_INSECURE: true
@@ -244,7 +244,7 @@ jobs:
       - task: bucc-offline-vsphere
         file: bucc-ci/ci/tasks/bucc-offline/task.yml
         privileged: true
-        tags: [vsphere]
+        tags: [vsphere-bucc-offline-test]
         params:
           ARGS: --cpi vsphere --lite --tags
           VARS:
@@ -266,16 +266,16 @@ jobs:
       - task: bucc-test-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-test/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-offline-test]
         attempts: 5
       - task: bucc-down-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-down/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-offline-test]
       ensure:
         task: cleanup-vsphere
         file: bucc-ci/ci/tasks/cleanup-vshpere-ci-vm/task.yml
-        tags: [vsphere]
+        tags: [vsphere-bucc-offline-test]
         params: *cleanup-offline-params
       on_failure:
         put: notify
