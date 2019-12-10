@@ -7,7 +7,7 @@ chmod +x /usr/local/bin/govc
 
 govc ls /Buffalo-Lab/vm/bucc-ci/vms \
     | xargs -L1 govc vm.info -json -vm.ipath=  \
-    | jq -r -S --arg=tag=$CLEANUP_VM_TAG '.VirtualMachines
+    | jq -r -S --arg tag $CLEANUP_VM_TAG '.VirtualMachines
       | map(select(.Value[].Value | contains($tag)))
       | .[].Config.Hardware.Device[].Backing.Parent.Uuid' \
           | grep -v null | xargs govc vm.destroy -vm.uuid= \
@@ -15,7 +15,7 @@ govc ls /Buffalo-Lab/vm/bucc-ci/vms \
 
 govc ls /Buffalo-Lab/vm/bucc-ci/vms \
     | xargs -L1 govc vm.info -json -vm.ipath=  \
-    | jq -r -S --arg=tag=$CLEANUP_VM_TAG '.VirtualMachines
+    | jq -r -S --arg tag $CLEANUP_VM_TAG '.VirtualMachines
       | map(select(.Value[].Value | contains($tag)))
       | .[].Config.InstanceUuid' \
           | grep -v null | xargs govc vm.destroy -vm.uuid= \
