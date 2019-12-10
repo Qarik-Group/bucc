@@ -31,7 +31,7 @@ jobs:
         params: &cleanup-integration-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@" meta.vcenter.ip ))
           GOVC_INSECURE: true
-          CLEANUP_VM_WITH_IP: 10.135.8.1
+          CLEANUP_VM_TAG: integration-test
       - task: bucc-up-vsphere
         file: bucc-ci/ci/tasks/bucc-up/task.yml
         tags: [vsphere-bucc-integration-test]
@@ -94,7 +94,7 @@ jobs:
         params: &cleanup-upgrade-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@" meta.vcenter.ip  ))
           GOVC_INSECURE: true
-          CLEANUP_VM_WITH_IP: 10.135.8.2
+          CLEANUP_VM_TAG: upgrade-test
       - task: bucc-up-vsphere
         input_mapping: { bucc: bucc-stable }
         file: bucc-ci/ci/tasks/bucc-up/task.yml
@@ -162,7 +162,7 @@ jobs:
         params: &cleanup-dr-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@" meta.vcenter.ip  ))
           GOVC_INSECURE: true
-          CLEANUP_VM_WITH_IP: 10.135.8.3
+          CLEANUP_VM_TAG: disaster-recovery-test
       - task: bucc-up
         file: bucc-ci/ci/tasks/bucc-up/task.yml
         tags: [vsphere-bucc-disaster-recovery-test]
@@ -242,7 +242,7 @@ jobs:
         params: &cleanup-offline-params
           GOVC_URL: (( concat meta.vcenter.username ":" meta.vcenter.password "@" meta.vcenter.ip  ))
           GOVC_INSECURE: true
-          CLEANUP_VM_WITH_IP: 10.135.8.4
+          CLEANUP_VM_TAG: offline-test
       - task: bucc-offline-vsphere
         file: bucc-ci/ci/tasks/bucc-offline/task.yml
         privileged: true
