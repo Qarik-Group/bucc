@@ -52,7 +52,7 @@ jobs:
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
             vcenter_cluster: cluster1
-            tags: [ { type: VirtualMachine, ci_job: integration-test } ]
+            tags: { ci_job: integration-test }
       - task: bucc-test-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-test/task.yml
@@ -116,7 +116,7 @@ jobs:
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
             vcenter_cluster: cluster1
-            tags: [ { type: VirtualMachine, ci_job: upgrade-test } ]
+            tags: { ci_job: upgrade-test }
       - task: bucc-pre-upgrade-test-vsphere
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
         tags: [vsphere-bucc-upgrade-test]
@@ -181,7 +181,7 @@ jobs:
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
             vcenter_cluster: cluster1
-            tags: [ { type: VirtualMachine, ci_job: disaster-recovery-test } ]
+            tags: { ci_job: disaster-recovery-test }
       - task: pre-disaster-test
         file: bucc-ci/ci/tasks/bucc-upgrade-test/task.yml
         tags: [vsphere-bucc-disaster-recovery-test]
@@ -262,7 +262,7 @@ jobs:
             vcenter_templates: bucc-ci/templates
             vcenter_vms: bucc-ci/vms
             vcenter_cluster: cluster1
-            tags: [ { type: VirtualMachine, ci_job: offline-test } ]
+            tags: { ci_job: offline-test }
       - task: bucc-test-vsphere
         input_mapping: { bucc-state: bucc-state-out }
         file: bucc-ci/ci/tasks/bucc-test/task.yml
