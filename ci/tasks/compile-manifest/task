@@ -11,6 +11,7 @@ pushd bucc > /dev/null
     mkdir -p state
     echo "virtualbox" > state/cpi
     echo "foo: bar" > vars.yml
+    echo "true" > state/lite
     find ops -name "*compiled-release*" -exec mv {} {}.tmp \;
 popd > /dev/null
 
