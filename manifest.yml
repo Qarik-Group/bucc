@@ -6,9 +6,9 @@ releases:
   url: https://bosh.io/d/github.com/concourse/concourse-bosh-release?v=5.7.2
   version: 5.7.2
 - name: os-conf
-  sha1: 7579a96515b265c6d828924bf4f5fae115798199
-  url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=21.0.0
-  version: 21.0.0
+  sha1: 78d79f08ff5001cc2a24f572837c7a9c59a0e796
+  url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=18
+  version: 18
 - name: credhub-importer
   sha1: b8dcbe24ead72f3ca93747e0630e2f34c8b89cc4
   url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/1.1.0/credhub-importer-1.1.0.tgz
@@ -38,7 +38,7 @@ releases:
 stemcells:
 - alias: large
   os: ubuntu-xenial
-  version: "621.26"
+  version: "621.29"
 update:
   canaries: 1
   canary_watch_time: 1000 - 90000
