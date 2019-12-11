@@ -5,18 +5,19 @@ set -x
 curl -L -s https://github.com/vmware/govmomi/releases/download/v0.21.0/govc_linux_amd64.gz | gunzip >/usr/local/bin/govc
 chmod +x /usr/local/bin/govc
 
-govc ls /Buffalo-Lab/vm/bucc-ci/vms \
+BASE=/Buffalo-Lab/vm/bucc-ci
+govc ls ${BASE}/vms \
     | xargs -L1 govc vm.info -json -vm.ipath=  \
-    | jq -r -S --arg=tag=$CLEANUP_VM_TAG '.VirtualMachines
+    | jq -r -S --arg tag $CLEANUP_VM_TAG '.VirtualMachines
       | map(select(.Value[].Value | contains($tag)))
-      | .[].Config.Hardware.Device[].Backing.Parent.Uuid' \
-          | grep -v null | xargs govc vm.destroy -vm.uuid= \
-          | true
+      | .[].Config.Hardware.Device[].Backing.Parent.FileName' \
+          | grep -v null | cut -d/ -f1 | cut -d' ' -f2 \
+          | xargs -I{} -L1 govc vm.destroy ${BASE}/templates/{}
 
-govc ls /Buffalo-Lab/vm/bucc-ci/vms \
+govc ls ${BASE}/vms \
     | xargs -L1 govc vm.info -json -vm.ipath=  \
-    | jq -r -S --arg=tag=$CLEANUP_VM_TAG '.VirtualMachines
+    | jq -r -S --arg tag $CLEANUP_VM_TAG '.VirtualMachines
       | map(select(.Value[].Value | contains($tag)))
-      | .[].Config.InstanceUuid' \
-          | grep -v null | xargs govc vm.destroy -vm.uuid= \
+      | .[].Config.Name' \
+          | grep -v null | xargs -I{} govc vm.destroy ${BASE}/vms/{}  \
           | true
