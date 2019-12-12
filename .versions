@@ -1,5 +1,5 @@
 credhub=2.6.2
-bucc=0.7.3
+bucc=0.8.0
 bbr=1.5.2
 bosh=6.1.1
 uaa=0.10.0
