@@ -2,6 +2,6 @@
   path: /releases/name=os-conf?
   value:
     name: os-conf
-    version: 18
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-18-ubuntu-xenial-621.29-20191211-094745-184290027.tgz
-    sha1: 1da07bee6b224dd0361b5c647d0107e7bb6d0147
+    version: 21.0.0
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-21.0.0-ubuntu-xenial-456.25-20190919-095306-048757941.tgz
+    sha1: 1861468c064a9877b91e9d55a243674e1eb95976
