@@ -2,6 +2,6 @@
   path: /releases/name=postgres?
   value:
     name: postgres
-    version: 40
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/postgres-40-ubuntu-xenial-621.29-20191211-094943-02726622.tgz
-    sha1: 76449bda915acead53272535e1c7b6a30b11b8b9
+    version: 39
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/postgres-39-ubuntu-xenial-456.25-20190919-095509-062653316.tgz
+    sha1: 7ffc6c85caf918a58e766f023fbb2ca675dd9dd1
