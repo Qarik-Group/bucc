@@ -4,7 +4,9 @@ meta:
   target: pipes@bucc
   url:     https://pipes.starkandwayne.com
   lite:
-    target: 10.10.1.5
+    target: 10.128.4.73
+    client_secret: ((thunder-dome.password))
+    ca_cert: ((thunder-dome.ca-certificate))
   vcenter:
     username: ((vcenter_username))
     password: ((vcenter_password))
