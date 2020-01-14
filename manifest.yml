@@ -2,9 +2,9 @@ instance_groups: []
 name: compile-releases
 releases:
 - name: concourse
-  sha1: 367ddfd92fb0bab315c13039ca4a5a9fd154e164
-  url: https://bosh.io/d/github.com/concourse/concourse-bosh-release?v=5.7.2
-  version: 5.7.2
+  sha1: 66b8a0d51b0436bd615eb9b99fc5d3963dd87efa
+  url: https://bosh.io/d/github.com/concourse/concourse-bosh-release?v=5.8.0
+  version: 5.8.0
 - name: os-conf
   sha1: 78d79f08ff5001cc2a24f572837c7a9c59a0e796
   url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=18
@@ -38,7 +38,7 @@ releases:
 stemcells:
 - alias: large
   os: ubuntu-xenial
-  version: "621.29"
+  version: "621.41"
 update:
   canaries: 1
   canary_watch_time: 1000 - 90000
