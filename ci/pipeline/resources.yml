@@ -1,6 +1,8 @@
 resources:
   - name: bucc
     type: git
+    webhook_token: supercalifragilisticexpialidocious
+    check_every: 24h
     source:
       uri:         (( grab meta.github.uri ))
       branch:      (( grab meta.github.branch ))
@@ -10,6 +12,7 @@ resources:
 
   - name: bucc-master
     type: git
+    check_every: 24h
     source:
       uri:         (( grab meta.github.uri ))
       branch:      (( grab meta.github.master-branch ))
@@ -17,6 +20,7 @@ resources:
 
   - name: bucc-stable
     type: git
+    check_every: 24h
     source:
       uri:         (( grab meta.github.uri ))
       branch:      (( grab meta.github.master-branch ))
@@ -25,6 +29,8 @@ resources:
 
   - name: bucc-ci
     type: git
+    webhook_token: supercalifragilisticexpialidocious
+    check_every: 24h
     source:
       uri:         (( grab meta.github.uri ))
       branch:      (( grab meta.github.branch ))
@@ -34,6 +40,7 @@ resources:
 
   - name: bosh-deployment
     type: git
+    check_every: 24h
     source:
       uri:    https://github.com/cloudfoundry/bosh-deployment.git
       branch: (( grab meta.github.master-branch ))
@@ -153,6 +160,7 @@ resources:
 
   - name: github
     type: github-release
+    check_every: 24h
     source:
       user:         (( grab meta.github.owner ))
       repository:   (( grab meta.github.repo ))
@@ -160,21 +168,25 @@ resources:
 
   - name: bosh-release-concourse
     type: bosh-io-release
+    check_every: 24h
     source:
       repository: concourse/concourse-bosh-release
 
   - name: bosh-release-postgres
     type: bosh-io-release
+    check_every: 24h
     source:
       repository: cloudfoundry/postgres-release
 
   - name: bosh-release-garden-runc
     type: bosh-io-release
+    check_every: 24h
     source:
       repository: cloudfoundry/garden-runc-release
 
   - name: credhub-cli
     type: github-release
+    check_every: 24h
     source:
       user: cloudfoundry-incubator
       repository: credhub-cli
@@ -182,6 +194,7 @@ resources:
 
   - name: bbr-cli
     type: github-release
+    check_every: 24h
     source:
       user: cloudfoundry-incubator
       repository: bosh-backup-and-restore
@@ -189,6 +202,7 @@ resources:
 
   - name: bosh-cli
     type: github-release
+    check_every: 24h
     source:
       user: cloudfoundry
       repository: bosh-cli
@@ -196,6 +210,7 @@ resources:
 
   - name: uaa-cli
     type: github-release
+    check_every: 24h
     source:
       user: cloudfoundry-incubator
       repository: uaa-cli
@@ -203,6 +218,7 @@ resources:
 
   - name: safe-cli
     type: github-release
+    check_every: 24h
     source:
       user: starkandwayne
       repository: safe
