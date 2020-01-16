@@ -12,9 +12,9 @@ if [ -f bucc/state/state.json ]; then
     mv state.json bucc/state/state.json
 fi
 
-# mkdir -p ${PWD}/bosh-cache/.bosh
-# rm -rf ${HOME}/.bosh
-# ln -s ${PWD}/bosh-cache/.bosh/ ${HOME}/.bosh
+mkdir -p ${PWD}/bosh-cache/.bosh
+rm -rf ${HOME}/.bosh
+ln -s ${PWD}/bosh-cache/.bosh/ ${HOME}/.bosh
 
 pushd bucc > /dev/null
 

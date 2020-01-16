@@ -10,7 +10,7 @@ inputs:
   - name: bucc-ci
   - name: bucc
   - name: bucc-state
-  # - name: bosh-cache    
+  - name: bosh-cache    
 
 run:
   path: bucc-ci/ci/tasks/bucc-down/task
