@@ -10,8 +10,8 @@ inputs:
   - name: bucc-ci
   - name: bucc
 
-# caches:
-#   - path: bosh-cache
+caches:
+  - path: bosh-cache
 
 outputs:
   - name: bosh-cache
