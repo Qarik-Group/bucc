@@ -1,6 +1,7 @@
 - type: replace
   path: /resource_pools/name=vms/cloud_properties?
   value:
-    cpu: ((vcenter_vm_cpu))
-    disk: ((vcenter_vm_disk))
-    ram: ((vcenter_vm_ram))
+    cpu: 4
+    disk: 50000
+    ram: 16640
+      
