@@ -156,6 +156,7 @@ ca_cert() {
     local ca_cert_file="${tmp}/ca.pem"
     store_int --path /default_ca/ca > $ca_cert_file
     store_int --path /credhub_ca/ca >> $ca_cert_file
+    get_var_with_default "concourse_ca_certs" "" >> $ca_cert_file
     echo $ca_cert_file
 }
 
