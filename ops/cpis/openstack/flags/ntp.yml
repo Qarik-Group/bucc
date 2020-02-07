@@ -1,5 +1,5 @@
 - type: replace
-  path: /resource_pools/0/env/bosh/ntp
+  path: /resource_pools/0/env/bosh/ntp?
   value: ((ntp))
 - type: replace
   path: /instance_groups/name=bosh/properties/agent/env/bosh/ntp?
