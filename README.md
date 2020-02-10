@@ -55,6 +55,40 @@ To delete your VM run:
 $ bucc down
 ```
 
+### (Optional) Add a Certificate for Concourse
+
+By default, BUCC will generate self-signed certificates for all components. If you would like to add a true certificate for the Concourse web interface, follow these steps:
+
+1. Generate a certificate with the domain name you wish to use for Concourse. This is easily done with [Let's Encrypt](https://letsencrypt.org/) if you don't have another option.
+1. Add a variable to `vars.yml` file with the domain name you chose:
+    ```yml
+    concourse_domain: concourse.foo.com
+    ```
+1. Add your certificate to `vars.yml` as follows:
+   ```yml
+    atc_ssl:
+      ca: |
+        -----BEGIN CERTIFICATE-----
+        ...
+        -----END CERTIFICATE-----
+      certificate: |
+        -----BEGIN CERTIFICATE-----
+        ...
+        -----END CERTIFICATE-----
+      private_key: |
+        -----BEGIN CERTIFICATE-----
+        ...
+        -----END CERTIFICATE-----
+   ```
+1. Add the intermediate certificate to `vars.yml` as follows:
+    ```yml
+    concourse_ca_certs: |
+      -----BEGIN CERTIFICATE-----
+      ...
+      -----END CERTIFICATE-----
+    ```
+1. Run bucc with the flags `--concourse-lb` and `--concourse-ca-certs`
+
 ## Using BUCC
 
 ### Using BOSH
