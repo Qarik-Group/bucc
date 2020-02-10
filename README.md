@@ -76,9 +76,9 @@ By default, BUCC will generate self-signed certificates for all components. If y
         ...
         -----END CERTIFICATE-----
       private_key: |
-        -----BEGIN CERTIFICATE-----
+        -----BEGIN PRIVATE KEY-----
         ...
-        -----END CERTIFICATE-----
+        -----END PRIVATE KEY-----
    ```
 1. Add the intermediate certificate to `vars.yml` as follows:
     ```yml
