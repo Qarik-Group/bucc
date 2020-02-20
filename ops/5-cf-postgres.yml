@@ -24,3 +24,4 @@
       release_level_backup: true
       postgres:
         databases: *databases
+        single-transaction: true
