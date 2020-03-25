@@ -3,5 +3,5 @@
   value:
     name: os-conf
     version: 18
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-18-ubuntu-xenial-621.59-20200304-122825-188141075.tgz
-    sha1: 8aef8ea488bcc1575c4d72c2c0b9de8abf7b9256
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-18-ubuntu-xenial-621.61-20200325-184702-24341893.tgz
+    sha1: 62721727316cb9292a9749aad505b5660050c7a2
