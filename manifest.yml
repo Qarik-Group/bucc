@@ -31,10 +31,6 @@ releases:
   sha1: d1aadbda5d60c44dec4a429cda872cf64f6d8d0b
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.10.0
   version: 1.10.0
-- name: garden-runc
-  sha1: 6d3a30a5d90b0ab7bd89fddf7fa22b9a4cc08b0d
-  url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.19.10
-  version: 1.19.10
 stemcells:
 - alias: large
   os: ubuntu-xenial
