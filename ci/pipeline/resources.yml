@@ -137,15 +137,6 @@ resources:
       region_name: eu-west-1
       regexp: "bosh-dns.*-(\\d+).tgz"
 
-  - name: compiled-releases-garden-runc
-    type: s3
-    source:
-      bucket: "bucc-compiled-releases"
-      access_key_id: (( grab meta.aws.access_key_id ))
-      secret_access_key: (( grab meta.aws.secret_access_key ))
-      region_name: eu-west-1
-      regexp: "garden-runc.*-(\\d+).tgz"
-
   - name: compiled-releases-manifest
     type: git
     source:
@@ -177,12 +168,6 @@ resources:
     check_every: 24h
     source:
       repository: cloudfoundry/postgres-release
-
-  - name: bosh-release-garden-runc
-    type: bosh-io-release
-    check_every: 24h
-    source:
-      repository: cloudfoundry/garden-runc-release
 
   - name: credhub-cli
     type: github-release

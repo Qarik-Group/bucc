@@ -215,33 +215,6 @@ jobs:
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": bosh-dns-compiled-release-ops-file job failed" ))'
 
-- name: garden-runc-compiled-release-ops-file
-  public: true
-  serial: true
-  plan:
-    - do:
-      - in_parallel:
-        - get: bucc
-        - get: bucc-ci
-        - { get: compiled-releases-garden-runc, trigger: true }
-      - task: update-garden-runc-compiled-release-ops-file
-        file: bucc-ci/ci/tasks/update-compiled-release-ops-file/task.yml
-        input_mapping:
-          compiled-release: compiled-releases-garden-runc
-        params:
-          OPS_FILE_PATH: ops/lite/9-garden-runc-compiled-release.yml
-      - put: bucc
-        params:
-          merge: true
-          repository: bucc-out
-      on_failure:
-        put: notify
-        params:
-          channel:  (( grab meta.slack.channel ))
-          username: (( grab meta.slack.username ))
-          icon_url: (( grab meta.slack.icon ))
-          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": garden-runc-compiled-release-ops-file job failed" ))'
-
 - name: bucc-creds-bbr-ops-file
   public: true
   serial: true

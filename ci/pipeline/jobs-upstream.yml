@@ -90,39 +90,6 @@ jobs:
           icon_url: (( grab meta.slack.icon ))
           text:    '(( concat meta.slack.fail_url " " meta.pipeline ": postgres-release job failed" ))'
 
-- name: garden-runc-release
-  public: true
-  serial: true
-  plan:
-    - do:
-      - in_parallel:
-        - { get: bucc, trigger: false, passed: [sanity-check] }
-        - { get: bucc-ci, trigger: false }
-        - get: bosh-release-garden-runc
-          trigger: true
-          params:
-            tarball: false
-      - task: update-bosh-release
-        file: bucc-ci/ci/tasks/update-bosh-release/task.yml
-        input_mapping:
-          bosh-release: bosh-release-garden-runc
-        params:
-          OPS_FILE_PATH: ops/lite/3-garden-runc-release.yml
-          RELEASE_NAME: garden-runc
-      - task: bucc-manifests
-        file: bucc-ci/ci/tasks/bucc-manifests/task.yml
-      - put: bucc
-        params:
-          merge: true
-          repository: bucc-out
-      on_failure:
-        put: notify
-        params:
-          channel:  (( grab meta.slack.channel ))
-          username: (( grab meta.slack.username ))
-          icon_url: (( grab meta.slack.icon ))
-          text:    '(( concat meta.slack.fail_url " " meta.pipeline ": garden-runc-release job failed" ))'
-
 - name: update-credhub-cli
   public: true
   serial: true
