@@ -2,7 +2,8 @@
 
 set -x
 
-curl -L -s https://github.com/vmware/govmomi/releases/download/v0.21.0/govc_linux_amd64.gz | gunzip >/usr/local/bin/govc
+#TODO: we can get govc from starkandwayne apt
+curl -L -s https://github.com/vmware/govmomi/releases/download/v0.22.1/govc_linux_amd64.gz | gunzip >/usr/local/bin/govc
 chmod +x /usr/local/bin/govc
 
 BASE=/Buffalo-Lab/vm/bucc-ci
