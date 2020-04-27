@@ -25,5 +25,6 @@ govc ls ${BASE}/vms \
 
 # remove all templates
 # will only reliably work if the tests run in serial with the serial_group tag
+set +x
 govc ls ${BASE}/templates \
     | xargs -L1 govc vm.destroy
