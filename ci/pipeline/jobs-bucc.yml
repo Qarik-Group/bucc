@@ -20,6 +20,7 @@ jobs:
 - name: integration-test
   public: true
   serial: true
+  serial_groups: [test]
   plan:
     - do:
       - in_parallel:
@@ -79,6 +80,7 @@ jobs:
 - name: upgrade-test
   public: true
   serial: true
+  serial_groups: [test]
   plan:
     - do:
       - in_parallel:
@@ -145,6 +147,7 @@ jobs:
 - name: disaster-recovery-test
   public: true
   serial: true
+  serial_groups: [test]
   plan:
     - do:
       - in_parallel:
@@ -218,6 +221,7 @@ jobs:
 - name: offline-test
   public: true
   serial: true
+  serial_groups: [test]
   plan:
     - do:
       - in_parallel:
