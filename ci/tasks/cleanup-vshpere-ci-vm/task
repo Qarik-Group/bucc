@@ -28,3 +28,4 @@ govc ls ${BASE}/vms \
 set +x
 govc ls ${BASE}/templates \
     | xargs -L1 govc vm.destroy
+exit 0
