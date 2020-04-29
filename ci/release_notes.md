@@ -1,3 +1,1 @@
-### Bug fixes:
-
-### Small improvments
+### Just version bumps
