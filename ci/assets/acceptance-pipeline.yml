@@ -15,7 +15,6 @@ jobs:
     - get: stemcell
     - get: bosh-deployment
     - get: docker-release
-    - get: xenial-ops-file
     - get: storage-driver-ops-file
   - put: cloud-config
     params:
@@ -26,19 +25,9 @@ jobs:
       manifest: docker-release/manifests/swarm/docker-swarm.yml
       stemcells: [ stemcell/stemcell.tgz ]
       ops_files:
-      - xenial-ops-file/ops.yml
       - storage-driver-ops-file/ops.yml
 
 resources:
-- name: xenial-ops-file
-  type: file
-  source:
-    filename: ops.yml
-    content:
-    - type: replace
-      path: /stemcells/alias=default/os
-      value: ubuntu-xenial
-
 - name: storage-driver-ops-file
   type: file
   source:
