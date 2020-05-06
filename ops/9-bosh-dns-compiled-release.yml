@@ -3,5 +3,5 @@
   value:
     name: bosh-dns
     version: 1.10.0
-    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bosh-dns-1.10.0-ubuntu-xenial-621.71-20200427-134032-800633047.tgz
-    sha1: 23fc766782bb73785c272eab7084486325bace80
+    url: https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/bosh-dns-1.10.0-ubuntu-xenial-621.74-20200506-113930-545419932.tgz
+    sha1: 1ca5816cfcee0075dc9f35619d9ef9b9872719c6
