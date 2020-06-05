@@ -199,7 +199,7 @@ $ fly -t bucc pipelines
 ## Backup & Restore
 BUCC works with [BBR](https://github.com/cloudfoundry-incubator/bosh-backup-and-restore).
 
-To make a backup of you deployed BUCC vm, run:
+To make a backup of your deployed BUCC vm, run:
 
 ```
 bucc bbr backup
