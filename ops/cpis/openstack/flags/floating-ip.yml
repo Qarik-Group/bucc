@@ -15,3 +15,9 @@
   value:
     name: floating
     static_ips: [((openstack_vip_ip))]
+
+- type: replace
+  path: /variables/name=atc_ssl/options/alternative_names
+  value:
+    [((openstack_vip_ip))]
+
