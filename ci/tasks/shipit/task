@@ -35,16 +35,18 @@ popd > /dev/null
 
 pushd bucc-master > /dev/null
 
-# merge develop into master
+echo "# merge develop into master"
 git pull ../bucc -X theirs --no-edit
 
 popd > /dev/null
 
 pushd bucc-ci
-# merge upstream develop and keep our changes (we have bumped versions)
+
+echo "# merge upstream develop and keep our changes (we have bumped versions)"
 git pull ../bucc -X ours --no-edit
 
 echo -e "### Bug fixes:\n\n### Small improvments" > ci/release_notes.md
 
+echo "when fails! please fill in the release notes"
 git add -A
 git commit -m "Clean release_notes.md"
