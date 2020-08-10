@@ -40,13 +40,7 @@ git pull ../bucc -X theirs --no-edit
 
 popd > /dev/null
 
-# clone master so we have an output
-git clone bucc-master bucc-out-master
-
-# clone develop for develop output
-git clone bucc-ci bucc-out-develop
-
-pushd bucc-out-develop
+pushd bucc-ci
 # merge upstream develop and keep our changes (we have bumped versions)
 git pull ../bucc -X ours --no-edit
 
