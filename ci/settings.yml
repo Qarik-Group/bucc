@@ -15,6 +15,7 @@ meta:
     repo:  bucc
     private_key:  ((github_private_key))
     access_token: ((github_acces_token))
+    webhook_token: ((github_webhook_token))
   aws:
     access_key_id: ((aws_access_key))
     secret_access_key: ((aws_secret_key))

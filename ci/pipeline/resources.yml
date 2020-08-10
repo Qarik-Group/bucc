@@ -1,7 +1,7 @@
 resources:
   - name: bucc
     type: git
-    webhook_token: supercalifragilisticexpialidocious
+    webhook_token: (( grab meta.github.webhook_token ))
     check_every: 24h
     source:
       uri:         (( grab meta.github.uri ))
@@ -29,7 +29,7 @@ resources:
 
   - name: bucc-ci
     type: git
-    webhook_token: supercalifragilisticexpialidocious
+    webhook_token: (( grab meta.github.webhook_token ))
     check_every: 24h
     source:
       uri:         (( grab meta.github.uri ))
