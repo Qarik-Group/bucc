@@ -14,9 +14,9 @@ releases:
   url: https://github.com/cloudfoundry-community/credhub-importer-boshrelease/releases/download/1.1.0/credhub-importer-1.1.0.tgz
   version: 1.1.0
 - name: postgres
-  sha1: 4488d08ff54117a9d904f6e2f27c82c1cf4c910e
-  url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=41
-  version: 41
+  sha1: 0a9e4ad424f2ad9611dd1d3f387cc12ed7b71ee4
+  url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=42
+  version: 42
 - name: bucc-bbr
   url: git+https://github.com/starkandwayne/bucc-bbr-boshrelease
   version: 8
