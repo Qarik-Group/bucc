@@ -23,7 +23,7 @@ get_stemcell_version() {
 release_paths=$(curl -s https://bosh.io/releases/ | grep '<a href="/releases/' | cut -d'"' -f2 | cut -d'?' -f1)
 get_release_url() {
     # sort results to prefere cloudfoundry over cloudfoundry-{incubator,community}
-    local release_path=$(echo -e "${release_paths}" | grep -E "/${1}$|/${1}-release$|/${1}-boshrelease$" | sort -n | tail -n 1)
+    local release_path=$(echo -e "${release_paths}" | grep -E "/${1}$|/${1}-release$|/${1}-boshrelease$|/${1}-bosh-release$" | sort -n | tail -n 1)
 
     if [ ! -z "${release_path}" ]; then
         echo "https://bosh.io${release_path}?version=${2}"
