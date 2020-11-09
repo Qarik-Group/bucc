@@ -46,6 +46,8 @@ echo "# merge upstream develop and keep our changes (we have bumped versions)"
 git pull ../bucc -X ours --no-edit
 
 echo -e "### Bug fixes:\n\n### Small improvments" > ci/release_notes.md
+echo -e "## Version: ${VERSION}" > ci/version
+
 
 echo "when fails! please fill in the release notes"
 git add -A
