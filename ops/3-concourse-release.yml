@@ -2,6 +2,6 @@
   path: /releases/name=concourse?
   value:
     name: concourse
-    version: 6.7.1
-    url: https://bosh.io/d/github.com/concourse/concourse-bosh-release?v=6.7.1
-    sha1: a72b88a132fc71773b8cef47edc61f3a6edb9bb5
+    version: 6.7.2
+    url: https://bosh.io/d/github.com/concourse/concourse-bosh-release?v=6.7.2
+    sha1: 6a5a21a38bd7f8c544f1721033e17f34ecb9c063
