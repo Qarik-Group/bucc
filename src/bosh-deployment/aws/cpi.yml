@@ -3,15 +3,15 @@
   type: replace
   value:
     name: bosh-aws-cpi
-    sha1: cabcdf15846adabe2000fe892314a3a2f72c9177
-    url: https://bosh.io/d/github.com/cloudfoundry/bosh-aws-cpi-release?v=83
-    version: 83
+    sha1: 60c1e3e150175632709d70c074a21f25ec474d8b
+    url: https://bosh.io/d/github.com/cloudfoundry/bosh-aws-cpi-release?v=84
+    version: 84
 - name: stemcell
   path: /resource_pools/name=vms/stemcell?
   type: replace
   value:
-    sha1: 99fec7cf51389b58d5ac4efac79f9fb2e4256d2d
-    url: https://bosh-aws-light-stemcells.s3-accelerate.amazonaws.com/621.93/light-bosh-stemcell-621.93-aws-xen-hvm-ubuntu-xenial-go_agent.tgz
+    sha1: 32d144c3a2ae9d58b0e0dc94210ba4146445f9e2
+    url: https://bosh-aws-light-stemcells.s3-accelerate.amazonaws.com/621.97/light-bosh-stemcell-621.97-aws-xen-hvm-ubuntu-xenial-go_agent.tgz
 - path: /resource_pools/name=vms/cloud_properties?
   type: replace
   value:
