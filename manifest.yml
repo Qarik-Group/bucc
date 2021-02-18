@@ -21,7 +21,7 @@ releases:
   url: git+https://github.com/starkandwayne/bucc-bbr-boshrelease
   version: 8
 - name: vault-credhub-proxy
-  sha1: 8038e8eb63b993a4c95e96924a88e4e3e6b251e
+  sha1: 8038e8eb63b993a4c95e96924a88e4e3e6b251e5
   url: https://s3.amazonaws.com/vault-credhub-proxy-boshrelease/vault-credhub-proxy-release-1.1.9.tgz
   version: 1.1.9
 - name: director-bosh-dns
