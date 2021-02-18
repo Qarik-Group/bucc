@@ -4,7 +4,7 @@
     name: vault-credhub-proxy
     version: 1.1.9
     url:     https://s3.amazonaws.com/vault-credhub-proxy-boshrelease/vault-credhub-proxy-release-1.1.9.tgz
-    sha1:    8038e8eb63b993a4c95e96924a88e4e3e6b251e
+    sha1:    8038e8eb63b993a4c95e96924a88e4e3e6b251e5
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
