@@ -3,5 +3,5 @@
   value:
     name: postgres
     version: 43
-    url: https://s3.eu-west-1.amazonaws.com/bucc-compiled-releases/postgres-43-ubuntu-xenial-621.107-20210223-113657-386302776.tgz
-    sha1: e71ad466df25dd4076d1b5941b3545016aefdb2a
+    url: https://s3.eu-west-1.amazonaws.com/bucc-compiled-releases/postgres-43-ubuntu-xenial-621.108-20210302-113835-853588706.tgz
+    sha1: 134f67eea9f74aa370fd824f3537042d0696b71a
