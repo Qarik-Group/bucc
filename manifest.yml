@@ -35,7 +35,7 @@ releases:
 stemcells:
 - alias: large
   os: ubuntu-xenial
-  version: "621.107"
+  version: "621.108"
 update:
   canaries: 1
   canary_watch_time: 1000 - 90000
