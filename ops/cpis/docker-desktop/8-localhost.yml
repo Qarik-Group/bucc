@@ -26,8 +26,8 @@
 
 # use houdini so we can reach services on localhost
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=worker/properties/garden?/use_houdini
-  value: true
+  path: /instance_groups/name=bosh/jobs/name=worker/properties/runtime?
+  value: houdini
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=worker/properties/baggageclaim?/disable_user_namespaces
