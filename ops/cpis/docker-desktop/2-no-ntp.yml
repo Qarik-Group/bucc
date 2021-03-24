@@ -1,0 +1,7 @@
+- path: /instance_groups/name=bosh/properties/agent/env/bosh/ntp
+  type: replace
+  value: []
+
+- path: /resource_pools/name=vms/env/bosh/ntp
+  type: replace
+  value: []
