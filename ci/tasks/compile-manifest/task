@@ -21,7 +21,7 @@ cat > ${compile_manifest} <<EOF
 name: compile-releases
 stemcells:
 - alias: large
-  os: ubuntu-xenial
+  os: ubuntu-bionic
   version: "${stemcell_version}"
 update:
   canaries: 1

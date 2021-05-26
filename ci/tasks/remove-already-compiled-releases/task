@@ -11,7 +11,7 @@ stemcell_version=$(bosh int ${manifest} --path /stemcells/0/version)
 for name in $(spruce json ${manifest} | jq -r '.releases[].name'); do
     version=$(bosh int ${manifest} --path /releases/name=${name}/version)
     url="https://s3-eu-west-1.amazonaws.com/bucc-compiled-releases/?prefix=${name}"
-    blob="${version}-ubuntu-xenial-${stemcell_version}"
+    blob="${version}-ubuntu-bionic-${stemcell_version}"
 
     if ! curl -s "${url}" | grep -q "${blob}"; then
         echo "did not find blob in ${url}"
