@@ -4,4 +4,4 @@
   value:
     name: concourse/main/bucc_version
     type: value
-    value: 0.10.3
+    value: 0.10.4
