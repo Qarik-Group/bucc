@@ -71,7 +71,7 @@ fi
 
 if [[ ${stemcell} != ${new_stemcell} ]]; then
     echo "## Stemcell update:" >> ${notes}
-    stemcell_url="https://github.com/cloudfoundry/bosh-linux-stemcell-builder/releases/tag/stable-${new_stemcell}"
+    stemcell_url="https://github.com/cloudfoundry/bosh-linux-stemcell-builder/releases/tag/ubuntu-bionic/v${new_stemcell}"
     echo -e "Bumped to [${new_stemcell}](${stemcell_url})" >> ${notes}
 fi
 

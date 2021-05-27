@@ -283,35 +283,11 @@ jobs:
   - do:
     - in_parallel:
         - { get: bucc,    trigger: true,  passed: [integration-test, upgrade-test, disaster-recovery-test, offline-test] }
+        - { get: bucc-ci }
+        - { get: bucc-stable }
         - { get: version, trigger: true }
-    - task: release-notes
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: starkandwayne/concourse
-        inputs:
-            - { name: bucc }
-        run:
-          path: sh
-          args:
-          - -ce
-          - |
-            cd bucc
-            if [ -f ci/release_notes.md ]; then
-              echo "######   RELEASE NOTES   ###############"
-              echo
-              cat ci/release_notes.md
-              echo
-              echo "########################################"
-              echo
-            else
-              echo "NO RELEASE NOTES HAVE BEEN WRITTEN"
-              echo "You *might* want to do that before"
-              echo "hitting (+) on that shipit job..."
-              echo
-            fi
+    - task: generate-release-notes
+      file: bucc-ci/ci/tasks/generate-release-notes/task.yml
     on_failure:
       put: notify
       params:
@@ -384,8 +360,7 @@ jobs:
   serial: true
   plan:
     - do:
-      - name: inputs
-        in_parallel:
+      - in_parallel:
           - { get: version, passed: [rc], params: {bump: final} }
           - { get: bucc,    passed: [upgrade-test] }
           - { get: bucc-ci }
@@ -406,8 +381,7 @@ jobs:
         params:
           repository: bucc-ci
           merge: true
-      - name: github
-        put: github
+      - put: github
         params:
           name:       release/name
           tag:        release/tag
