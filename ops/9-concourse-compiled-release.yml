@@ -2,6 +2,6 @@
   path: /releases/name=concourse?
   value:
     name: concourse
-    version: 7.3.1
-    url: https://s3.eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-7.3.1-ubuntu-bionic-1.10-20210612-160915-708493689.tgz
-    sha1: c024d3602bc98f4c91daa1dcc167bf17e2a88810
+    version: 7.3.2
+    url: https://s3.eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-7.3.2-ubuntu-bionic-1.10-20210615-213649-915790681.tgz
+    sha1: 0586c63674596ce7b5c802bdc5e74be290dc8e62
