@@ -3,5 +3,5 @@
   value:
     name: concourse
     version: 7.4.0
-    url: https://s3.eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-7.4.0-ubuntu-bionic-1.22-20210730-013452-4040424.tgz
-    sha1: 06fffac0e4a2051eed9ce112918034bb2c47b680
+    url: https://s3.eu-west-1.amazonaws.com/bucc-compiled-releases/concourse-7.4.0-ubuntu-bionic-1.24-20210820-021250-449802014.tgz
+    sha1: 791233c1c6965ba5ee57bacfad7e9c2d87908067
