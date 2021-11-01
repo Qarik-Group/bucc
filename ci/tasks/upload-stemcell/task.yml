@@ -15,7 +15,7 @@ params:
   BOSH_CLIENT:
   BOSH_CLIENT_SECRET:
   BOSH_CA_CERT:
-  CPI: warden-boshlite
+  CPI: vsphere-esxi
 
 run:
   path: bucc-ci/ci/tasks/upload-stemcell/task
