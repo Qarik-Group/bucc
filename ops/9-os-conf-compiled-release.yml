@@ -3,5 +3,5 @@
   value:
     name: os-conf
     version: 18
-    url: https://s3.eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-18-ubuntu-bionic-1.41-20211209-221002-769860486.tgz
-    sha1: 01682f3118d28769d41bd107858e81568743066a
+    url: https://s3.eu-west-1.amazonaws.com/bucc-compiled-releases/os-conf-18-ubuntu-bionic-1.51-20211222-220210-306021624.tgz
+    sha1: 92287e5aa982cba2fb55aee531dcb1cf0636a0be
