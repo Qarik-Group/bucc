@@ -3,5 +3,5 @@
   value:
     name: bucc-bbr
     version: 8
-    url: https://s3.eu-west-1.amazonaws.com/bucc-compiled-releases/bucc-bbr-8-ubuntu-bionic-1.41-20211209-222644-959018358.tgz
-    sha1: e9b33df61468632af5405c095a4ae5f9d3bb432c
+    url: https://s3.eu-west-1.amazonaws.com/bucc-compiled-releases/bucc-bbr-8-ubuntu-bionic-1.51-20211222-221026-912783846.tgz
+    sha1: afed224429368aba28b13c93a7ad5896ada943d9
