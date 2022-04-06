@@ -10,8 +10,8 @@
   path: /resource_pools/name=vms/stemcell?
   type: replace
   value:
-    sha1: 594a761651c440b945576c37def287c3476cef25
-    url: https://storage.googleapis.com/bosh-core-stemcells/1.41/bosh-stemcell-1.41-openstack-kvm-ubuntu-bionic-go_agent.tgz
+    sha1: 454600bab1a7135b029eb2e6fe58634b3211c0d8
+    url: https://storage.googleapis.com/bosh-core-stemcells/1.76/bosh-stemcell-1.76-openstack-kvm-ubuntu-bionic-go_agent.tgz
 - path: /resource_pools/name=vms/cloud_properties?
   type: replace
   value:
@@ -21,26 +21,6 @@
   type: replace
   value:
     net_id: ((net_id))
-- path: /instance_groups/name=bosh/jobs/-
-  type: replace
-  value:
-    name: registry
-    release: bosh
-- path: /instance_groups/name=bosh/properties/registry?
-  type: replace
-  value:
-    address: ((internal_ip))
-    db:
-      adapter: postgres
-      database: bosh
-      host: 127.0.0.1
-      password: ((postgres_password))
-      user: postgres
-    endpoint: http://registry:((registry_password))@((internal_ip)):25777
-    host: ((internal_ip))
-    password: ((registry_password))
-    port: 25777
-    username: registry
 - path: /instance_groups/name=bosh/jobs/-
   type: replace
   value:
@@ -66,13 +46,6 @@
     project: ((openstack_project))
     region: ((region))
     username: ((openstack_username))
-- path: /cloud_provider/ssh_tunnel?
-  type: replace
-  value:
-    host: ((internal_ip))
-    port: 22
-    private_key: ((private_key))
-    user: vcap
 - path: /cloud_provider/properties/openstack?
   type: replace
   value:
@@ -85,8 +58,3 @@
     project: ((openstack_project))
     region: ((region))
     username: ((openstack_username))
-- path: /variables/-
-  type: replace
-  value:
-    name: registry_password
-    type: password

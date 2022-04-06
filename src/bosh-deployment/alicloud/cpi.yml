@@ -3,15 +3,15 @@
   type: replace
   value:
     name: bosh-alicloud-cpi
-    sha1: 583759e5b63abcafe9aa1fcfc483359b71127593
-    url: https://github.com/cloudfoundry-incubator/bosh-alicloud-cpi-release/releases/download/v43.0.0/bosh-alicloud-cpi-release-43.0.0.tgz
-    version: 43.0.0
+    sha1: f01fcd9d5a775755086513692d92630e0a77e8ea
+    url: https://github.com/cloudfoundry-incubator/bosh-alicloud-cpi-release/releases/download/v45.0.0/bosh-alicloud-cpi-release-45.0.0.tgz
+    version: 45.0.0
 - name: stemcell
   path: /resource_pools/name=vms/stemcell?
   type: replace
   value:
-    sha1: 822e9e5395428018eacbada277575047bec8db6f
-    url: https://bosh-alicloud-light-stemcells-cn.oss-cn-hangzhou.aliyuncs.com/light-bosh-stemcell-1.41-alicloud-kvm-ubuntu-bionic-go_agent.tgz
+    sha1: d04466691ee13ee4c4390adfbeeba8916968d198
+    url: https://bosh-alicloud-light-stemcells-cn.oss-cn-hangzhou.aliyuncs.com/light-bosh-stemcell-1.76-alicloud-kvm-ubuntu-bionic-go_agent.tgz
 - path: /resource_pools/name=vms/cloud_properties?
   type: replace
   value:
@@ -40,29 +40,6 @@
 - path: /instance_groups/name=bosh/jobs/-
   type: replace
   value:
-    name: registry
-    release: bosh
-- path: /instance_groups/name=bosh/properties/registry?
-  type: replace
-  value:
-    address: ((internal_ip))
-    db:
-      adapter: postgres
-      database: bosh
-      host: 127.0.0.1
-      password: ((postgres_password))
-      user: postgres
-    host: ((internal_ip))
-    http:
-      password: ((registry_password))
-      port: 25777
-      user: registry
-    password: ((registry_password))
-    port: 25777
-    username: registry
-- path: /instance_groups/name=bosh/jobs/-
-  type: replace
-  value:
     name: alicloud_cpi
     release: bosh-alicloud-cpi
 - path: /instance_groups/name=bosh/properties/director/cpi_job?
@@ -87,18 +64,6 @@
     access_key_secret: ((access_key_secret))
     availability_zone: ((zone))
     region: ((region))
-- path: /cloud_provider/ssh_tunnel?
-  type: replace
-  value:
-    host: ((internal_ip))
-    port: 22
-    private_key: ((private_key))
-    user: vcap
-- path: /variables/-
-  type: replace
-  value:
-    name: registry_password
-    type: password
 - path: /instance_groups/name=bosh/properties/agent/env/bosh/ntp?
   type: replace
   value:

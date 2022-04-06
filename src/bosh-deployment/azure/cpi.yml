@@ -3,15 +3,15 @@
   type: replace
   value:
     name: bosh-azure-cpi
-    sha1: d0546e6a516ee1cff077b44f3db12386a8a2f439
-    url: https://bosh.io/d/github.com/cloudfoundry/bosh-azure-cpi-release?v=37.6.0
-    version: 37.6.0
+    sha1: dce9cbc36b19ede2270ad37d73ad5ad434e86f9f
+    url: https://bosh.io/d/github.com/cloudfoundry/bosh-azure-cpi-release?v=39.0.0
+    version: 39.0.0
 - name: stemcell
   path: /resource_pools/name=vms/stemcell?
   type: replace
   value:
-    sha1: de94db9dfb8d6f145751961646a4c31f9e8ce5ad
-    url: https://storage.googleapis.com/bosh-core-stemcells/1.41/bosh-stemcell-1.41-azure-hyperv-ubuntu-bionic-go_agent.tgz
+    sha1: 5931ff22c76519fb4570cabf75237952219fe79a
+    url: https://storage.googleapis.com/bosh-core-stemcells/1.76/bosh-stemcell-1.76-azure-hyperv-ubuntu-bionic-go_agent.tgz
 - path: /resource_pools/name=vms/cloud_properties?
   type: replace
   value:
@@ -21,29 +21,6 @@
   value:
     subnet_name: ((subnet_name))
     virtual_network_name: ((vnet_name))
-- path: /instance_groups/name=bosh/jobs/-
-  type: replace
-  value:
-    name: registry
-    release: bosh
-- path: /instance_groups/name=bosh/properties/registry?
-  type: replace
-  value:
-    address: ((internal_ip))
-    db:
-      adapter: postgres
-      database: bosh
-      host: 127.0.0.1
-      password: ((postgres_password))
-      user: postgres
-    host: ((internal_ip))
-    http:
-      password: ((registry_password))
-      port: 25777
-      user: registry
-    password: ((registry_password))
-    port: 25777
-    username: registry
 - path: /instance_groups/name=bosh/jobs/-
   type: replace
   value:
@@ -70,13 +47,6 @@
     storage_account_name: ((storage_account_name))
     subscription_id: ((subscription_id))
     tenant_id: ((tenant_id))
-- path: /cloud_provider/ssh_tunnel?
-  type: replace
-  value:
-    host: ((internal_ip))
-    port: 22
-    private_key: ((ssh.private_key))
-    user: vcap
 - path: /cloud_provider/properties/azure?
   type: replace
   value:
@@ -95,8 +65,3 @@
   value:
     name: ssh
     type: ssh
-- path: /variables/-
-  type: replace
-  value:
-    name: registry_password
-    type: password

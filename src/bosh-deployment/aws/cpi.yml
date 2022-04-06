@@ -3,15 +3,15 @@
   type: replace
   value:
     name: bosh-aws-cpi
-    sha1: c8fdf45dd3baa0c85f5f64b472b55b2ff3432cb4
-    url: https://bosh.io/d/github.com/cloudfoundry/bosh-aws-cpi-release?v=91
-    version: 91
+    sha1: 1b4d0f542faa1b8e6fd5aaae375073ecf7833291
+    url: https://bosh.io/d/github.com/cloudfoundry/bosh-aws-cpi-release?v=93
+    version: 93
 - name: stemcell
   path: /resource_pools/name=vms/stemcell?
   type: replace
   value:
-    sha1: cacf5a4e0e7431b94999487ecf94ce01a1c3e49e
-    url: https://storage.googleapis.com/bosh-aws-light-stemcells/1.41/light-bosh-stemcell-1.41-aws-xen-hvm-ubuntu-bionic-go_agent.tgz
+    sha1: 24db899386d06ef7ff6818bbccc8fcdd591e683f
+    url: https://storage.googleapis.com/bosh-aws-light-stemcells/1.76/light-bosh-stemcell-1.76-aws-xen-hvm-ubuntu-bionic-go_agent.tgz
 - path: /resource_pools/name=vms/cloud_properties?
   type: replace
   value:
@@ -28,29 +28,6 @@
   type: replace
   value:
     subnet: ((subnet_id))
-- path: /instance_groups/name=bosh/jobs/-
-  type: replace
-  value:
-    name: registry
-    release: bosh
-- path: /instance_groups/name=bosh/properties/registry?
-  type: replace
-  value:
-    address: ((internal_ip))
-    db:
-      adapter: postgres
-      database: bosh
-      host: 127.0.0.1
-      password: ((postgres_password))
-      user: postgres
-    host: ((internal_ip))
-    http:
-      password: ((registry_password))
-      port: 25777
-      user: registry
-    password: ((registry_password))
-    port: 25777
-    username: registry
 - path: /instance_groups/name=bosh/jobs/-
   type: replace
   value:
@@ -72,13 +49,6 @@
     default_security_groups: ((default_security_groups))
     region: ((region))
     secret_access_key: ((secret_access_key))
-- path: /cloud_provider/ssh_tunnel?
-  type: replace
-  value:
-    host: ((internal_ip))
-    port: 22
-    private_key: ((private_key))
-    user: vcap
 - path: /cloud_provider/properties/aws?
   type: replace
   value:
@@ -87,8 +57,3 @@
     default_security_groups: ((default_security_groups))
     region: ((region))
     secret_access_key: ((secret_access_key))
-- path: /variables/-
-  type: replace
-  value:
-    name: registry_password
-    type: password

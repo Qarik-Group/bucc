@@ -17,7 +17,7 @@ instance_groups:
     release: bpm
   - name: nats
     release: bosh
-  - name: postgres-10
+  - name: postgres
     release: bosh
   - name: blobstore
     release: bosh
@@ -142,13 +142,13 @@ networks:
   type: manual
 releases:
 - name: bosh
-  sha1: 1eeb5067d342909b68cf5a38783a3421c2f53f55
-  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-271.17.0-ubuntu-bionic-1.41-20211209-104853-348622355-20211209104855.tgz
-  version: 271.17.0
+  sha1: 30269892812b46c56a412ce993e4232e47bee4aa
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-272.2.0-ubuntu-bionic-1.76-20220331-092504-144015278-20220331092505.tgz
+  version: 272.2.0
 - name: bpm
-  sha1: 9e8f0c84773523139e4bf02ec80fea872b04f9aa
-  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bpm-1.1.15-ubuntu-bionic-1.41-20211209-104652-483576868-20211209104654.tgz
-  version: 1.1.15
+  sha1: f9a6ffc96ba1c712a3c523b8343629b9659b5889
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bpm-1.1.16-ubuntu-bionic-1.76-20220331-092117-444849847-20220331092119.tgz
+  version: 1.1.16
 resource_pools:
 - env:
     bosh:
