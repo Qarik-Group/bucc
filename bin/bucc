@@ -621,7 +621,7 @@ _ssh() {
         echo $BOSH_ALL_PROXY | sed -e 's$ssh+socks5://\(.*\):\(.*\)?.*=\(.*\)$ProxyCommand ssh -W %h:%p \1 -p \2 -i \3$g' > ${tmp_config}
     fi
     local user=$(int --path /instance_groups/name=bosh/jobs/name=user_add/properties/users/0/name)
-    cmd="ssh -i $(ssh_private_key jumpbox_ssh) -F ${tmp_config} $user@$(ip)"
+    cmd="ssh -i $(ssh_private_key jumpbox_ssh) -F ${tmp_config} $user@$(ip) -o IdentitiesOnly=yes"
 
     if [ $# -eq 0 ]; then
         ${cmd} -t 'command; sudo su -'
