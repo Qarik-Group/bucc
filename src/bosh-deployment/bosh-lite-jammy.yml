@@ -3,37 +3,36 @@
   type: replace
   value:
     name: garden-runc
-    version: "1.20.6"
-    url: "https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.20.6"
-    sha1: "55307cd007129bfb95703aaf44ad2e40312429ef"
+    sha1: d7bbca4843f1be8dd5c2acee824cdb2882b43676
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/garden-runc-1.20.6-ubuntu-jammy-0.1.10-20220609-194908-511599017-20220609194912.tgz
+    version: 1.20.6
 - path: /releases/name=bosh-warden-cpi?
   release: bosh-warden-cpi
   type: replace
   value:
     name: bosh-warden-cpi
-    sha1: eea3e6e863ff63eda68470a7d622b01ba6f80b46
-    url: https://bosh.io/d/github.com/cloudfoundry/bosh-warden-cpi-release?v=43
+    sha1: 2fc0bb69730b7ee9cc57d027a59bc3318a3b8b4b
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-warden-cpi-43-ubuntu-jammy-0.1.10-20220609-201158-185754904-20220609201159.tgz
     version: 43
 - path: /releases/name=bosh?
   release: bosh
   type: replace
   value:
     name: bosh
-    sha1: 2bac32b40b413a377460bf8a5fd9d50da624f1a4
-    url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=272.2.0
-    version: 272.2.0
+    sha1: fe7154b78fe928cf5654f2f66bc099c5488991f9
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-272.5.0-ubuntu-jammy-0.1.10-20220609-204014-227292028-20220609204015.tgz
+    version: 272.5.0
 - path: /releases/name=bpm?
   release: bpm
   type: replace
   value:
     name: bpm
-    sha1: d8656c331cf0604a54df779f40bbddda9d9fc2eb
-    url: https://bosh.io/d/github.com/cloudfoundry/bpm-release?v=1.1.17
-    version: 1.1.17
-
+    sha1: 1b0fd2b3103987701cbe9fa2814add1fb38ebf8d
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bpm-1.1.18-ubuntu-jammy-0.1.10-20220609-213203-246787284-20220609213205.tgz
+    version: 1.1.18
 - name: stemcell
   path: /resource_pools/name=vms/stemcell?
   type: replace
   value:
-    sha1: aa87325a0bc1eb1d17043a4e9267a83ec0a04a72
-    url: https://storage.googleapis.com/bosh-core-stemcells/0.1.1/bosh-stemcell-0.1.1-vsphere-esxi-ubuntu-jammy-go_agent.tgz
+    sha1: 739f3ae5655894caa187fbc2552b300a541648a3
+    url: https://storage.googleapis.com/bosh-core-stemcells/0.1.10/bosh-stemcell-0.1.10-warden-boshlite-ubuntu-jammy-go_agent.tgz
