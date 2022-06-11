@@ -35,7 +35,7 @@ releases:
 stemcells:
 - alias: large
   os: ubuntu-bionic
-  version: "1.87"
+  version: "1.88"
 update:
   canaries: 1
   canary_watch_time: 1000 - 90000
