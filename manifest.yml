@@ -2,9 +2,9 @@ instance_groups: []
 name: compile-releases
 releases:
 - name: concourse
-  sha1: 04891ae6a4a89c50291259f82af543be57418dc7
-  url: https://bosh.io/d/github.com/concourse/concourse-bosh-release?v=7.8.0
-  version: 7.8.0
+  sha1: 1173a49605f3a6ca2b15ed7983e845f61055ccc6
+  url: https://bosh.io/d/github.com/concourse/concourse-bosh-release?v=7.8.1
+  version: 7.8.1
 - name: os-conf
   sha1: 78d79f08ff5001cc2a24f572837c7a9c59a0e796
   url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=18
