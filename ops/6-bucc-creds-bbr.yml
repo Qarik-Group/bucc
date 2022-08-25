@@ -32,6 +32,7 @@
         nats_clients_health_monitor_tls: ((nats_clients_health_monitor_tls))
         nats_password: ((nats_password))
         nats_server_tls: ((nats_server_tls))
+        nats_sync_password: ((nats_sync_password))
         postgres_password: ((postgres_password))
         token_signing_key: ((token_signing_key))
         tsa_host_key: ((tsa_host_key))
